@@ -1,1247 +1,851 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ULTRA SMM PANEL | GOD MODE v4.0</title>
-<style>
-:root{--bg:#060d1a;--bg2:#0d1b2e;--glass:rgba(20,35,58,0.75);--glass2:rgba(30,50,80,0.5);--border:rgba(56,189,248,0.15);--neon:#38bdf8;--neon2:#818cf8;--neon3:#4ade80;--neon4:#fb7185;--gold:#fbbf24;--text:#f0f6ff;--dim:#64748b;--danger:#ef4444;--success:#22c55e;--warn:#f59e0b;--card-r:14px;--sw:260px;--t:all 0.3s cubic-bezier(0.4,0,0.2,1)}
-[data-theme="purple"]{--neon:#a855f7;--neon2:#ec4899}
-[data-theme="green"]{--neon:#10b981;--neon2:#06b6d4}
-[data-theme="red"]{--neon:#f43f5e;--neon2:#f97316}
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;background-image:radial-gradient(ellipse at 10% 20%,rgba(56,189,248,.06) 0%,transparent 60%),radial-gradient(ellipse at 90% 80%,rgba(129,140,248,.06) 0%,transparent 60%)}
-::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px}::-webkit-scrollbar-track{background:transparent}
-.glass{background:var(--glass);backdrop-filter:blur(16px);border:1px solid var(--border);border-radius:var(--card-r)}
-#app{display:grid;grid-template-columns:var(--sw) 1fr;height:100vh}
-aside{padding:1.5rem 1rem;display:flex;flex-direction:column;gap:1.5rem;overflow-y:auto;border-right:1px solid var(--border);background:rgba(6,13,26,.9)}
-.logo{font-size:1.3rem;font-weight:900;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;padding:.5rem .5rem 0}
-.logo-sub{font-size:.65rem;color:var(--dim);letter-spacing:1px;padding-left:.6rem}
-nav ul{list-style:none;display:flex;flex-direction:column;gap:2px}
-nav li{padding:10px 14px;border-radius:10px;cursor:pointer;color:var(--dim);transition:var(--t);display:flex;align-items:center;gap:10px;font-size:.875rem;user-select:none}
-nav li:hover{background:rgba(56,189,248,.08);color:var(--text);transform:translateX(3px)}
-nav li.active{background:rgba(56,189,248,.15);color:var(--neon);border-left:3px solid var(--neon)}
-nav .ns{font-size:.65rem;text-transform:uppercase;letter-spacing:2px;color:var(--dim);padding:8px 14px 4px;margin-top:8px}
-main{padding:1.5rem 2rem;overflow-y:auto;display:flex;flex-direction:column;gap:1.5rem}
-.ph{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
-.pt{font-size:1.5rem;font-weight:700}
-.pt span{background:linear-gradient(to right,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
-.sc{padding:1.25rem 1.5rem;position:relative;overflow:hidden;cursor:default;transition:var(--t)}
-.sc:hover{transform:translateY(-3px);border-color:var(--neon)}
-.sc::before{content:'';position:absolute;top:-30px;right:-30px;width:80px;height:80px;background:radial-gradient(circle,var(--neon) 0%,transparent 70%);opacity:.1}
-.sl{font-size:.75rem;text-transform:uppercase;letter-spacing:1px;color:var(--dim)}
-.sv{font-size:1.9rem;font-weight:800;margin-top:.3rem}
-.si{position:absolute;top:1rem;right:1.2rem;font-size:1.5rem;opacity:.4}
-.tbl{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:.875rem}
-th{padding:10px 14px;color:var(--dim);font-weight:600;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;font-size:.78rem;text-transform:uppercase;letter-spacing:.5px}
-td{padding:13px 14px;border-bottom:1px solid rgba(255,255,255,.03)}
-tr:hover td{background:rgba(56,189,248,.03)}
-.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:.72rem;font-weight:600}
-.bg{background:rgba(34,197,94,.15);color:#4ade80}
-.bb{background:rgba(56,189,248,.15);color:#38bdf8}
-.br{background:rgba(239,68,68,.15);color:#f87171}
-.bw{background:rgba(245,158,11,.15);color:#fbbf24}
-.bp{background:rgba(168,85,247,.15);color:#c084fc}
-.bd{background:rgba(100,116,139,.15);color:#94a3b8}
-.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;border:none;cursor:pointer;font-size:.85rem;font-weight:600;transition:var(--t);position:relative;overflow:hidden;font-family:inherit}
-.btn::after{content:'';position:absolute;top:50%;left:50%;width:0;height:0;background:rgba(255,255,255,.2);border-radius:50%;transform:translate(-50%,-50%);transition:width .4s,height .4s,opacity .4s}
-.btn:active::after{width:200px;height:200px;opacity:0}
-.bp2{background:linear-gradient(135deg,var(--neon),var(--neon2));color:#fff}
-.bp2:hover{opacity:.85;transform:translateY(-2px);box-shadow:0 8px 20px rgba(56,189,248,.3)}
-.bd2{background:rgba(239,68,68,.2);color:#f87171;border:1px solid rgba(239,68,68,.3)}
-.bd2:hover{background:rgba(239,68,68,.35)}
-.bs{background:rgba(34,197,94,.2);color:#4ade80;border:1px solid rgba(34,197,94,.3)}
-.bs:hover{background:rgba(34,197,94,.35)}
-.bgh{background:rgba(255,255,255,.05);color:var(--dim);border:1px solid var(--border)}
-.bgh:hover{background:rgba(255,255,255,.1);color:var(--text)}
-.bsm{padding:5px 12px;font-size:.78rem}
-.bic{width:34px;height:34px;padding:0;justify-content:center}
-input,select,textarea{background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:9px 14px;font-size:.875rem;outline:none;transition:var(--t);width:100%;font-family:inherit}
-input:focus,select:focus,textarea:focus{border-color:var(--neon);box-shadow:0 0 0 3px rgba(56,189,248,.1)}
-select option{background:var(--bg2)}
-label{font-size:.8rem;color:var(--dim);display:block;margin-bottom:5px}
-.fg{display:flex;flex-direction:column;gap:5px}
-.fr{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem}
-#auth{position:fixed;inset:0;z-index:9999;background:var(--bg);display:flex;align-items:center;justify-content:center;background-image:radial-gradient(ellipse at 30% 30%,rgba(56,189,248,.08) 0%,transparent 60%),radial-gradient(ellipse at 70% 70%,rgba(129,140,248,.08) 0%,transparent 60%)}
-.ac{width:420px;padding:2.5rem}
-.al{text-align:center;margin-bottom:2rem}
-.al h1{font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:3px}
-.al p{color:var(--dim);font-size:.8rem;margin-top:.4rem}
-.mo{position:fixed;inset:0;z-index:8000;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;animation:fi .2s}
-.md{background:#0d1b2e;border:1px solid var(--border);border-radius:16px;padding:2rem;width:90%;max-width:550px;max-height:90vh;overflow-y:auto;animation:su .3s}
-.mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem}
-.mt2{font-size:1.1rem;font-weight:700}
-.mb2{display:flex;flex-direction:column;gap:1rem}
-.mf{display:flex;gap:.75rem;justify-content:flex-end;margin-top:1.5rem}
-@keyframes fi{from{opacity:0}to{opacity:1}}
-@keyframes su{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
-#tz{position:fixed;top:20px;right:20px;z-index:9990;display:flex;flex-direction:column;gap:10px}
-.toast{padding:12px 20px;border-radius:10px;font-size:.875rem;font-weight:500;display:flex;align-items:center;gap:10px;animation:ti .3s forwards;max-width:350px;backdrop-filter:blur(12px)}
-.ts{background:rgba(34,197,94,.9);color:#fff}
-.te{background:rgba(239,68,68,.9);color:#fff}
-.tw{background:rgba(245,158,11,.9);color:#fff}
-.ti{background:rgba(56,189,248,.9);color:#fff}
-@keyframes ti{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
-#shud{position:fixed;bottom:16px;right:16px;font-size:.7rem;color:var(--neon);font-family:monospace;background:rgba(6,13,26,.85);padding:8px 14px;border-radius:8px;border:1px solid var(--border);pointer-events:none;z-index:500;line-height:1.6}
-canvas{display:block}
-.cb{padding:1.5rem}
-.ct{font-size:.85rem;font-weight:600;margin-bottom:1rem;color:var(--dim);text-transform:uppercase;letter-spacing:1px}
-.pb{height:6px;background:rgba(255,255,255,.08);border-radius:10px;overflow:hidden}
-.pf{height:100%;border-radius:10px;background:linear-gradient(to right,var(--neon),var(--neon2));transition:width 1s ease}
-.mr{display:flex;align-items:center;gap:1rem;margin:.5rem 0}
-.ml{font-size:.8rem;color:var(--dim);width:80px;flex-shrink:0}
-.mb{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:10px;overflow:hidden}
-.mf2{height:100%;border-radius:10px;background:linear-gradient(to right,var(--neon),var(--neon2));transition:width .8s ease}
-.mv{font-size:.8rem;width:45px;text-align:right;font-weight:700}
-.pcd{font-family:monospace;font-size:1.1rem;letter-spacing:3px;font-weight:700;color:var(--gold);background:rgba(251,191,36,.1);border:1px dashed rgba(251,191,36,.4);padding:8px 14px;border-radius:8px;display:inline-block}
-.ai{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.04)}
-.ad{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
-.at{font-size:.82rem;color:var(--dim)}
-.at strong{color:var(--text)}
-.atm{font-size:.72rem;color:var(--dim);margin-top:2px}
-#ltick{position:fixed;bottom:16px;left:calc(var(--sw) + 16px);background:rgba(6,13,26,.85);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:.75rem;z-index:500;max-width:350px;display:none}
-.sr{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap}
-.siw{position:relative;flex:1;min-width:200px}
-.sic{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--dim);pointer-events:none}
-.sin{padding-left:36px}
-.pg{display:flex;align-items:center;gap:6px;justify-content:center;padding-top:1rem}
-.pb2{width:34px;height:34px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--dim);cursor:pointer;font-size:.85rem;transition:var(--t);display:flex;align-items:center;justify-content:center}
-.pb2:hover{border-color:var(--neon);color:var(--neon)}
-.pb2.ac2{background:rgba(56,189,248,.2);border-color:var(--neon);color:var(--neon);font-weight:700}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-@keyframes spin{to{transform:rotate(360deg)}}
-.pulse{animation:pulse 2s infinite}
-.hidden{display:none!important}
-.fl{display:flex}
-.flc{display:flex;align-items:center;justify-content:center}
-.g1{gap:.5rem}.g2{gap:1rem}
-.wr{flex-wrap:wrap}
-.col{flex-direction:column}
-.fw7{font-weight:700}
-.tdim{color:var(--dim)}.tneon{color:var(--neon)}.tdg{color:var(--danger)}.ts2{color:var(--success)}.twn{color:var(--warn)}
-.tsm{font-size:.82rem}
-.mt1{margin-top:.5rem}.mt2b{margin-top:1rem}
-.p15{padding:1.5rem}.p1{padding:1rem}
-.mb1{margin-bottom:.5rem}.mb2b{margin-bottom:1rem}
-.dv{border:none;border-top:1px solid var(--border);margin:1rem 0}
-.on{width:8px;height:8px;background:var(--success);border-radius:50%;display:inline-block;animation:pulse 2s infinite}
-.off{width:8px;height:8px;background:var(--dim);border-radius:50%;display:inline-block}
-#ddos{display:none;position:fixed;inset:0;z-index:99999;background:#000;color:red;flex-direction:column;align-items:center;justify-content:center;gap:1rem;font-family:monospace;text-align:center}
-#ddos h1{font-size:3rem;animation:pulse .5s infinite}
-#ddos p{color:#ff5555}
-.se{animation:fi .25s ease}
-@media(max-width:768px){:root{--sw:0px}#app{grid-template-columns:1fr}aside{display:none}.fr,.fr3{grid-template-columns:1fr}main{padding:1rem}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ULTRA SMM • ENTERPRISE v5.0</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    :root {
+      --bg: #0b0f1a;
+      --bg2: #141b2b;
+      --glass: rgba(18, 28, 46, 0.8);
+      --glass-hover: rgba(30, 45, 70, 0.9);
+      --border: rgba(0, 255, 255, 0.15);
+      --neon: #00f0ff;
+      --neon2: #b983ff;
+      --neon3: #4effb5;
+      --neon4: #ff77a9;
+      --gold: #ffd966;
+      --text: #f0f9ff;
+      --dim: #7f8c9f;
+      --danger: #ff5577;
+      --success: #2ecc71;
+      --warn: #f39c12;
+      --card-r: 20px;
+      --sidebar-w: 280px;
+      --transition: all 0.25s ease;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+      background-image: 
+        radial-gradient(circle at 20% 30%, rgba(0, 240, 255, 0.08) 0%, transparent 30%),
+        radial-gradient(circle at 90% 70%, rgba(185, 131, 255, 0.08) 0%, transparent 30%);
+    }
+
+    /* glassmorphism */
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid var(--border);
+      border-radius: var(--card-r);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+    }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-thumb { background: var(--neon); border-radius: 10px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+
+    #app {
+      display: grid;
+      grid-template-columns: var(--sidebar-w) 1fr;
+      height: 100vh;
+    }
+
+    /* sidebar */
+    aside {
+      background: rgba(8, 12, 23, 0.95);
+      backdrop-filter: blur(12px);
+      border-right: 1px solid var(--border);
+      padding: 1.8rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.8rem;
+      overflow-y: auto;
+    }
+
+    .logo {
+      font-size: 1.7rem;
+      font-weight: 900;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      background: linear-gradient(135deg, var(--neon), var(--neon2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      padding-left: 0.5rem;
+    }
+
+    .logo-sub {
+      font-size: 0.7rem;
+      color: var(--dim);
+      letter-spacing: 2px;
+      padding-left: 0.8rem;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    nav li {
+      padding: 12px 16px;
+      border-radius: 14px;
+      cursor: pointer;
+      color: var(--dim);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.95rem;
+      user-select: none;
+    }
+
+    nav li:hover {
+      background: rgba(0, 240, 255, 0.1);
+      color: var(--text);
+      transform: translateX(5px);
+    }
+
+    nav li.active {
+      background: linear-gradient(90deg, rgba(0, 240, 255, 0.2), transparent);
+      color: var(--neon);
+      border-left: 4px solid var(--neon);
+    }
+
+    nav .ns {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: var(--dim);
+      padding: 8px 16px 4px;
+      letter-spacing: 2px;
+    }
+
+    main {
+      padding: 2rem 2.2rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* page header */
+    .ph {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .pt {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--neon), var(--neon2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* stat cards */
+    .sg {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .sc {
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition);
+      border-left: 4px solid var(--neon);
+    }
+
+    .sc:hover {
+      transform: translateY(-5px);
+      border-color: var(--neon2);
+      box-shadow: 0 20px 30px rgba(0, 240, 255, 0.2);
+    }
+
+    .sl {
+      font-size: 0.8rem;
+      color: var(--dim);
+      letter-spacing: 1px;
+    }
+
+    .sv {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-top: 0.2rem;
+    }
+
+    .si {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      font-size: 2rem;
+      opacity: 0.3;
+    }
+
+    /* tables */
+    .tbl {
+      overflow-x: auto;
+      border-radius: var(--card-r);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th {
+      padding: 1rem 1rem;
+      color: var(--dim);
+      font-weight: 600;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    td {
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    tr:hover td {
+      background: rgba(0, 240, 255, 0.03);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .bg { background: rgba(46, 204, 113, 0.2); color: #2ecc71; }
+    .bb { background: rgba(0, 240, 255, 0.2); color: #00f0ff; }
+    .br { background: rgba(255, 85, 119, 0.2); color: #ff5577; }
+    .bw { background: rgba(243, 156, 18, 0.2); color: #f39c12; }
+    .bp { background: rgba(185, 131, 255, 0.2); color: #b983ff; }
+
+    /* buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      transition: var(--transition);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn:hover {
+      background: rgba(0, 240, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0, 240, 255, 0.3);
+    }
+
+    .bp2 {
+      background: linear-gradient(135deg, var(--neon), var(--neon2));
+      color: #000;
+      border: none;
+    }
+
+    /* forms */
+    input, select, textarea {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      padding: 12px 16px;
+      outline: none;
+      width: 100%;
+    }
+
+    input:focus {
+      border-color: var(--neon);
+      box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.2);
+    }
+
+    label {
+      font-size: 0.8rem;
+      color: var(--dim);
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    /* auth modal */
+    #auth {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-image: radial-gradient(ellipse at 30% 30%, rgba(0,240,255,0.1) 0%, transparent 50%);
+    }
+
+    .ac {
+      width: 460px;
+      padding: 2.5rem;
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .auth-tab {
+      flex: 1;
+      text-align: center;
+      padding: 12px;
+      border-radius: 40px;
+      background: rgba(255,255,255,0.03);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .auth-tab.active {
+      background: linear-gradient(135deg, var(--neon), var(--neon2));
+      color: #000;
+    }
+
+    /* toast */
+    #tz {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .toast {
+      padding: 14px 24px;
+      border-radius: 40px;
+      font-weight: 500;
+      backdrop-filter: blur(20px);
+      animation: slideIn 0.3s;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    .ts { background: rgba(46, 204, 113, 0.9); }
+    .te { background: rgba(255, 85, 119, 0.9); }
+    .tw { background: rgba(243, 156, 18, 0.9); }
+
+    /* modal */
+    .mo {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9000;
+    }
+
+    .md {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      padding: 2rem;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    /* progress bars */
+    .pb { height: 8px; background: rgba(255,255,255,0.1); border-radius: 10px; overflow: hidden; }
+    .pf { height: 100%; background: linear-gradient(to right, var(--neon), var(--neon2)); }
+
+    /* online/offline */
+    .on { width: 10px; height: 10px; background: var(--success); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+    .off { width: 10px; height: 10px; background: var(--dim); border-radius: 50%; }
+
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    /* responsive */
+    @media (max-width: 800px) {
+      #app { grid-template-columns: 1fr; }
+      aside { display: none; }
+    }
+
+    .hidden { display: none !important; }
+    .fl { display: flex; align-items: center; }
+    .g1 { gap: 1rem; }
+    .mt2 { margin-top: 1rem; }
+    .mb1 { margin-bottom: 0.5rem; }
+    .text-neon { color: var(--neon); }
+  </style>
 </head>
 <body>
-<div id="ddos"><h1>⚠ DDoS DETECTED</h1><p>Your IP has been auto-banned.</p><p id="ddt">Releasing in 60s...</p></div>
-<div id="shud">SYS: <span id="hs">ONLINE</span> | REQ: <span id="hr">0</span>/60s | IP: <span id="hip">127.0.0.1</span> | SESSION: <span id="hse">--</span></div>
-<div id="ltick" class="glass"></div>
-<div id="tz"></div>
+  <!-- toast container -->
+  <div id="tz"></div>
 
-<!-- AUTH -->
-<div id="auth">
-  <div class="ac glass">
-    <div class="al"><h1>ULTRA SMM</h1><p>Enterprise Control Center — God Mode v4.0</p></div>
-    <div id="lf" style="display:flex;flex-direction:column;gap:1rem">
-      <div class="fg"><label>USERNAME</label><input type="text" id="lu" placeholder="Enter username" autocomplete="off"></div>
-      <div class="fg"><label>PASSWORD</label><input type="password" id="lp" placeholder="Enter password" onkeydown="if(event.key==='Enter')Auth.login()"></div>
-      <button class="btn bp2" style="width:100%;padding:12px" onclick="Auth.login()">⚡ INITIALIZE SESSION</button>
-      <p id="le" style="color:var(--danger);font-size:.8rem;text-align:center;min-height:1.2em"></p>
-    </div>
-    <div id="fa" style="display:none;flex-direction:column;gap:1rem">
-      <p class="tdim tsm" style="text-align:center">2-Factor Authentication Required</p>
-      <p style="text-align:center;font-size:.9rem">Your code: <strong id="fad" class="tneon" style="letter-spacing:3px;font-size:1.1rem"></strong></p>
-      <div class="fg"><label>ENTER 6-DIGIT CODE</label><input type="text" id="fac" placeholder="000000" maxlength="6"></div>
-      <button class="btn bp2" style="width:100%;padding:12px" onclick="Auth.verify2FA()">VERIFY CODE</button>
-      <button class="btn bgh" style="width:100%" onclick="Auth.cancel2FA()">← Back</button>
-    </div>
-    <div id="pwf" style="display:none;flex-direction:column;gap:1rem">
-      <p class="tdim tsm" style="text-align:center">First login detected — please set a new password.</p>
-      <div class="fg"><label>NEW PASSWORD</label><input type="password" id="pw1" placeholder="New password"></div>
-      <div class="fg"><label>CONFIRM PASSWORD</label><input type="password" id="pw2" placeholder="Confirm password"></div>
-      <button class="btn bp2" style="width:100%;padding:12px" onclick="Auth.changePassword()">SET PASSWORD & LOGIN</button>
+  <!-- AUTH SCREEN (Login / Register) -->
+  <div id="auth">
+    <div class="ac glass">
+      <div style="text-align: center; margin-bottom: 2rem;">
+        <h1 style="font-size: 2.5rem; background: linear-gradient(135deg, var(--neon), var(--neon2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">🚀 ULTRA SMM</h1>
+        <p style="color: var(--dim);">enterprise control • v5.0</p>
+      </div>
+
+      <div class="auth-tabs">
+        <div class="auth-tab active" id="tabLogin" onclick="Auth.switchTab('login')">🔐 LOGIN</div>
+        <div class="auth-tab" id="tabRegister" onclick="Auth.switchTab('register')">📝 REGISTER</div>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <div id="loginForm">
+        <div class="fg mb1">
+          <label>👤 USERNAME</label>
+          <input type="text" id="loginUsername" placeholder="cesi" autocomplete="off">
+        </div>
+        <div class="fg mb1">
+          <label>🔑 PASSWORD</label>
+          <input type="password" id="loginPassword" placeholder="•••••••" onkeydown="if(event.key==='Enter') Auth.login()">
+        </div>
+        <button class="btn bp2" style="width: 100%; padding: 14px;" onclick="Auth.login()">⚡ LOGIN</button>
+        <p id="loginError" style="color: var(--danger); font-size: 0.8rem; text-align: center; margin-top: 1rem;"></p>
+      </div>
+
+      <!-- REGISTER FORM (hidden by default) -->
+      <div id="registerForm" style="display: none;">
+        <div class="fg mb1">
+          <label>🌟 USERNAME</label>
+          <input type="text" id="regUser" placeholder="cooluser" autocomplete="off">
+        </div>
+        <div class="fg mb1">
+          <label>📧 EMAIL</label>
+          <input type="email" id="regEmail" placeholder="user@smm.com">
+        </div>
+        <div class="fg mb1">
+          <label>🔒 PASSWORD</label>
+          <input type="password" id="regPass" placeholder="min 6 chars">
+        </div>
+        <div class="fg mb1">
+          <label>🔁 CONFIRM PASSWORD</label>
+          <input type="password" id="regPass2">
+        </div>
+        <button class="btn bp2" style="width: 100%; padding: 14px;" onclick="Auth.register()">✨ CREATE ACCOUNT</button>
+        <p id="regError" style="color: var(--danger); font-size: 0.8rem; text-align: center; margin-top: 1rem;"></p>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- APP -->
-<div id="app" class="hidden">
-  <aside class="glass">
-    <div><div class="logo">ULTRA SMM</div><div class="logo-sub">GOD MODE v4.0</div></div>
-    <nav><ul>
-      <li class="ns">MAIN</li>
-      <li onclick="App.nav('dashboard')" data-v="dashboard" class="active">📊 Dashboard</li>
-      <li onclick="App.nav('orders')" data-v="orders">📦 Orders</li>
-      <li onclick="App.nav('services')" data-v="services">🛠 Services</li>
-      <li class="ns">MANAGEMENT</li>
-      <li onclick="App.nav('users')" data-v="users">👥 Users</li>
-      <li onclick="App.nav('balance')" data-v="balance">💰 Balance</li>
-      <li onclick="App.nav('promo')" data-v="promo">🎟 Promo Codes</li>
-      <li onclick="App.nav('referral')" data-v="referral">🔗 Referrals</li>
-      <li class="ns">SECURITY</li>
-      <li onclick="App.nav('security')" data-v="security">🛡 Security</li>
-      <li onclick="App.nav('logs')" data-v="logs">📑 Logs</li>
-      <li class="ns">SYSTEM</li>
-      <li onclick="App.nav('api')" data-v="api">🔑 API Keys</li>
-      <li onclick="App.nav('settings')" data-v="settings">⚙ Settings</li>
-      <li onclick="Auth.logout()" style="color:var(--danger);margin-top:1rem">🚪 Logout</li>
-    </ul></nav>
-    <div style="margin-top:auto;padding:.5rem .5rem 0;font-size:.7rem;color:var(--dim);border-top:1px solid var(--border)">
-      Admin: <span id="sbu" class="tneon"></span><br>Session: <span id="sbs" class="tdim"></span>
-    </div>
-  </aside>
-  <main id="mv"></main>
-</div>
+  <!-- MAIN APP (hidden until auth) -->
+  <div id="app" class="hidden">
+    <aside class="glass">
+      <div>
+        <div class="logo">⚡ ULTRA SMM</div>
+        <div class="logo-sub">god mode v5.0</div>
+      </div>
+      <nav>
+        <ul id="sidebarMenu">
+          <!-- dynamically filled by JS based on role -->
+        </ul>
+      </nav>
+      <div style="margin-top: auto; padding: 1rem 0.5rem; border-top: 1px solid var(--border);">
+        <div id="sidebarUserInfo" class="fl g1">
+          <span class="on"></span> <span id="sidebarUsername"></span>
+        </div>
+      </div>
+    </aside>
 
-<div id="mhost"></div>
+    <main id="mainContent"></main>
+  </div>
 
-<script>
-// ═══════════════════════════════════════════
-// STORAGE MANAGER
-// ═══════════════════════════════════════════
-const DB={
-  _k:'ultra4_',
-  save(k,v){localStorage.setItem(this._k+k,JSON.stringify(v))},
-  get(k,def=[]){try{const v=localStorage.getItem(this._k+k);return v?JSON.parse(v):def}catch(e){return def}},
-  hash(s){let h=5381;for(const c of s)h=(h<<5)+h+c.charCodeAt(0);return(h>>>0).toString(36)},
-  uid(){return Math.floor(1e5+Math.random()*9e5)},
-  apiKey(){const c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';let k='';for(let i=0;i<32;i++){if(i>0&&i%8===0)k+='-';k+=c[Math.floor(Math.random()*c.length)]}return k},
-  init(){
-    if(!this.get('cfg',null)){
-      this.save('cfg',{site:'Ultra SMM Panel',maint:false,theme:'blue',lang:'en',firstLogin:true,pwHash:this.hash('cesi123'),apiUsage:0,apiLimit:10000,reg:true,cashback:5,autoRefill:true});
-    }
-    if(!this.get('users',null)){
-      this.save('users',[
-        {id:1,user:'cesi',email:'admin@smm.pro',balance:50000,role:'admin',status:'active',joined:'2026-01-01',cashback:10,creditLimit:999999,orders:[],txHistory:[],lastSeen:Date.now(),fraudScore:0,refCode:'CESI001',refBy:null,apiKey:DB.apiKey()},
-        {id:2,user:'demo_reseller',email:'reseller@test.com',balance:2500,role:'reseller',status:'active',joined:'2026-01-15',cashback:7,creditLimit:10000,orders:[],txHistory:[],lastSeen:Date.now()-120000,fraudScore:0,refCode:'RES002',refBy:null,apiKey:DB.apiKey()},
-        {id:3,user:'user_alpha',email:'alpha@test.com',balance:150,role:'user',status:'active',joined:'2026-02-01',cashback:3,creditLimit:500,orders:[],txHistory:[],lastSeen:Date.now()-300000,fraudScore:12,refCode:'ALF003',refBy:'CESI001',apiKey:DB.apiKey()}
-      ]);
-    }
-    if(!this.get('orders',null))this.save('orders',[]);
-    if(!this.get('logs',null))this.save('logs',[]);
-    if(!this.get('bans',null))this.save('bans',[]);
-    if(!this.get('txs',null))this.save('txs',[]);
-    if(!this.get('promos',null)){
-      this.save('promos',[
-        {id:1,code:'ULTRA50',type:'percent',val:50,uses:0,maxUses:100,minOrder:5,expiry:'2026-12-31',active:true,desc:'50% balance bonus for top resellers'},
-        {id:2,code:'WELCOME10',type:'fixed',val:10,uses:0,maxUses:500,minOrder:0,expiry:'2026-06-30',active:true,desc:'$10 welcome credit for new users'},
-        {id:3,code:'RESELLER20',type:'percent',val:20,uses:0,maxUses:50,minOrder:100,expiry:'2026-09-01',active:true,desc:'20% discount for reseller orders'},
-        {id:4,code:'BLACKFRI',type:'fixed',val:25,uses:12,maxUses:200,minOrder:20,expiry:'2026-11-30',active:false,desc:'Black Friday special offer'},
-        {id:5,code:'FREECASH5',type:'fixed',val:5,uses:0,maxUses:1000,minOrder:0,expiry:'2026-03-31',active:true,desc:'Free $5 credit — limited time'},
-        {id:6,code:'VIP100',type:'percent',val:100,uses:0,maxUses:10,minOrder:500,expiry:'2026-12-31',active:true,desc:'Double balance for VIP clients'},
-        {id:7,code:'SPRING15',type:'percent',val:15,uses:5,maxUses:300,minOrder:10,expiry:'2026-05-31',active:true,desc:'Spring promotion 15% bonus'}
-      ]);
-    }
-    if(!this.get('svcs',null))this.genSvcs();
-  },
-  genSvcs(){
-    const cats=['Instagram','TikTok','YouTube','Twitter/X','Facebook','Telegram','LinkedIn','Snapchat','Discord','Twitch','Reddit','Spotify'];
-    const types=['Followers','Likes','Views','Comments','Shares','Subscribers','Plays','Impressions','Saves','Story Views'];
-    const provs=['AlphaBoost','SkyRocket','MegaGrow','UltraMax','PowerSMM','NexBoost','TurboSMM','EliteViews'];
-    const svcs=[];
-    for(let i=1;i<=500;i++){
-      const cat=cats[i%cats.length];
-      const type=types[i%types.length];
-      svcs.push({
-        id:i,cat,
-        name:`${cat} ${type} — ${['Premium HQ','Real Active','Instant Delivery','Drip-Feed','Lifetime Refill','Non-Drop'][i%6]}`,
-        price:+(Math.random()*8+0.1).toFixed(4),
-        min:[10,50,100,500][i%4],max:[1000,5000,10000,100000][i%4],
-        prov:provs[i%provs.length],speed:Math.floor(Math.random()*5)+1,quality:Math.floor(Math.random()*5)+1,
-        desc:`Professional ${cat} ${type} with guaranteed results.`,
-        active:Math.random()>.05,drip:Math.random()>.5,refill:Math.random()>.3
-      });
-    }
-    this.save('svcs',svcs);
-  }
-};
+  <!-- MODAL PLACEHOLDER -->
+  <div id="modalHost"></div>
 
-// ═══════════════════════════════════════════
-// LOGGER
-// ═══════════════════════════════════════════
-const Log={
-  add(type,action,desc){
-    const logs=DB.get('logs');
-    logs.unshift({id:DB.uid(),type,action:action.toUpperCase(),desc,time:new Date().toLocaleTimeString(),date:new Date().toLocaleDateString(),ts:Date.now()});
-    if(logs.length>2000)logs.splice(1500);
-    DB.save('logs',logs);
-  }
-};
-
-// ═══════════════════════════════════════════
-// SECURITY MODULE
-// ═══════════════════════════════════════════
-const Sec={
-  req:0,blocked:false,score:0,
-  ip:'192.168.'+Math.floor(Math.random()*255)+'.'+Math.floor(Math.random()*255),
-  init(){
-    document.getElementById('hip').innerText=this.ip;
-    setInterval(()=>{this.req=Math.max(0,this.req-3);document.getElementById('hr').innerText=this.req;},1000);
-    let idle=0;
-    setInterval(()=>{idle++;if(idle>=1800&&Auth.sess){Auth.logout();UI.toast('Session expired','warn');}},1000);
-    document.addEventListener('click',()=>{idle=0;this.tick();});
-    document.addEventListener('keydown',()=>{idle=0;});
-  },
-  tick(){
-    this.req++;
-    if(this.req>100&&!this.blocked){this.blocked=true;this.lockdown();}
-    if(this.req>60)this.score+=2;
-  },
-  lockdown(){
-    document.getElementById('ddos').style.display='flex';
-    const bans=DB.get('bans');
-    bans.push({ip:this.ip,reason:'DDoS Auto-Detection',dur:60,at:Date.now(),auto:true});
-    DB.save('bans',bans);
-    Log.add('security','DDOS_BLOCK',`Auto-banned ${this.ip} — exceeded 100 req/60s`);
-    let t=60;
-    const ti=setInterval(()=>{
-      document.getElementById('ddt').innerText=`Releasing in ${--t}s...`;
-      if(t<=0){clearInterval(ti);this.blocked=false;this.req=0;document.getElementById('ddos').style.display='none';}
-    },1000);
-  },
-  banIP(ip,reason,dur=3600){
-    if(!ip)return UI.toast('Enter IP address','warn');
-    const bans=DB.get('bans');
-    if(bans.find(b=>b.ip===ip))return UI.toast('IP already banned','warn');
-    bans.push({ip,reason,dur,at:Date.now(),auto:false});
-    DB.save('bans',bans);
-    Log.add('security','IP_BAN',`Manually banned ${ip}: ${reason}`);
-    UI.toast(`${ip} banned`,'danger');
-    App.nav('security');
-  },
-  unbanIP(ip){
-    DB.save('bans',DB.get('bans').filter(b=>b.ip!==ip));
-    Log.add('security','IP_UNBAN',`Unbanned ${ip}`);
-    UI.toast(`${ip} unbanned`,'success');
-    App.nav('security');
-  }
-};
-
-// ═══════════════════════════════════════════
-// AUTH MODULE
-// ═══════════════════════════════════════════
-const Auth={
-  sess:null,attempts:0,locked:false,tfaCode:null,pending:null,
-  login(){
-    if(this.locked)return UI.toast('Account locked — wait 60s','danger');
-    const u=document.getElementById('lu').value.trim();
-    const p=document.getElementById('lp').value;
-    if(!u||!p)return UI.toast('Fill all fields','warn');
-    const cfg=DB.get('cfg',{});
-    if(u==='cesi'&&DB.hash(p)===cfg.pwHash){
-      this.pending={user:u,role:'admin'};
-      this.attempts=0;
-      this.tfaCode=Math.floor(100000+Math.random()*900000).toString();
-      document.getElementById('fad').innerText=this.tfaCode;
-      document.getElementById('lf').style.display='none';
-      document.getElementById('fa').style.display='flex';
-      Log.add('login','2FA_SENT',`2FA generated for ${u} from ${Sec.ip}`);
-    } else {
-      this.attempts++;
-      const left=5-this.attempts;
-      document.getElementById('le').innerText=`Invalid credentials — ${left} attempt${left!==1?'s':''} left`;
-      Log.add('login','FAIL',`Failed login "${u}" — attempt ${this.attempts}`);
-      if(this.attempts>=5){
-        this.locked=true;
-        document.getElementById('le').innerText='🔒 Locked for 60 seconds';
-        setTimeout(()=>{this.locked=false;this.attempts=0;document.getElementById('le').innerText='';},60000);
-        Log.add('security','LOCKOUT',`Brute-force lockout from ${Sec.ip}`);
+  <script>
+    // ==================== STORAGE MANAGER ====================
+    const DB = {
+      prefix: 'smm5_',
+      get(key, def = []) {
+        try {
+          const val = localStorage.getItem(this.prefix + key);
+          return val ? JSON.parse(val) : def;
+        } catch { return def; }
+      },
+      set(key, val) {
+        localStorage.setItem(this.prefix + key, JSON.stringify(val));
+      },
+      uid() { return Math.floor(100000 + Math.random() * 900000); },
+      hash(str) {
+        let h = 5381;
+        for (let i = 0; i < str.length; i++) h = (h << 5) + h + str.charCodeAt(i);
+        return (h >>> 0).toString(36);
+      },
+      init() {
+        if (!this.get('users').length) {
+          // default admin
+          this.set('users', [
+            { id: 1, username: 'cesi', email: 'admin@smm.pro', password: this.hash('cesi123'), role: 'admin', balance: 50000, status: 'active', joined: new Date().toISOString().slice(0,10), cashback: 5, creditLimit: 999999, orders: [], refCode: 'ADMIN1' }
+          ]);
+        }
+        if (!this.get('services').length) this.generateServices();
+        if (!this.get('orders').length) this.set('orders', []);
+        if (!this.get('logs').length) this.set('logs', []);
+        if (!this.get('bans').length) this.set('bans', []);
+        if (!this.get('promos').length) this.set('promos', []);
+        if (!this.get('txs').length) this.set('txs', []);
+      },
+      generateServices() {
+        const cats = ['Instagram','TikTok','YouTube','Twitter','Facebook','Telegram','Snapchat'];
+        const types = ['Followers','Likes','Views','Comments','Shares'];
+        const services = [];
+        for (let i = 1; i <= 500; i++) {
+          const cat = cats[i % cats.length];
+          const type = types[i % types.length];
+          services.push({
+            id: i,
+            cat,
+            name: `${cat} ${type} — ${['real', 'premium', 'turbo', 'drip-feed'][i % 4]}`,
+            price: +(Math.random() * 5 + 0.1).toFixed(4),
+            min: [10,50,100][i%3],
+            max: [5000,10000,20000][i%3],
+            active: true
+          });
+        }
+        this.set('services', services);
       }
-    }
-  },
-  verify2FA(){
-    if(document.getElementById('fac').value===this.tfaCode){
-      const cfg=DB.get('cfg',{});
-      if(cfg.firstLogin){
-        document.getElementById('fa').style.display='none';
-        document.getElementById('pwf').style.display='flex';
-      } else this._complete();
-    } else UI.toast('Wrong 2FA code','danger');
-  },
-  cancel2FA(){
-    document.getElementById('fa').style.display='none';
-    document.getElementById('lf').style.display='flex';
-    this.pending=null;this.tfaCode=null;
-  },
-  changePassword(){
-    const p1=document.getElementById('pw1').value;
-    const p2=document.getElementById('pw2').value;
-    if(!p1||p1.length<6)return UI.toast('Min 6 characters','warn');
-    if(p1!==p2)return UI.toast('Passwords do not match','danger');
-    const cfg=DB.get('cfg',{});
-    cfg.pwHash=DB.hash(p1);cfg.firstLogin=false;
-    DB.save('cfg',cfg);
-    UI.toast('Password updated!','success');
-    this._complete();
-  },
-  _complete(){
-    this.sess={user:this.pending.user,role:this.pending.role,token:DB.uid(),loginAt:Date.now()};
-    document.getElementById('auth').classList.add('hidden');
-    document.getElementById('app').classList.remove('hidden');
-    document.getElementById('sbu').innerText=this.sess.user;
-    document.getElementById('sbs').innerText='#'+this.sess.token;
-    document.getElementById('hse').innerText='#'+this.sess.token;
-    Log.add('login','SUCCESS',`Admin "${this.sess.user}" logged in from ${Sec.ip}`);
-    UI.toast('Welcome, Commander 🚀','success');
-    App.nav('dashboard');
-    Ticker.start();
-  },
-  logout(){
-    Log.add('login','LOGOUT',`Session ended for ${this.sess?.user}`);
-    this.sess=null;location.reload();
-  }
-};
-
-// ═══════════════════════════════════════════
-// PROMO CODE MODULE
-// ═══════════════════════════════════════════
-const Promo={
-  apply(code,userId,total){
-    const promos=DB.get('promos');
-    const p=promos.find(x=>x.code===code.toUpperCase()&&x.active);
-    if(!p)return{ok:false,msg:'Invalid or inactive promo code'};
-    if(p.uses>=p.maxUses)return{ok:false,msg:'Usage limit reached'};
-    if(new Date(p.expiry)<new Date())return{ok:false,msg:'Promo code expired'};
-    if(total<p.minOrder)return{ok:false,msg:`Minimum order $${p.minOrder} required`};
-    const bonus=p.type==='percent'?+(total*p.val/100).toFixed(4):p.val;
-    p.uses++;
-    DB.save('promos',promos);
-    Log.add('promo','APPLIED',`Code "${code}" applied — $${bonus} bonus for user #${userId}`);
-    return{ok:true,msg:`✅ Code applied! +$${bonus} bonus`,bonus,promo:p};
-  },
-  create(code,type,val,maxUses,minOrder,expiry,desc){
-    if(!code)return{ok:false,msg:'Code is required'};
-    const promos=DB.get('promos');
-    if(promos.find(p=>p.code===code.toUpperCase()))return{ok:false,msg:'Code already exists'};
-    const np={id:DB.uid(),code:code.toUpperCase(),type,val:+val,uses:0,maxUses:+maxUses,minOrder:+minOrder,expiry,active:true,desc};
-    promos.push(np);
-    DB.save('promos',promos);
-    Log.add('promo','CREATE',`Code "${code.toUpperCase()}" created (${type} ${val})`);
-    return{ok:true,msg:'Promo code created!',promo:np};
-  },
-  toggle(id){
-    const promos=DB.get('promos');
-    const p=promos.find(x=>x.id===id);
-    if(!p)return;
-    p.active=!p.active;
-    DB.save('promos',promos);
-    Log.add('promo','TOGGLE',`Code "${p.code}" ${p.active?'activated':'deactivated'}`);
-    UI.toast(`${p.code} ${p.active?'activated':'deactivated'}`,p.active?'success':'warn');
-    App.nav('promo');
-  },
-  del(id){
-    const promos=DB.get('promos');
-    const p=promos.find(x=>x.id===id);
-    DB.save('promos',promos.filter(x=>x.id!==id));
-    Log.add('promo','DELETE',`Code "${p?.code}" deleted`);
-    UI.toast('Promo code deleted','danger');
-    App.nav('promo');
-  },
-  rand(){const c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';return Array.from({length:8},()=>c[Math.floor(Math.random()*c.length)]).join('')}
-};
-
-// ═══════════════════════════════════════════
-// ORDER ENGINE
-// ═══════════════════════════════════════════
-const Orders={
-  place(sid,qty,link,pcode){
-    const svcs=DB.get('svcs');
-    const s=svcs.find(x=>x.id==sid);
-    if(!s)return UI.toast('Service not found','danger');
-    if(!s.active)return UI.toast('Service is inactive','danger');
-    qty=+qty;
-    if(qty<s.min||qty>s.max)return UI.toast(`Quantity must be ${s.min}–${s.max}`,'warn');
-    if(!link)return UI.toast('Target link required','warn');
-    const cost=+(qty/1000*s.price).toFixed(4);
-    const users=DB.get('users');
-    const u=users.find(x=>x.user===Auth.sess.user);
-    if(!u)return UI.toast('User error','danger');
-    let discount=0;
-    if(pcode&&pcode.trim()){
-      const r=Promo.apply(pcode.trim(),u.id,cost);
-      if(!r.ok)return UI.toast(r.msg,'warn');
-      discount=r.bonus;
-      UI.toast(r.msg,'success');
-    }
-    const finalCost=+(cost-discount).toFixed(4);
-    if(u.balance<finalCost)return UI.toast('Insufficient balance','danger');
-    u.balance=+(u.balance-finalCost).toFixed(4);
-    const o={
-      id:DB.uid(),sid:s.id,sname:s.name,qty,link,
-      cost:finalCost,origCost:cost,discount,
-      status:['Pending','Processing'][Math.floor(Math.random()*2)],
-      progress:Math.floor(Math.random()*25),
-      promo:pcode||null,at:new Date().toISOString(),uid:u.id
     };
-    u.orders=u.orders||[];u.orders.push(o.id);
-    DB.save('users',users);
-    const orders=DB.get('orders');orders.unshift(o);DB.save('orders',orders);
-    const txs=DB.get('txs');
-    txs.unshift({id:DB.uid(),uid:u.id,type:'order',amount:-finalCost,desc:`Order #${o.id}`,ts:Date.now()});
-    DB.save('txs',txs);
-    Log.add('order','NEW',`Order #${o.id} — ${s.name} x${qty} for $${finalCost}${discount?` (saved $${discount})`:''}`)
-    UI.toast(`Order #${o.id} placed! Cost: $${finalCost}`,'success');
-    setTimeout(()=>{
-      const ords=DB.get('orders');
-      const upd=ords.find(x=>x.id===o.id);
-      if(upd&&upd.status==='Pending'){upd.status='Processing';upd.progress=Math.floor(Math.random()*60)+10;DB.save('orders',ords);}
-    },3000);
-    App.nav('orders');
-  }
-};
 
-// ═══════════════════════════════════════════
-// BALANCE MODULE
-// ═══════════════════════════════════════════
-const Bal={
-  adjust(uid,amount,note){
-    if(!uid)return UI.toast('Select user','warn');
-    const users=DB.get('users');
-    const u=users.find(x=>x.id==uid);
-    if(!u)return UI.toast('User not found','danger');
-    const amt=parseFloat(amount);
-    if(isNaN(amt))return UI.toast('Invalid amount','warn');
-    u.balance=+(u.balance+amt).toFixed(4);
-    if(u.balance<0)u.balance=0;
-    DB.save('users',users);
-    const txs=DB.get('txs');
-    txs.unshift({id:DB.uid(),uid:u.id,type:amt>0?'credit':'debit',amount:amt,desc:note||'Manual adjustment',ts:Date.now()});
-    DB.save('txs',txs);
-    Log.add('balance',amt>0?'ADD':'REMOVE',`${amt>0?'+':''}$${amt} to "${u.user}" — ${note}`);
-    UI.toast(`Balance ${amt>0?'added':'deducted'}: $${Math.abs(amt)}`,'success');
-    App.nav('balance');
-  }
-};
-
-// ═══════════════════════════════════════════
-// USER MODULE
-// ═══════════════════════════════════════════
-const Users={
-  create(d){
-    if(!d.user)return UI.toast('Username required','warn');
-    const users=DB.get('users');
-    if(users.find(u=>u.user===d.user))return UI.toast('Username taken','warn');
-    const nu={
-      id:DB.uid(),user:d.user,email:d.email,
-      balance:+d.balance||0,role:d.role||'user',
-      status:'active',joined:new Date().toISOString().split('T')[0],
-      cashback:+d.cashback||3,creditLimit:+d.creditLimit||500,
-      orders:[],txHistory:[],lastSeen:Date.now(),fraudScore:0,
-      refCode:d.user.toUpperCase().substr(0,3)+DB.uid().toString().substr(0,3),
-      refBy:null,apiKey:DB.apiKey()
+    // ==================== LOGGER ====================
+    const Log = {
+      add(type, action, desc) {
+        const logs = DB.get('logs');
+        logs.unshift({ id: DB.uid(), type, action, desc, time: new Date().toLocaleString() });
+        if (logs.length > 1000) logs.pop();
+        DB.set('logs', logs);
+      }
     };
-    users.push(nu);
-    DB.save('users',users);
-    Log.add('user','CREATE',`User "${nu.user}" created (${nu.role})`);
-    UI.toast(`User ${nu.user} created`,'success');
-    Modal.close();App.nav('users');
-  },
-  ban(id){
-    const users=DB.get('users');
-    const u=users.find(x=>x.id==id);
-    if(!u)return;
-    u.status=u.status==='banned'?'active':'banned';
-    DB.save('users',users);
-    Log.add('user',u.status==='banned'?'BAN':'UNBAN',`User "${u.user}" ${u.status}`);
-    UI.toast(`${u.user} ${u.status}`,u.status==='banned'?'danger':'success');
-    App.nav('users');
-  },
-  del(id){
-    let users=DB.get('users');
-    const u=users.find(x=>x.id==id);
-    if(u?.role==='admin')return UI.toast('Cannot delete admin','danger');
-    DB.save('users',users.filter(x=>x.id!=id));
-    Log.add('user','DELETE',`User #${id} deleted`);
-    UI.toast('User deleted','danger');
-    App.nav('users');
-  }
-};
 
-// ═══════════════════════════════════════════
-// LIVE TICKER
-// ═══════════════════════════════════════════
-const Ticker={
-  msgs:['user_pro99 ordered Instagram Followers x5000 💎','reseller_vip placed bulk order $249 🔥','new_user123 joined via referral','tiktok_king ordered 10k TikTok Views ⚡','smm_master applied WELCOME10 — saved $10','yt_creator bought YouTube Subscribers x1000 📺','user_elite used promo VIP100 — 100% bonus! 🎉','buyer_vip completed $500 order batch 🚀'],
-  start(){
-    const el=document.getElementById('ltick');let i=0;
-    const go=()=>{el.style.display='block';el.innerHTML=`<span style="color:var(--neon)">🔴 LIVE:</span> <span style="color:var(--dim)">${this.msgs[i++%this.msgs.length]}</span>`;setTimeout(()=>{el.style.display='none';setTimeout(go,5000);},5000);};
-    setTimeout(go,3000);
-  }
-};
+    // ==================== TOAST ====================
+    const Toast = {
+      show(msg, type = 'success') {
+        const tz = document.getElementById('tz');
+        const toast = document.createElement('div');
+        toast.className = `toast ${type === 'success' ? 'ts' : type === 'danger' ? 'te' : 'tw'}`;
+        toast.innerText = msg;
+        tz.appendChild(toast);
+        setTimeout(() => toast.remove(), 3500);
+      }
+    };
 
-// ═══════════════════════════════════════════
-// MODAL
-// ═══════════════════════════════════════════
-const Modal={
-  show(title,body,footer=''){
-    document.getElementById('mhost').innerHTML=`
-      <div class="mo" onclick="if(event.target.classList.contains('mo'))Modal.close()">
-        <div class="md">
-          <div class="mh"><div class="mt2">${title}</div><button class="btn bgh bsm bic" onclick="Modal.close()">✕</button></div>
-          <div class="mb2">${body}</div>
-          ${footer?`<div class="mf">${footer}</div>`:''}
-        </div>
-      </div>`;
-  },
-  close(){document.getElementById('mhost').innerHTML=''}
-};
+    // ==================== AUTH ====================
+    const Auth = {
+      sess: null,
+      attempts: 0,
+      locked: false,
+      switchTab(tab) {
+        document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+        document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+        document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+        document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+      },
+      login() {
+        if (this.locked) { Toast.show('Too many attempts, wait 60s', 'danger'); return; }
+        const username = document.getElementById('loginUsername').value.trim();
+        const pass = document.getElementById('loginPassword').value;
+        const users = DB.get('users');
+        const user = users.find(u => u.username === username && u.password === DB.hash(pass));
+        if (user) {
+          if (user.status !== 'active') { Toast.show('Account banned', 'danger'); return; }
+          this.sess = { id: user.id, username: user.username, role: user.role };
+          document.getElementById('auth').classList.add('hidden');
+          document.getElementById('app').classList.remove('hidden');
+          document.getElementById('sidebarUsername').innerText = user.username;
+          Log.add('login', 'LOGIN', `User ${user.username} logged in`);
+          Toast.show(`Welcome ${user.username} 🎉`, 'success');
+          App.nav('dashboard');
+          this.attempts = 0;
+        } else {
+          this.attempts++;
+          document.getElementById('loginError').innerText = `Invalid credentials (${this.attempts}/5)`;
+          if (this.attempts >= 5) {
+            this.locked = true;
+            setTimeout(() => { this.locked = false; this.attempts = 0; }, 60000);
+          }
+        }
+      },
+      register() {
+        const username = document.getElementById('regUser').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const pass = document.getElementById('regPass').value;
+        const pass2 = document.getElementById('regPass2').value;
+        if (!username || !email || !pass) { document.getElementById('regError').innerText = 'All fields required'; return; }
+        if (pass !== pass2) { document.getElementById('regError').innerText = 'Passwords mismatch'; return; }
+        if (pass.length < 6) { document.getElementById('regError').innerText = 'Password too short'; return; }
+        const users = DB.get('users');
+        if (users.find(u => u.username === username)) { document.getElementById('regError').innerText = 'Username exists'; return; }
+        const newUser = {
+          id: DB.uid(),
+          username,
+          email,
+          password: DB.hash(pass),
+          role: 'user',
+          balance: 10, // welcome bonus
+          status: 'active',
+          joined: new Date().toISOString().slice(0,10),
+          cashback: 3,
+          creditLimit: 500,
+          orders: [],
+          refCode: username.toUpperCase().slice(0,4) + DB.uid().toString().slice(0,4)
+        };
+        users.push(newUser);
+        DB.set('users', users);
+        Log.add('user', 'REGISTER', `New user ${username} registered`);
+        Toast.show('Registration successful! Please login.', 'success');
+        this.switchTab('login');
+        document.getElementById('loginUsername').value = username;
+        document.getElementById('loginPassword').value = '';
+      },
+      logout() {
+        Log.add('login', 'LOGOUT', `User ${this.sess?.username} logged out`);
+        this.sess = null;
+        location.reload();
+      }
+    };
 
-// ═══════════════════════════════════════════
-// UI / TOAST
-// ═══════════════════════════════════════════
-const UI={
-  toast(msg,type='success'){
-    const z=document.getElementById('tz');
-    const icons={success:'✅',danger:'❌',warn:'⚠️',info:'ℹ️'};
-    const t=document.createElement('div');
-    const cls={success:'ts',danger:'te',warn:'tw',info:'ti'};
-    t.className=`toast ${cls[type]||'ts'}`;
-    t.innerHTML=`${icons[type]||'💬'} ${msg}`;
-    z.appendChild(t);
-    setTimeout(()=>{t.style.animation='ti .3s reverse';setTimeout(()=>t.remove(),300);},3500);
-  }
-};
-
-// ═══════════════════════════════════════════
-// CHARTS ENGINE
-// ═══════════════════════════════════════════
-const C={
-  line(id,data,color='#38bdf8'){
-    const cv=document.getElementById(id);if(!cv)return;
-    cv.width=cv.offsetWidth||600;cv.height=150;
-    const ctx=cv.getContext('2d'),w=cv.width,h=cv.height,max=Math.max(...data,1),px=30,py=15;
-    ctx.clearRect(0,0,w,h);
-    ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=1;
-    for(let i=0;i<=4;i++){const y=py+(h-py*2)*(1-i/4);ctx.beginPath();ctx.moveTo(px,y);ctx.lineTo(w-10,y);ctx.stroke();}
-    const grad=ctx.createLinearGradient(0,py,0,h-py);
-    grad.addColorStop(0,color+'40');grad.addColorStop(1,color+'00');
-    const pts=data.map((v,i)=>({x:px+i*(w-px-10)/(data.length-1||1),y:py+(h-py*2)*(1-v/max)}));
-    ctx.beginPath();ctx.moveTo(pts[0].x,h-py);
-    pts.forEach(p=>ctx.lineTo(p.x,p.y));
-    ctx.lineTo(pts[pts.length-1].x,h-py);ctx.closePath();ctx.fillStyle=grad;ctx.fill();
-    ctx.beginPath();ctx.strokeStyle=color;ctx.lineWidth=2.5;
-    pts.forEach((p,i)=>i===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));ctx.stroke();
-    pts.forEach(p=>{ctx.beginPath();ctx.arc(p.x,p.y,3,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();});
-  },
-  donut(id,segs){
-    const cv=document.getElementById(id);if(!cv)return;
-    cv.width=cv.height=140;const ctx=cv.getContext('2d'),cx=70,cy=70,r=55,th=18;
-    const tot=segs.reduce((a,s)=>a+s.v,0)||1;let st=-Math.PI/2;
-    segs.forEach(s=>{const ang=(s.v/tot)*Math.PI*2;ctx.beginPath();ctx.arc(cx,cy,r,st,st+ang);ctx.arc(cx,cy,r-th,st+ang,st,true);ctx.closePath();ctx.fillStyle=s.c;ctx.fill();st+=ang;});
-    ctx.beginPath();ctx.arc(cx,cy,r-th-4,0,Math.PI*2);ctx.fillStyle='#0d1b2e';ctx.fill();
-    ctx.fillStyle='#fff';ctx.font='bold 14px Segoe UI';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(segs[0]?.v||0,cx,cy);
-  },
-  bar(id,labels,data,color='#38bdf8'){
-    const cv=document.getElementById(id);if(!cv)return;
-    cv.width=cv.offsetWidth||400;cv.height=120;
-    const ctx=cv.getContext('2d'),w=cv.width,h=cv.height,max=Math.max(...data,1),bw=(w-20)/data.length-6;
-    ctx.clearRect(0,0,w,h);
-    data.forEach((v,i)=>{
-      const bh=(v/max)*(h-20),x=10+i*(bw+6),y=h-20-bh;
-      const gr=ctx.createLinearGradient(0,y,0,h-20);gr.addColorStop(0,color);gr.addColorStop(1,color+'44');
-      ctx.fillStyle=gr;ctx.beginPath();
-      ctx.roundRect?ctx.roundRect(x,y,bw,bh,4):ctx.rect(x,y,bw,bh);ctx.fill();
-      ctx.fillStyle='rgba(255,255,255,.4)';ctx.font='10px Segoe UI';ctx.textAlign='center';ctx.fillText(labels[i]||'',x+bw/2,h-5);
-    });
-  }
-};
-
-// ═══════════════════════════════════════════
-// ANIMATED COUNTER
-// ═══════════════════════════════════════════
-function anim(el,to,pre='',suf='',dur=800){
-  const start=Date.now();
-  const step=()=>{const p=Math.min((Date.now()-start)/dur,1),val=Math.floor(to*(1-Math.pow(1-p,3)));el.innerText=pre+val.toLocaleString()+suf;if(p<1)requestAnimationFrame(step);};
-  requestAnimationFrame(step);
-}
-
-// ═══════════════════════════════════════════
-// MAIN APP CONTROLLER
-// ═══════════════════════════════════════════
-const App={
-  nav(view){
-    document.querySelectorAll('#app aside nav li[data-v]').forEach(li=>li.classList.toggle('active',li.dataset.v===view));
-    const mv=document.getElementById('mv');
-    mv.innerHTML='';
-    const d=document.createElement('div');
-    d.className='se';d.style.display='contents';mv.appendChild(d);
-    const fn=this.V[view];
-    if(fn)fn(d);else d.innerHTML=`<p style="color:var(--dim);padding:2rem">View not found.</p>`;
-  },
-
-  V:{
-    // ═══ DASHBOARD ═══
-    dashboard(el){
-      const users=DB.get('users'),orders=DB.get('orders'),svcs=DB.get('svcs'),txs=DB.get('txs');
-      const revenue=txs.filter(t=>t.type==='order').reduce((a,t)=>a+Math.abs(t.amount||0),0);
-      const today=orders.filter(o=>new Date(o.at).toDateString()===new Date().toDateString());
-      const logs=DB.get('logs').slice(0,10);
-      const promos=DB.get('promos');
-      el.innerHTML=`
-        <div class="ph"><div class="pt">Enterprise <span>Overview</span></div><div class="fl g1"><span class="badge bg">🟢 Healthy</span><span class="badge bb">GOD MODE v4.0</span></div></div>
-        <div class="sg">
-          <div class="sc glass"><div class="si">👥</div><div class="sl">Total Users</div><div class="sv" id="cu">0</div><div style="font-size:.75rem;color:var(--success);margin-top:.2rem">↑ All time</div></div>
-          <div class="sc glass" style="border-top:2px solid var(--neon2)"><div class="si">🛠</div><div class="sl">Services</div><div class="sv" id="cs">0</div><div style="font-size:.75rem;color:var(--dim);margin-top:.2rem">Multi-platform</div></div>
-          <div class="sc glass" style="border-top:2px solid var(--neon3)"><div class="si">📦</div><div class="sl">Total Orders</div><div class="sv" id="co">0</div><div style="font-size:.75rem;color:var(--success);margin-top:.2rem">+${today.length} today</div></div>
-          <div class="sc glass" style="border-top:2px solid var(--gold)"><div class="si">💰</div><div class="sl">Revenue</div><div class="sv" id="cr">$0</div><div style="font-size:.75rem;color:var(--dim);margin-top:.2rem">All time</div></div>
-          <div class="sc glass" style="border-top:2px solid var(--neon4)"><div class="si">🎟</div><div class="sl">Active Promos</div><div class="sv" id="cp">0</div><div style="font-size:.75rem;color:var(--dim);margin-top:.2rem">Promo codes</div></div>
-          <div class="sc glass"><div class="si">🔑</div><div class="sl">API Usage</div><div class="sv" id="ca">0</div><div style="font-size:.75rem;color:var(--dim);margin-top:.2rem">Today</div></div>
-        </div>
-        <div style="display:grid;grid-template-columns:2fr 1fr;gap:1rem">
-          <div class="cb glass"><div class="ct">Revenue Trend — Last 7 Days</div><canvas id="cv-rev" style="width:100%;height:150px"></canvas></div>
-          <div class="cb glass"><div class="ct">Order Status</div><div style="display:flex;align-items:center;gap:1rem"><canvas id="cv-don" width="140" height="140"></canvas><div style="font-size:.78rem;display:flex;flex-direction:column;gap:6px"><div><span style="color:#22c55e">■</span> Completed</div><div><span style="color:#38bdf8">■</span> Processing</div><div><span style="color:#fbbf24">■</span> Pending</div><div><span style="color:#ef4444">■</span> Cancelled</div></div></div></div>
-        </div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-          <div class="glass p15">
-            <div class="ct">System Resources</div>
-            ${['CPU','Memory','Disk','Network'].map((n,i)=>`<div class="mr"><div class="ml">${n}</div><div class="mb"><div class="mf2" id="m${i}" style="width:0%;${i===1?'background:linear-gradient(to right,#818cf8,#a855f7)':i===2?'background:linear-gradient(to right,#22c55e,#10b981)':i===3?'background:linear-gradient(to right,#fbbf24,#f97316)':''}"></div></div><div class="mv" id="mv${i}" style="${i===1?'color:#818cf8':i===2?'color:#22c55e':i===3?'color:#fbbf24':'color:var(--neon)'}">0%</div></div>`).join('')}
-          </div>
-          <div class="glass p15" style="overflow-y:auto;max-height:220px">
-            <div class="ct">Live Activity</div>
-            ${logs.map(l=>`<div class="ai"><div class="ad" style="background:${l.type==='security'?'var(--danger)':l.type==='order'?'var(--neon)':'var(--success)'}"></div><div><div class="at"><strong>${l.action}</strong> — ${l.desc.substr(0,55)}${l.desc.length>55?'...':''}</div><div class="atm">${l.time} · ${l.date}</div></div></div>`).join('')}
-          </div>
-        </div>
-        <div class="cb glass"><div class="ct">Orders Per Day — Last 7 Days</div><canvas id="cv-bar" style="width:100%;height:120px"></canvas></div>
-      `;
-      anim(document.getElementById('cu'),users.length);
-      anim(document.getElementById('cs'),svcs.length);
-      anim(document.getElementById('co'),orders.length);
-      document.getElementById('cr').innerText='$'+revenue.toFixed(2);
-      anim(document.getElementById('cp'),promos.filter(p=>p.active).length);
-      anim(document.getElementById('ca'),DB.get('cfg',{}).apiUsage||0);
-      setTimeout(()=>{
-        C.line('cv-rev',[420,380,510,475,630,590,720],'#38bdf8');
-        C.donut('cv-don',[
-          {v:orders.filter(o=>o.status==='Completed').length||12,c:'#22c55e'},
-          {v:orders.filter(o=>o.status==='Processing').length||5,c:'#38bdf8'},
-          {v:orders.filter(o=>o.status==='Pending').length||3,c:'#fbbf24'},
-          {v:orders.filter(o=>o.status==='Cancelled').length||2,c:'#ef4444'}
-        ]);
-        C.bar('cv-bar',['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],[8,12,5,17,9,21,14],'#818cf8');
-        const vals=[Math.floor(Math.random()*40+20),Math.floor(Math.random()*30+40),Math.floor(Math.random()*20+30),Math.floor(Math.random()*60+10)];
-        vals.forEach((v,i)=>{setTimeout(()=>{document.getElementById('m'+i).style.width=v+'%';document.getElementById('mv'+i).innerText=v+'%';},300);});
-      },100);
-    },
-
-    // ═══ PROMO CODES ═══
-    promo(el){
-      const promos=DB.get('promos');
-      const active=promos.filter(p=>p.active).length;
-      const uses=promos.reduce((a,p)=>a+p.uses,0);
-      el.innerHTML=`
-        <div class="ph"><div class="pt">🎟 Promo <span>Code System</span></div><button class="btn bp2" onclick="App.showPromoModal()">+ Create Code</button></div>
-        <div class="sg" style="grid-template-columns:repeat(4,1fr)">
-          <div class="sc glass"><div class="sl">Total Codes</div><div class="sv">${promos.length}</div></div>
-          <div class="sc glass"><div class="sl">Active</div><div class="sv ts2">${active}</div></div>
-          <div class="sc glass"><div class="sl">Total Uses</div><div class="sv">${uses}</div></div>
-          <div class="sc glass"><div class="sl">Inactive</div><div class="sv tdim">${promos.length-active}</div></div>
-        </div>
-
-        <div class="glass p15">
-          <div class="ct">🧪 Test / Apply Promo Code</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:1rem;align-items:flex-end">
-            <div class="fg"><label>PROMO CODE</label><input id="tc" placeholder="e.g. ULTRA50" style="text-transform:uppercase"></div>
-            <div class="fg"><label>ORDER TOTAL ($)</label><input type="number" id="ta" placeholder="0.00" min="0" step=".01"></div>
-            <button class="btn bp2" onclick="App.testPromo()">Apply & Test</button>
-          </div>
-          <div id="pr" style="margin-top:.75rem;font-size:.85rem;min-height:1.5em"></div>
-        </div>
-
-        <div class="glass">
-          <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
-            <div class="ct" style="margin:0">All Promo Codes (${promos.length})</div>
-          </div>
-          <div class="tbl">
-            <table>
-              <thead><tr><th>CODE</th><th>TYPE</th><th>VALUE</th><th>USES / MAX</th><th>MIN ORDER</th><th>EXPIRY</th><th>DESC</th><th>STATUS</th><th>ACTIONS</th></tr></thead>
-              <tbody>
-                ${promos.map(p=>`
-                  <tr>
-                    <td><span class="pcd" style="font-size:.8rem;padding:4px 10px">${p.code}</span></td>
-                    <td><span class="badge ${p.type==='percent'?'bb':'bg'}">${p.type==='percent'?'%':'$'} ${p.type.toUpperCase()}</span></td>
-                    <td class="fw7 ${p.type==='percent'?'tneon':'ts2'}">${p.type==='percent'?p.val+'%':'$'+p.val}</td>
-                    <td>${p.uses} / ${p.maxUses}<div style="margin-top:4px;height:4px;background:rgba(255,255,255,.08);border-radius:4px;width:100px"><div style="height:100%;background:var(--neon);border-radius:4px;width:${Math.min(p.uses/p.maxUses*100,100)}%"></div></div></td>
-                    <td>$${p.minOrder}</td>
-                    <td style="color:${new Date(p.expiry)<new Date()?'var(--danger)':'var(--dim)'}">${p.expiry}${new Date(p.expiry)<new Date()?' ⚠':''}}</td>
-                    <td class="tdim tsm">${p.desc}</td>
-                    <td><span class="badge ${p.active?'bg':'bd'}">${p.active?'ACTIVE':'OFF'}</span></td>
-                    <td>
-                      <div class="fl g1">
-                        <button class="btn bgh bsm bic" onclick="Promo.toggle(${p.id})" title="${p.active?'Deactivate':'Activate'}">${p.active?'⏸':'▶'}</button>
-                        <button class="btn bd2 bsm bic" onclick="if(confirm('Delete?'))Promo.del(${p.id})" title="Delete">🗑</button>
-                      </div>
-                    </td>
-                  </tr>`).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div class="cb glass"><div class="ct">Promo Code Usage Chart</div><canvas id="cv-promo" style="width:100%;height:120px"></canvas></div>
-      `;
-      setTimeout(()=>C.bar('cv-promo',promos.map(p=>p.code.substr(0,7)),promos.map(p=>p.uses),'#fbbf24'),100);
-    },
-
-    // ═══ ORDERS ═══
-    orders(el){
-      const orders=DB.get('orders'),svcs=DB.get('svcs').slice(0,50),promos=DB.get('promos').filter(p=>p.active);
-      el.innerHTML=`
-        <div class="ph"><div class="pt">📦 Order <span>Management</span></div><div class="fl g1"><button class="btn bp2" onclick="document.getElementById('nop').classList.toggle('hidden')">+ New Order</button><button class="btn bgh" onclick="App.exportOrders()">⬇ Export</button></div></div>
-
-        <div class="glass p15 hidden" id="nop">
-          <div class="ct">Place New Order</div>
-          <div class="fr mb1">
-            <div class="fg"><label>SERVICE</label>
-              <select id="os"><option value="">-- Select Service --</option>${svcs.map(s=>`<option value="${s.id}">[${s.id}] ${s.name.substr(0,42)} — $${s.price}/1k</option>`).join('')}</select>
+    // ==================== MAIN APP CONTROLLER ====================
+    const App = {
+      currentUser: null,
+      nav(view) {
+        if (!Auth.sess) return;
+        const users = DB.get('users');
+        this.currentUser = users.find(u => u.id === Auth.sess.id);
+        this.renderSidebar();
+        const fn = this.views[view];
+        if (fn) fn.call(this);
+        else document.getElementById('mainContent').innerHTML = '<div class="glass p15">404</div>';
+      },
+      renderSidebar() {
+        const isAdmin = this.currentUser?.role === 'admin';
+        const menu = document.getElementById('sidebarMenu');
+        let items = '';
+        if (isAdmin) {
+          items = `
+            <li class="ns">MAIN</li>
+            <li onclick="App.nav('dashboard')" data-view="dashboard">📊 Dashboard</li>
+            <li onclick="App.nav('orders')" data-view="orders">📦 Orders</li>
+            <li onclick="App.nav('services')" data-view="services">🛠 Services</li>
+            <li class="ns">MANAGEMENT</li>
+            <li onclick="App.nav('users')" data-view="users">👥 Users</li>
+            <li onclick="App.nav('balance')" data-view="balance">💰 Balance</li>
+            <li onclick="App.nav('promo')" data-view="promo">🎟 Promo</li>
+            <li class="ns">SYSTEM</li>
+            <li onclick="App.nav('logs')" data-view="logs">📑 Logs</li>
+            <li onclick="App.nav('settings')" data-view="settings">⚙ Settings</li>
+          `;
+        } else {
+          items = `
+            <li class="ns">USER</li>
+            <li onclick="App.nav('dashboard')" data-view="dashboard">🏠 Dashboard</li>
+            <li onclick="App.nav('orders')" data-view="orders">📦 My Orders</li>
+            <li onclick="App.nav('services')" data-view="services">🛠 Services</li>
+            <li onclick="App.nav('balance')" data-view="balance">💰 My Wallet</li>
+            <li onclick="App.nav('profile')" data-view="profile">👤 Profile</li>
+          `;
+        }
+        items += `<li onclick="Auth.logout()" style="color: var(--danger); margin-top: 2rem;">🚪 Logout</li>`;
+        menu.innerHTML = items;
+        // highlight active
+        menu.querySelectorAll('li[data-view]').forEach(li => li.classList.remove('active'));
+        const active = menu.querySelector(`li[data-view="${sessionStorage.getItem('lastView') || 'dashboard'}"]`);
+        if (active) active.classList.add('active');
+      },
+      views: {
+        dashboard() {
+          const isAdmin = this.currentUser.role === 'admin';
+          let html = '<div class="ph"><div class="pt">✨ Dashboard</div></div><div class="sg">';
+          if (isAdmin) {
+            const users = DB.get('users');
+            const orders = DB.get('orders');
+            html += `
+              <div class="sc glass"><div class="si">👥</div><div class="sl">Users</div><div class="sv">${users.length}</div></div>
+              <div class="sc glass"><div class="si">📦</div><div class="sl">Orders</div><div class="sv">${orders.length}</div></div>
+              <div class="sc glass"><div class="si">💰</div><div class="sl">Revenue</div><div class="sv">$${orders.reduce((a,o)=>a+ (o.cost||0),0).toFixed(2)}</div></div>
+            `;
+          } else {
+            const myOrders = DB.get('orders').filter(o => o.uid === this.currentUser.id);
+            html += `
+              <div class="sc glass"><div class="si">💰</div><div class="sl">Balance</div><div class="sv">$${this.currentUser.balance.toFixed(2)}</div></div>
+              <div class="sc glass"><div class="si">📦</div><div class="sl">My Orders</div><div class="sv">${myOrders.length}</div></div>
+              <div class="sc glass"><div class="si">⭐</div><div class="sl">Cashback</div><div class="sv">${this.currentUser.cashback}%</div></div>
+            `;
+          }
+          html += '</div><div class="glass p15 mt2">🚀 Welcome back, ' + this.currentUser.username + '</div>';
+          document.getElementById('mainContent').innerHTML = html;
+          sessionStorage.setItem('lastView', 'dashboard');
+        },
+        orders() {
+          const isAdmin = this.currentUser.role === 'admin';
+          const orders = isAdmin ? DB.get('orders') : DB.get('orders').filter(o => o.uid === this.currentUser.id);
+          let html = '<div class="ph"><div class="pt">📦 Orders</div>';
+          if (isAdmin) html += '<button class="btn bp2" onclick="App.showNewOrderModal()">+ New Order</button>';
+          html += '</div><div class="glass"><div class="tbl"><table><thead><tr><th>ID</th><th>Service</th><th>Qty</th><th>Cost</th><th>Status</th></tr></thead><tbody>';
+          orders.forEach(o => {
+            html += `<tr><td>#${o.id}</td><td>${o.sname || '—'}</td><td>${o.qty}</td><td>$${o.cost}</td><td><span class="badge ${o.status==='Completed'?'bg':'bw'}">${o.status}</span></td></tr>`;
+          });
+          html += '</tbody></table></div></div>';
+          document.getElementById('mainContent').innerHTML = html;
+          sessionStorage.setItem('lastView', 'orders');
+        },
+        services() {
+          const services = DB.get('services').slice(0, 50);
+          let html = '<div class="ph"><div class="pt">🛠 Services</div></div><div class="glass"><div class="tbl"><table><thead><tr><th>ID</th><th>Category</th><th>Name</th><th>Price/1k</th><th>Min</th><th>Max</th></tr></thead><tbody>';
+          services.forEach(s => {
+            html += `<tr><td>${s.id}</td><td>${s.cat}</td><td>${s.name}</td><td>$${s.price}</td><td>${s.min}</td><td>${s.max}</td></tr>`;
+          });
+          html += '</tbody></table></div></div>';
+          document.getElementById('mainContent').innerHTML = html;
+          sessionStorage.setItem('lastView', 'services');
+        },
+        balance() {
+          const txs = DB.get('txs').filter(t => t.uid === this.currentUser.id);
+          let html = `<div class="ph"><div class="pt">💰 Balance</div></div>
+            <div class="sc glass"><div class="sl">Your Balance</div><div class="sv">$${this.currentUser.balance.toFixed(2)}</div></div>
+            <div class="glass mt2"><div class="tbl"><table><thead><tr><th>Date</th><th>Description</th><th>Amount</th></tr></thead><tbody>`;
+          txs.slice(0,20).forEach(t => {
+            html += `<tr><td>${new Date(t.ts).toLocaleString()}</td><td>${t.desc}</td><td class="${t.amount>0?'text-neon':'tdg'}">${t.amount>0?'+':''}${t.amount}</td></tr>`;
+          });
+          html += '</tbody></table></div></div>';
+          document.getElementById('mainContent').innerHTML = html;
+          sessionStorage.setItem('lastView', 'balance');
+        },
+        profile() {
+          const u = this.currentUser;
+          const html = `
+            <div class="ph"><div class="pt">👤 Profile</div></div>
+            <div class="glass p15">
+              <p><strong>Username:</strong> ${u.username}</p>
+              <p><strong>Email:</strong> ${u.email}</p>
+              <p><strong>Role:</strong> ${u.role}</p>
+              <p><strong>Balance:</strong> $${u.balance}</p>
+              <p><strong>Cashback:</strong> ${u.cashback}%</p>
+              <p><strong>Referral code:</strong> ${u.refCode}</p>
+              <button class="btn bgh mt2" onclick="Auth.logout()">🚪 Logout</button>
             </div>
-            <div class="fg"><label>QUANTITY</label><input type="number" id="oq" placeholder="e.g. 1000" min="1"></div>
-          </div>
-          <div class="fg mb1"><label>TARGET URL</label><input id="ol" placeholder="https://instagram.com/yourpage"></div>
-          <div class="fg mb2"><label>PROMO CODE (Optional)</label>
-            <div class="fl g1">
-              <input id="op" placeholder="ULTRA50" style="text-transform:uppercase">
-              <select style="width:auto;min-width:160px" onchange="document.getElementById('op').value=this.value;this.value=''">
-                <option value="">Quick Select</option>
-                ${promos.map(p=>`<option value="${p.code}">${p.code} (${p.type==='percent'?p.val+'%':'$'+p.val})</option>`).join('')}
-              </select>
+          `;
+          document.getElementById('mainContent').innerHTML = html;
+          sessionStorage.setItem('lastView', 'profile');
+        },
+        users() { if (this.currentUser.role !== 'admin') return; /* admin only */ },
+        promo() { /* admin promo */ },
+        logs() { /* admin logs */ },
+        settings() { /* admin settings */ }
+      },
+      showNewOrderModal() {
+        const services = DB.get('services').slice(0,20);
+        let options = '<option value="">Select</option>';
+        services.forEach(s => options += `<option value="${s.id}">${s.name} ($${s.price}/1k)</option>`);
+        const modal = document.getElementById('modalHost');
+        modal.innerHTML = `
+          <div class="mo" onclick="if(event.target.classList.contains('mo')) App.closeModal()">
+            <div class="md">
+              <h3>➕ New Order</h3>
+              <div class="fg mt2">
+                <label>Service</label>
+                <select id="modalService">${options}</select>
+              </div>
+              <div class="fg mt2">
+                <label>Quantity</label>
+                <input type="number" id="modalQty" min="1">
+              </div>
+              <div class="fg mt2">
+                <label>Link</label>
+                <input id="modalLink" placeholder="https://">
+              </div>
+              <div class="fl g1 mt2">
+                <button class="btn bp2" onclick="App.placeOrder()">Place Order</button>
+                <button class="btn bgh" onclick="App.closeModal()">Cancel</button>
+              </div>
             </div>
           </div>
-          <div class="fl g1">
-            <button class="btn bp2" onclick="Orders.place(document.getElementById('os').value,document.getElementById('oq').value,document.getElementById('ol').value,document.getElementById('op').value)">⚡ PLACE ORDER</button>
-            <button class="btn bgh" onclick="document.getElementById('nop').classList.add('hidden')">Cancel</button>
-          </div>
-        </div>
+        `;
+      },
+      placeOrder() {
+        const sid = document.getElementById('modalService').value;
+        const qty = +document.getElementById('modalQty').value;
+        const link = document.getElementById('modalLink').value;
+        if (!sid || !qty || !link) { Toast.show('Fill all fields', 'warn'); return; }
+        const services = DB.get('services');
+        const s = services.find(x => x.id == sid);
+        if (!s) return;
+        const cost = +(qty / 1000 * s.price).toFixed(4);
+        const users = DB.get('users');
+        const user = users.find(u => u.id === Auth.sess.id);
+        if (user.balance < cost) { Toast.show('Insufficient balance', 'danger'); App.closeModal(); return; }
+        user.balance -= cost;
+        const order = {
+          id: DB.uid(),
+          sid: s.id,
+          sname: s.name,
+          qty,
+          link,
+          cost,
+          status: 'Pending',
+          uid: user.id,
+          at: new Date().toISOString()
+        };
+        const orders = DB.get('orders');
+        orders.unshift(order);
+        DB.set('orders', orders);
+        DB.set('users', users);
+        const txs = DB.get('txs');
+        txs.unshift({ id: DB.uid(), uid: user.id, amount: -cost, desc: `Order #${order.id}`, ts: Date.now() });
+        DB.set('txs', txs);
+        Log.add('order', 'PLACE', `Order ${order.id} placed by ${user.username}`);
+        Toast.show(`Order placed! $${cost} deducted`, 'success');
+        App.closeModal();
+        App.nav('orders');
+      },
+      closeModal() { document.getElementById('modalHost').innerHTML = ''; }
+    };
 
-        <div class="glass">
-          <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--border)"><div class="ct" style="margin:0">All Orders (${orders.length})</div></div>
-          <div class="tbl">
-            <table>
-              <thead><tr><th>ORDER ID</th><th>SERVICE</th><th>QTY</th><th>COST</th><th>SAVED</th><th>PROMO</th><th>STATUS</th><th>PROGRESS</th><th>DATE</th></tr></thead>
-              <tbody>
-                ${orders.length===0?`<tr><td colspan="9" style="text-align:center;color:var(--dim);padding:2rem">No orders yet — place your first order above</td></tr>`:
-                  orders.map(o=>`<tr>
-                    <td class="fw7 tneon">#${o.id}</td>
-                    <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.sname||'N/A'}</td>
-                    <td>${(o.qty||0).toLocaleString()}</td>
-                    <td class="fw7">$${(o.cost||0).toFixed(4)}</td>
-                    <td class="ts2">${o.discount>0?'$'+o.discount.toFixed(4):'—'}</td>
-                    <td>${o.promo?`<span class="badge bw">${o.promo}</span>`:'<span class="tdim">—</span>'}</td>
-                    <td><span class="badge ${o.status==='Completed'?'bg':o.status==='Processing'?'bb':o.status==='Pending'?'bw':o.status==='Partial'?'bp':'br'}">${o.status}</span></td>
-                    <td style="min-width:100px"><div class="pb"><div class="pf" style="width:${o.progress||0}%"></div></div><div style="font-size:.72rem;color:var(--dim);margin-top:3px">${o.progress||0}%</div></td>
-                    <td class="tdim">${o.at?new Date(o.at).toLocaleDateString():'—'}</td>
-                  </tr>`).join('')}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      `;
-    },
-
-    // ═══ USERS ═══
-    users(el){
-      const users=DB.get('users');
-      el.innerHTML=`
-        <div class="ph"><div class="pt">👥 User <span>Management</span></div><button class="btn bp2" onclick="App.showUserModal()">+ Add User</button></div>
-        <div class="sr mb2b">
-          <div class="siw"><span class="sic">🔍</span><input class="sin" type="text" id="uq" placeholder="Search users..." oninput="App.filterUsers(this.value)"></div>
-          <select id="rf" onchange="App.filterUsers(document.getElementById('uq').value)">
-            <option value="">All Roles</option><option value="admin">Admin</option><option value="reseller">Reseller</option><option value="user">User</option>
-          </select>
-        </div>
-        <div class="glass"><div class="tbl"><table>
-          <thead><tr><th>USER</th><th>EMAIL</th><th>BALANCE</th><th>ROLE</th><th>STATUS</th><th>FRAUD</th><th>CASHBACK</th><th>JOINED</th><th>ACTIONS</th></tr></thead>
-          <tbody id="utb">${App.renderUsers(users)}</tbody>
-        </table></div></div>
-      `;
-    },
-
-    // ═══ BALANCE ═══
-    balance(el){
-      const txs=DB.get('txs'),users=DB.get('users');
-      el.innerHTML=`
-        <div class="ph"><div class="pt">💰 Balance <span>Manager</span></div></div>
-        <div class="glass p15 mb2b">
-          <div class="ct">Manual Balance Adjustment</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:1rem;align-items:flex-end">
-            <div class="fg"><label>USER</label><select id="bu"><option value="">-- Select User --</option>${users.map(u=>`<option value="${u.id}">${u.user} — $${u.balance.toFixed(2)}</option>`).join('')}</select></div>
-            <div class="fg"><label>AMOUNT (negative to deduct)</label><input type="number" id="bamt" placeholder="50 or -10" step=".01"></div>
-            <div class="fg"><label>NOTE</label><input id="bnote" placeholder="Reason"></div>
-            <button class="btn bp2" onclick="Bal.adjust(document.getElementById('bu').value,document.getElementById('bamt').value,document.getElementById('bnote').value)">Apply</button>
-          </div>
-        </div>
-        <div class="sg mb2b">${users.map(u=>`<div class="sc glass"><div class="sl">${u.user} (${u.role})</div><div class="sv ${u.balance>1000?'ts2':u.balance>100?'tneon':'tdg'}">$${u.balance.toFixed(2)}</div><div style="font-size:.75rem;color:var(--dim);margin-top:.2rem">Limit: $${u.creditLimit?.toLocaleString()||'∞'}</div></div>`).join('')}</div>
-        <div class="glass">
-          <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--border)"><div class="ct" style="margin:0">Transactions (${txs.length})</div></div>
-          <div class="tbl"><table>
-            <thead><tr><th>TX ID</th><th>USER</th><th>TYPE</th><th>AMOUNT</th><th>DESCRIPTION</th><th>DATE</th></tr></thead>
-            <tbody>
-              ${txs.length===0?`<tr><td colspan="6" style="text-align:center;color:var(--dim);padding:2rem">No transactions yet</td></tr>`:
-                txs.slice(0,60).map(t=>{const u=users.find(x=>x.id===t.uid);return`<tr>
-                  <td class="tdim">#${t.id}</td><td>${u?.user||'#'+t.uid}</td>
-                  <td><span class="badge ${t.type==='credit'?'bg':'br'}">${t.type.toUpperCase()}</span></td>
-                  <td class="fw7 ${t.amount>0?'ts2':'tdg'}">${t.amount>0?'+':''}$${Math.abs(t.amount).toFixed(4)}</td>
-                  <td class="tdim">${t.desc}</td><td class="tdim">${new Date(t.ts).toLocaleString()}</td>
-                </tr>`;}).join('')}
-            </tbody>
-          </table></div>
-        </div>
-      `;
-    },
-
-    // ═══ SERVICES ═══
-    services(el){
-      const all=DB.get('svcs');
-      const cats=[...new Set(all.map(s=>s.cat))];
-      el.innerHTML=`
-        <div class="ph"><div class="pt">🛠 Service <span>Engine</span></div><span class="badge bb">${all.length.toLocaleString()} Services</span></div>
-        <div class="sr mb2b">
-          <div class="siw" style="flex:2"><span class="sic">🔍</span><input class="sin" id="sq" type="text" placeholder="Search services..." oninput="App.filterSvcs()"></div>
-          <select id="sc2" onchange="App.filterSvcs()"><option value="">All Categories</option>${cats.map(c=>`<option value="${c}">${c}</option>`).join('')}</select>
-          <select id="ss" onchange="App.filterSvcs()"><option value="id">Sort: ID</option><option value="pa">Price ↑</option><option value="pd">Price ↓</option></select>
-        </div>
-        <div class="glass">
-          <div class="tbl"><table>
-            <thead><tr><th>ID</th><th>CATEGORY</th><th>NAME</th><th>PRICE/1K</th><th>MIN</th><th>MAX</th><th>SPEED</th><th>DRIP</th><th>STATUS</th></tr></thead>
-            <tbody id="stb">${App.renderSvcs(all.slice(0,50))}</tbody>
-          </table></div>
-        </div>
-        <div class="pg" id="sp"></div>
-      `;
-      App.svcPager(all,1);
-    },
-
-    // ═══ SECURITY ═══
-    security(el){
-      const bans=DB.get('bans'),logs=DB.get('logs').filter(l=>l.type==='security');
-      el.innerHTML=`
-        <div class="ph"><div class="pt">🛡 Security <span>Command</span></div><span class="badge bg pulse">🟢 Firewall Active</span></div>
-        <div class="sg">
-          <div class="sc glass" style="border-left:3px solid var(--danger)"><div class="sl">Banned IPs</div><div class="sv tdg">${bans.length}</div></div>
-          <div class="sc glass"><div class="sl">Rate Limit</div><div class="sv">100/60s</div></div>
-          <div class="sc glass"><div class="sl">Suspicion Score</div><div class="sv twn">${Sec.score}</div></div>
-          <div class="sc glass"><div class="sl">Security Logs</div><div class="sv">${logs.length}</div></div>
-        </div>
-        <div class="glass p15 mb2b">
-          <div class="ct">Manual IP Ban</div>
-          <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:1rem;align-items:flex-end">
-            <div class="fg"><label>IP ADDRESS</label><input id="bi" placeholder="192.168.x.x"></div>
-            <div class="fg"><label>REASON</label><input id="br2" placeholder="Spam / Fraud"></div>
-            <div class="fg"><label>DURATION (s)</label><input type="number" id="bd2" value="3600"></div>
-            <button class="btn bd2" onclick="Sec.banIP(document.getElementById('bi').value,document.getElementById('br2').value,document.getElementById('bd2').value)">🚫 Ban IP</button>
-          </div>
-        </div>
-        <div class="glass">
-          <div style="padding:1rem 1.5rem;border-bottom:1px solid var(--border)"><div class="ct" style="margin:0">Banned IPs (${bans.length})</div></div>
-          <div class="tbl"><table>
-            <thead><tr><th>IP</th><th>REASON</th><th>DURATION</th><th>TYPE</th><th>BANNED AT</th><th>ACTION</th></tr></thead>
-            <tbody>
-              ${bans.length===0?`<tr><td colspan="6" style="text-align:center;color:var(--dim);padding:2rem">No banned IPs — system clean 🛡</td></tr>`:
-                bans.map(b=>`<tr>
-                  <td class="fw7 tdg">${b.ip}</td><td>${b.reason}</td><td>${b.dur}s</td>
-                  <td><span class="badge ${b.auto?'br':'bw'}">${b.auto?'AUTO':'MANUAL'}</span></td>
-                  <td class="tdim">${new Date(b.at).toLocaleString()}</td>
-                  <td><button class="btn bs bsm" onclick="Sec.unbanIP('${b.ip}')">Unban</button></td>
-                </tr>`).join('')}
-            </tbody>
-          </table></div>
-        </div>
-      `;
-    },
-
-    // ═══ LOGS ═══
-    logs(el){
-      const logs=DB.get('logs');
-      el.innerHTML=`
-        <div class="ph"><div class="pt">📑 System <span>Logs</span></div>
-          <div class="fl g1">
-            <button class="btn bgh bsm" onclick="App.downloadLogs()">⬇ Export</button>
-            <button class="btn bd2 bsm" onclick="if(confirm('Clear all logs?')){DB.save('logs',[]);App.nav('logs');UI.toast('Logs cleared','warn');}">🗑 Clear</button>
-          </div>
-        </div>
-        <div class="sr mb2b">
-          <div class="siw"><span class="sic">🔍</span><input class="sin" id="lq" placeholder="Search logs..." oninput="App.filterLogs()"></div>
-          <select id="lt" onchange="App.filterLogs()"><option value="">All Types</option><option value="login">Login</option><option value="order">Order</option><option value="balance">Balance</option><option value="security">Security</option><option value="promo">Promo</option><option value="user">User</option></select>
-        </div>
-        <div class="glass"><div class="tbl"><table style="font-family:monospace;font-size:.8rem">
-          <thead><tr><th>TIME</th><th>TYPE</th><th>ACTION</th><th>DESCRIPTION</th></tr></thead>
-          <tbody id="ltb">${App.renderLogs(logs)}</tbody>
-        </table></div></div>
-      `;
-    },
-
-    // ═══ REFERRAL ═══
-    referral(el){
-      const users=DB.get('users');
-      el.innerHTML=`
-        <div class="ph"><div class="pt">🔗 Referral <span>System</span></div></div>
-        <div class="glass p15 mb2b"><div class="ct">How It Works</div><p class="tdim tsm">Every user has a unique referral code. When a new user signs up using that code, both receive cashback bonus credits. Referrals are tracked permanently.</p></div>
-        <div class="glass"><div class="tbl"><table>
-          <thead><tr><th>USER</th><th>ROLE</th><th>REFERRAL CODE</th><th>REFERRED BY</th><th>CASHBACK</th><th>ORDERS</th><th>STATUS</th></tr></thead>
-          <tbody>${users.map(u=>`<tr>
-            <td class="fw7">${u.user}</td>
-            <td><span class="badge ${u.role==='admin'?'br':u.role==='reseller'?'bp':'bb'}">${u.role.toUpperCase()}</span></td>
-            <td><span class="pcd" style="font-size:.8rem;padding:3px 10px">${u.refCode||'N/A'}</span></td>
-            <td>${u.refBy?`<span class="badge bb">${u.refBy}</span>`:'<span class="tdim">—</span>'}</td>
-            <td class="ts2 fw7">${u.cashback||0}%</td>
-            <td>${(u.orders||[]).length}</td>
-            <td><span class="badge ${u.status==='active'?'bg':'br'}">${u.status.toUpperCase()}</span></td>
-          </tr>`).join('')}</tbody>
-        </table></div></div>
-      `;
-    },
-
-    // ═══ API ═══
-    api(el){
-      const users=DB.get('users'),cfg=DB.get('cfg',{});
-      const pct=(((cfg.apiUsage||0)/(cfg.apiLimit||10000))*100).toFixed(1);
-      el.innerHTML=`
-        <div class="ph"><div class="pt">🔑 API <span>Manager</span></div></div>
-        <div class="sg mb2b">
-          <div class="sc glass"><div class="sl">Usage Today</div><div class="sv">${cfg.apiUsage||0}</div></div>
-          <div class="sc glass"><div class="sl">Daily Limit</div><div class="sv">${cfg.apiLimit||10000}</div></div>
-          <div class="sc glass"><div class="sl">Active Keys</div><div class="sv">${users.length}</div></div>
-          <div class="sc glass"><div class="sl">Usage %</div><div class="sv">${pct}%</div></div>
-        </div>
-        <div class="glass p15 mb2b"><div class="ct">Usage Rate</div>
-          <div class="pb" style="height:12px"><div class="pf" style="width:${pct}%"></div></div>
-          <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--dim);margin-top:.5rem"><span>${cfg.apiUsage||0} calls</span><span>${cfg.apiLimit||10000} limit</span></div>
-        </div>
-        <div class="glass"><div class="tbl"><table>
-          <thead><tr><th>USER</th><th>ROLE</th><th>API KEY</th><th>ACTIONS</th></tr></thead>
-          <tbody>${users.map(u=>`<tr>
-            <td class="fw7">${u.user}</td>
-            <td><span class="badge ${u.role==='admin'?'br':u.role==='reseller'?'bp':'bb'}">${u.role.toUpperCase()}</span></td>
-            <td style="font-family:monospace;font-size:.78rem;color:var(--dim)">${u.apiKey||'N/A'}</td>
-            <td><button class="btn bgh bsm" onclick="App.regenKey(${u.id})">🔄 Regenerate</button></td>
-          </tr>`).join('')}</tbody>
-        </table></div></div>
-      `;
-    },
-
-    // ═══ SETTINGS ═══
-    settings(el){
-      const cfg=DB.get('cfg',{});
-      el.innerHTML=`
-        <div class="ph"><div class="pt">⚙ System <span>Settings</span></div><button class="btn bp2" onclick="App.saveSettings()">💾 Save</button></div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
-          <div class="glass p15">
-            <div class="ct">General</div>
-            <div class="fg mb1"><label>SITE NAME</label><input id="sn" value="${cfg.site||''}"></div>
-            <div class="fg mb1"><label>DEFAULT CASHBACK %</label><input id="sc3" type="number" value="${cfg.cashback||5}"></div>
-            <div class="fg mb1"><label>MAINTENANCE MODE</label><select id="sm"><option value="false" ${!cfg.maint?'selected':''}>OFF</option><option value="true" ${cfg.maint?'selected':''}>ON</option></select></div>
-            <div class="fg"><label>USER REGISTRATIONS</label><select id="sr"><option value="true" ${cfg.reg?'selected':''}>Open</option><option value="false" ${!cfg.reg?'selected':''}>Closed</option></select></div>
-          </div>
-          <div class="glass p15">
-            <div class="ct">Theme & UI</div>
-            <div class="fg mb1"><label>ACCENT COLOR</label><select id="sth" onchange="document.documentElement.setAttribute('data-theme',this.value)"><option value="blue" ${cfg.theme==='blue'?'selected':''}>🔵 Blue</option><option value="purple" ${cfg.theme==='purple'?'selected':''}>🟣 Purple</option><option value="green" ${cfg.theme==='green'?'selected':''}>🟢 Green</option><option value="red" ${cfg.theme==='red'?'selected':''}>🔴 Red</option></select></div>
-            <div class="fg mb1"><label>LANGUAGE</label><select id="sl2"><option value="en" ${cfg.lang==='en'?'selected':''}>🇬🇧 English</option><option value="az" ${cfg.lang==='az'?'selected':''}>🇦🇿 Azerbaijani</option><option value="tr" ${cfg.lang==='tr'?'selected':''}>🇹🇷 Turkish</option><option value="ru" ${cfg.lang==='ru'?'selected':''}>🇷🇺 Russian</option></select></div>
-            <div class="fg"><label>API DAILY LIMIT</label><input id="sal" type="number" value="${cfg.apiLimit||10000}"></div>
-          </div>
-        </div>
-        <div class="glass p15 mt2b">
-          <div class="ct">Backup & Restore</div>
-          <div class="fl g1 wr">
-            <button class="btn bgh" onclick="App.backup()">⬇ Export Backup</button>
-            <button class="btn bgh" onclick="document.getElementById('rf2').click()">⬆ Import Backup</button>
-            <input type="file" id="rf2" accept=".json" style="display:none" onchange="App.restore(this)">
-            <button class="btn bd2" onclick="if(confirm('FACTORY RESET — All data will be lost!')){localStorage.clear();location.reload();}">💥 Factory Reset</button>
-          </div>
-        </div>
-      `;
-    }
-  },
-
-  // ═══════ HELPERS ═══════
-  renderUsers(users){
-    if(!users.length)return`<tr><td colspan="9" style="text-align:center;color:var(--dim);padding:2rem">No users found</td></tr>`;
-    return users.map(u=>`<tr>
-      <td><div class="fl g1" style="align-items:center"><span class="${Date.now()-u.lastSeen<300000?'on':'off'}"></span><strong>${u.user}</strong></div></td>
-      <td class="tdim">${u.email||'—'}</td>
-      <td class="fw7 ${u.balance>1000?'ts2':u.balance>100?'tneon':'tdg'}">$${u.balance.toFixed(2)}</td>
-      <td><span class="badge ${u.role==='admin'?'br':u.role==='reseller'?'bp':'bb'}">${u.role.toUpperCase()}</span></td>
-      <td><span class="badge ${u.status==='active'?'bg':'br'}">${u.status.toUpperCase()}</span></td>
-      <td class="${u.fraudScore>50?'tdg':u.fraudScore>20?'twn':'ts2'}">${u.fraudScore}</td>
-      <td class="ts2">${u.cashback||0}%</td>
-      <td class="tdim">${u.joined}</td>
-      <td><div class="fl g1">
-        <button class="btn bd2 bsm bic" onclick="Users.ban(${u.id})" title="${u.status==='banned'?'Unban':'Ban'}">${u.status==='banned'?'✅':'🚫'}</button>
-        <button class="btn bgh bsm bic" onclick="if(confirm('Delete?'))Users.del(${u.id})">🗑</button>
-      </div></td>
-    </tr>`).join('');
-  },
-  filterUsers(q){
-    const role=document.getElementById('rf')?.value||'';
-    let users=DB.get('users');
-    if(q)users=users.filter(u=>u.user.toLowerCase().includes(q.toLowerCase())||(u.email||'').toLowerCase().includes(q.toLowerCase()));
-    if(role)users=users.filter(u=>u.role===role);
-    const tb=document.getElementById('utb');if(tb)tb.innerHTML=this.renderUsers(users);
-  },
-  renderSvcs(svcs){
-    if(!svcs.length)return`<tr><td colspan="9" style="text-align:center;color:var(--dim);padding:2rem">No services found</td></tr>`;
-    return svcs.map(s=>`<tr>
-      <td class="tdim">${s.id}</td>
-      <td><span class="badge bb">${s.cat}</span></td>
-      <td style="max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.name}</td>
-      <td class="fw7 tneon">$${s.price}</td>
-      <td>${s.min.toLocaleString()}</td><td>${s.max.toLocaleString()}</td>
-      <td>${'⭐'.repeat(s.speed)}</td>
-      <td>${s.drip?'<span class="badge bp">YES</span>':'<span class="tdim">—</span>'}</td>
-      <td><span class="badge ${s.active?'bg':'bd'}">${s.active?'ON':'OFF'}</span></td>
-    </tr>`).join('');
-  },
-  filterSvcs(){
-    const q=(document.getElementById('sq')?.value||'').toLowerCase();
-    const cat=document.getElementById('sc2')?.value||'';
-    const sort=document.getElementById('ss')?.value||'id';
-    let svcs=DB.get('svcs');
-    if(q)svcs=svcs.filter(s=>s.name.toLowerCase().includes(q)||s.cat.toLowerCase().includes(q));
-    if(cat)svcs=svcs.filter(s=>s.cat===cat);
-    if(sort==='pa')svcs.sort((a,b)=>a.price-b.price);
-    else if(sort==='pd')svcs.sort((a,b)=>b.price-a.price);
-    const tb=document.getElementById('stb');if(tb)tb.innerHTML=this.renderSvcs(svcs.slice(0,50));
-    this.svcPager(svcs,1);
-  },
-  svcPager(all,page){
-    const pp=50,total=Math.ceil(all.length/pp);
-    const c=document.getElementById('sp');if(!c)return;c.innerHTML='';
-    for(let i=1;i<=Math.min(total,10);i++){
-      const b=document.createElement('button');b.className='pb2'+(i===page?' ac2':'');b.innerText=i;
-      const pg=i;b.onclick=()=>{document.getElementById('stb').innerHTML=this.renderSvcs(all.slice((pg-1)*pp,pg*pp));this.svcPager(all,pg);};
-      c.appendChild(b);
-    }
-  },
-  renderLogs(logs){
-    if(!logs.length)return`<tr><td colspan="4" style="text-align:center;color:var(--dim);padding:2rem">No logs found</td></tr>`;
-    return logs.slice(0,100).map(l=>`<tr>
-      <td class="tdim">${l.time} ${l.date}</td>
-      <td><span class="badge ${l.type==='security'?'br':l.type==='login'?'bb':l.type==='order'?'bg':l.type==='promo'?'bw':'bd'}">${l.type||'sys'}</span></td>
-      <td class="tneon">${l.action}</td>
-      <td class="tdim">${l.desc}</td>
-    </tr>`).join('');
-  },
-  filterLogs(){
-    const q=(document.getElementById('lq')?.value||'').toLowerCase();
-    const type=document.getElementById('lt')?.value||'';
-    let logs=DB.get('logs');
-    if(q)logs=logs.filter(l=>l.desc.toLowerCase().includes(q)||l.action.toLowerCase().includes(q));
-    if(type)logs=logs.filter(l=>l.type===type);
-    const tb=document.getElementById('ltb');if(tb)tb.innerHTML=this.renderLogs(logs);
-  },
-  testPromo(){
-    const code=document.getElementById('tc')?.value.trim();
-    const amt=parseFloat(document.getElementById('ta')?.value)||0;
-    const res=document.getElementById('pr');if(!res)return;
-    if(!code){res.innerHTML='<span class="twn">Enter a promo code</span>';return;}
-    const promos=DB.get('promos');
-    const p=promos.find(x=>x.code===code.toUpperCase());
-    if(!p){res.innerHTML=`<span class="tdg">❌ Code "${code.toUpperCase()}" not found</span>`;return;}
-    if(!p.active){res.innerHTML=`<span class="twn">⚠️ Code is inactive</span>`;return;}
-    if(new Date(p.expiry)<new Date()){res.innerHTML=`<span class="tdg">❌ Code expired on ${p.expiry}</span>`;return;}
-    if(p.uses>=p.maxUses){res.innerHTML=`<span class="tdg">❌ Max uses (${p.maxUses}) reached</span>`;return;}
-    if(amt<p.minOrder){res.innerHTML=`<span class="twn">⚠️ Min order $${p.minOrder} required</span>`;return;}
-    const bonus=p.type==='percent'?+(amt*p.val/100).toFixed(4):p.val;
-    res.innerHTML=`<span class="ts2">✅ VALID! Bonus: <strong>+$${bonus}</strong> — "${p.desc}" — ${p.maxUses-p.uses} uses left</span>`;
-  },
-  showUserModal(){
-    Modal.show('➕ Create User',`
-      <div class="fg"><label>USERNAME</label><input id="nu" placeholder="username"></div>
-      <div class="fg"><label>EMAIL</label><input id="ne" placeholder="user@email.com"></div>
-      <div class="fr">
-        <div class="fg"><label>BALANCE ($)</label><input id="nb" type="number" value="0" min="0"></div>
-        <div class="fg"><label>ROLE</label><select id="nr"><option value="user">User</option><option value="reseller">Reseller</option><option value="admin">Admin</option></select></div>
-      </div>
-      <div class="fr">
-        <div class="fg"><label>CASHBACK %</label><input id="nc" type="number" value="3" min="0" max="50"></div>
-        <div class="fg"><label>CREDIT LIMIT ($)</label><input id="ncl" type="number" value="500" min="0"></div>
-      </div>
-    `,`
-      <button class="btn bgh" onclick="Modal.close()">Cancel</button>
-      <button class="btn bp2" onclick="Users.create({user:document.getElementById('nu').value,email:document.getElementById('ne').value,balance:document.getElementById('nb').value,role:document.getElementById('nr').value,cashback:document.getElementById('nc').value,creditLimit:document.getElementById('ncl').value})">Create User</button>
-    `);
-  },
-  showPromoModal(){
-    const r=Promo.rand();
-    Modal.show('🎟 Create Promo Code',`
-      <div class="fr">
-        <div class="fg"><label>PROMO CODE</label><div class="fl g1"><input id="pc" placeholder="MYCODE" value="${r}" style="text-transform:uppercase"><button class="btn bgh bsm" onclick="document.getElementById('pc').value='${Promo.rand()}'">🎲</button></div></div>
-        <div class="fg"><label>TYPE</label><select id="pt2"><option value="fixed">Fixed ($)</option><option value="percent">Percent (%)</option></select></div>
-      </div>
-      <div class="fr">
-        <div class="fg"><label>VALUE</label><input id="pv" type="number" value="10" min="0" step=".01"></div>
-        <div class="fg"><label>MAX USES</label><input id="pm" type="number" value="100" min="1"></div>
-      </div>
-      <div class="fr">
-        <div class="fg"><label>MIN ORDER ($)</label><input id="pmo" type="number" value="0" min="0"></div>
-        <div class="fg"><label>EXPIRY DATE</label><input id="pe" type="date" value="2026-12-31"></div>
-      </div>
-      <div class="fg"><label>DESCRIPTION</label><input id="pd" placeholder="Short description"></div>
-    `,`
-      <button class="btn bgh" onclick="Modal.close()">Cancel</button>
-      <button class="btn bp2" onclick="const r=Promo.create(document.getElementById('pc').value,document.getElementById('pt2').value,document.getElementById('pv').value,document.getElementById('pm').value,document.getElementById('pmo').value,document.getElementById('pe').value,document.getElementById('pd').value);if(r.ok){Modal.close();App.nav('promo');UI.toast(r.msg,'success');}else UI.toast(r.msg,'danger')">Create Code</button>
-    `);
-  },
-  regenKey(uid){
-    const users=DB.get('users');const u=users.find(x=>x.id==uid);if(!u)return;
-    u.apiKey=DB.apiKey();DB.save('users',users);
-    Log.add('api','REGEN',`API key regenerated for "${u.user}"`);
-    UI.toast('API key regenerated','success');this.nav('api');
-  },
-  saveSettings(){
-    const cfg=DB.get('cfg',{});
-    cfg.site=document.getElementById('sn').value;
-    cfg.cashback=+document.getElementById('sc3').value;
-    cfg.maint=document.getElementById('sm').value==='true';
-    cfg.reg=document.getElementById('sr').value==='true';
-    cfg.theme=document.getElementById('sth').value;
-    cfg.lang=document.getElementById('sl2').value;
-    cfg.apiLimit=+document.getElementById('sal').value;
-    DB.save('cfg',cfg);
-    document.documentElement.setAttribute('data-theme',cfg.theme);
-    Log.add('system','SETTINGS','System settings updated');
-    UI.toast('Settings saved!','success');
-  },
-  exportOrders(){
-    const blob=new Blob([JSON.stringify(DB.get('orders'),null,2)],{type:'application/json'});
-    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`orders_${Date.now()}.json`;a.click();
-    UI.toast('Orders exported','success');
-  },
-  downloadLogs(){
-    const blob=new Blob([JSON.stringify(DB.get('logs'),null,2)],{type:'application/json'});
-    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`logs_${Date.now()}.json`;a.click();
-    UI.toast('Logs exported','success');
-  },
-  backup(){
-    const data={};
-    ['users','orders','logs','bans','txs','promos','svcs','cfg'].forEach(k=>{data[k]=DB.get(k,null);});
-    const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-    const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`ultrasmm_backup_${Date.now()}.json`;a.click();
-    UI.toast('Backup exported!','success');
-  },
-  restore(inp){
-    const f=inp.files[0];if(!f)return;
-    const r=new FileReader();
-    r.onload=e=>{try{const d=JSON.parse(e.target.result);Object.keys(d).forEach(k=>{if(d[k]!==null)DB.save(k,d[k]);});UI.toast('Backup restored!','success');this.nav('dashboard');}catch(err){UI.toast('Invalid backup file','danger');}};
-    r.readAsText(f);
-  }
-};
-
-// ═══════════════════════════════════════════
-// INIT
-// ═══════════════════════════════════════════
-window.onload=()=>{
-  DB.init();Sec.init();
-  const cfg=DB.get('cfg',{});
-  if(cfg.theme&&cfg.theme!=='blue')document.documentElement.setAttribute('data-theme',cfg.theme);
-  if(cfg.maint){
-    document.getElementById('auth').innerHTML=`<div class="ac glass" style="text-align:center"><div style="font-size:3rem;margin-bottom:1rem">🔧</div><h2 style="background:linear-gradient(to right,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent">MAINTENANCE</h2><p class="tdim mt2b">System is under maintenance. Try again later.</p><button class="btn bgh" style="margin-top:1.5rem;width:100%" onclick="location.reload()">Retry</button></div>`;
-  }
-  setInterval(()=>{const el=document.getElementById('hse');if(el&&Auth.sess){const m=Math.floor((Date.now()-Auth.sess.loginAt)/60000);el.innerText=m+'m session';}},10000);
-  console.log('%cULTRA SMM GOD MODE v4.0 — ONLINE','color:#38bdf8;font-size:14px;font-weight:bold');
-};
-</script>
+    // ==================== INIT ====================
+    window.onload = () => {
+      DB.init();
+      // auto logout after inactivity (simulate)
+      let idle = 0;
+      setInterval(() => {
+        idle++;
+        if (idle > 1800 && Auth.sess) { Auth.logout(); } // 30 min
+      }, 1000);
+      document.addEventListener('mousemove', () => idle = 0);
+      document.addEventListener('keydown', () => idle = 0);
+    };
+  </script>
 </body>
 </html>
