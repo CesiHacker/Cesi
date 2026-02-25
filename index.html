@@ -1,1351 +1,1261 @@
 <!DOCTYPE html>
-<html lang="az">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#000000">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
 <title>Sahur Alarm</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@200;300;400;500;600&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 
 <style>
-/* =============================================
-   ROOT & VARIABLES
-============================================= */
+/* ================================================
+   CSS VARIABLES — DARK (default)
+================================================ */
 :root {
-  --black: #000000;
-  --surface-1: #0a0a0a;
-  --surface-2: #111111;
-  --surface-3: #1a1a1a;
-  --surface-4: #222222;
-  --border: rgba(255,255,255,0.06);
-  --text-primary: #ffffff;
-  --text-secondary: rgba(255,255,255,0.45);
-  --text-dim: rgba(255,255,255,0.2);
-  --accent: #00e676;          /* neon green - sahur mode */
-  --accent-dim: rgba(0,230,118,0.12);
-  --accent-glow: rgba(0,230,118,0.25);
-  --red: #ff5252;
-  --amber: #ffab40;
-  --font: 'DM Sans', sans-serif;
-  --font-mono: 'DM Mono', monospace;
-  --nav-h: 68px;
-  --header-h: 60px;
-  --radius: 16px;
-  --radius-sm: 10px;
-  --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-spring: 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --bg:          #000000;
+  --bg-1:        #0d0d0d;
+  --bg-2:        #141414;
+  --bg-3:        #1c1c1c;
+  --bg-4:        #242424;
+  --border:      rgba(255,255,255,0.07);
+  --text-1:      #ffffff;
+  --text-2:      rgba(255,255,255,0.50);
+  --text-3:      rgba(255,255,255,0.25);
+  --accent:      #00e676;
+  --accent-dim:  rgba(0,230,118,0.10);
+  --accent-glow: rgba(0,230,118,0.22);
+  --red:         #ff5252;
+  --amber:       #ffab40;
+  --nav-h:       66px;
+  --radius:      16px;
+  --radius-sm:   10px;
+  --font:        'Inter', sans-serif;
+  --mono:        'Roboto Mono', monospace;
+  --ease:        cubic-bezier(.4,0,.2,1);
+  --spring:      cubic-bezier(.34,1.56,.64,1);
 }
 
-/* =============================================
-   RESET
-============================================= */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; overflow: hidden; }
-
-body {
-  font-family: var(--font);
-  background: var(--black);
-  color: var(--text-primary);
-  -webkit-font-smoothing: antialiased;
-  overscroll-behavior: none;
-  user-select: none;
+/* Light mode */
+body.light {
+  --bg:         #f5f5f5;
+  --bg-1:       #ffffff;
+  --bg-2:       #f0f0f0;
+  --bg-3:       #e8e8e8;
+  --bg-4:       #dcdcdc;
+  --border:     rgba(0,0,0,0.08);
+  --text-1:     #111111;
+  --text-2:     rgba(0,0,0,0.50);
+  --text-3:     rgba(0,0,0,0.25);
+  --accent:     #00b248;
+  --accent-dim: rgba(0,178,72,0.10);
+  --accent-glow:rgba(0,178,72,0.20);
 }
 
-/* =============================================
-   SAHUR MODE BACKGROUND
-============================================= */
-#sahurBg {
-  position: fixed; inset: 0; z-index: 0;
-  pointer-events: none; overflow: hidden;
-  opacity: 0; transition: opacity 0.8s ease;
+/* ================================================
+   RESET & BASE
+================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text-1);
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior:none;
+  user-select:none;
+  transition:background .4s var(--ease), color .4s var(--ease);
 }
-#sahurBg.active { opacity: 1; }
+input,select,button{font-family:var(--font);-webkit-appearance:none}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
+::-webkit-scrollbar{width:0}
 
-.sahur-gradient {
-  position: absolute; inset: 0;
+/* ================================================
+   SAHUR BG
+================================================ */
+#sahurBg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+  opacity:0;transition:opacity 1s ease;
+}
+#sahurBg.on{opacity:1}
+.sg{
+  position:absolute;inset:0;
   background:
-    radial-gradient(ellipse at 80% 0%, rgba(0,230,118,0.06) 0%, transparent 55%),
-    radial-gradient(ellipse at 20% 100%, rgba(0,180,90,0.04) 0%, transparent 50%);
+    radial-gradient(ellipse at 75% -5%,rgba(0,230,118,.07) 0%,transparent 50%),
+    radial-gradient(ellipse at 20% 110%,rgba(0,180,90,.04) 0%,transparent 50%);
+  animation:bgPulse 8s ease infinite alternate;
 }
+@keyframes bgPulse{0%{opacity:.6}100%{opacity:1}}
 
-/* Islamic geometric pattern - CSS only, minimal opacity */
-.sahur-pattern {
-  position: absolute; inset: 0;
-  opacity: 0.025;
-  background-image:
-    repeating-linear-gradient(60deg, transparent, transparent 28px, rgba(0,230,118,0.5) 28px, rgba(0,230,118,0.5) 29px),
-    repeating-linear-gradient(-60deg, transparent, transparent 28px, rgba(0,230,118,0.5) 28px, rgba(0,230,118,0.5) 29px),
-    repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(0,230,118,0.5) 28px, rgba(0,230,118,0.5) 29px);
+/* Islamic geometric SVG tile repeated */
+.sp{
+  position:absolute;inset:0;
+  opacity:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Cpath d='M30 0 L60 30 L30 60 L0 30Z' fill='none' stroke='%2300e676' stroke-width='.4' opacity='.4'/%3E%3Ccircle cx='30' cy='30' r='8' fill='none' stroke='%2300e676' stroke-width='.3' opacity='.3'/%3E%3C/svg%3E");
+  transition:opacity 1s ease;
 }
+#sahurBg.on .sp{opacity:.035}
 
 /* Stars */
-.star-dot {
-  position: absolute;
-  border-radius: 50%;
-  background: white;
-  animation: starPulse var(--d,3s) ease-in-out infinite;
-  animation-delay: var(--dl,0s);
+.star{
+  position:absolute;border-radius:50%;background:#fff;
+  animation:twinkle var(--d,3s) ease-in-out infinite;
+  animation-delay:var(--dl,0s);
 }
-@keyframes starPulse {
-  0%,100%{ opacity: 0.1; transform: scale(1); }
-  50%{ opacity: 0.7; transform: scale(1.4); }
-}
+@keyframes twinkle{0%,100%{opacity:.08;transform:scale(1)}50%{opacity:.8;transform:scale(1.5)}}
 
 /* Moon */
-.sahur-moon {
-  position: absolute;
-  top: 18px; right: 70px;
-  font-size: 22px;
-  opacity: 0;
-  transform: translateY(-10px);
-  transition: all 0.8s var(--transition-spring);
-  filter: drop-shadow(0 0 8px rgba(0,230,118,0.6));
-  animation: moonFloat 4s ease-in-out infinite;
+#moon{
+  position:fixed;top:14px;right:66px;font-size:20px;z-index:50;
+  opacity:0;transform:translateY(-8px) scale(.8);
+  transition:all .6s var(--spring);
+  filter:drop-shadow(0 0 10px rgba(0,230,118,.7));
+  animation:moonDrift 5s ease-in-out infinite;
+  pointer-events:none;
 }
-.sahur-moon.visible { opacity: 1; transform: translateY(0); }
-@keyframes moonFloat {
-  0%,100%{ transform: translateY(0) rotate(-5deg); }
-  50%{ transform: translateY(-6px) rotate(5deg); }
-}
+#moon.on{opacity:1;transform:translateY(0) scale(1)}
+@keyframes moonDrift{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-6px) rotate(8deg)}}
 
-/* =============================================
+/* ================================================
    APP SHELL
-============================================= */
-#app {
-  position: relative; z-index: 1;
-  display: flex; flex-direction: column;
-  height: 100%; max-width: 430px;
-  margin: 0 auto;
-  overflow: hidden;
+================================================ */
+#app{
+  position:relative;z-index:1;
+  display:flex;flex-direction:column;
+  height:100%;
+  max-width:430px;margin:0 auto;
+  overflow:hidden;
 }
 
-/* =============================================
+/* ================================================
+   TOP STATUS BAR (fake)
+================================================ */
+.status-bar{
+  height:28px;display:flex;align-items:center;
+  justify-content:space-between;
+  padding:0 18px;flex-shrink:0;
+}
+.status-time{font-size:11px;font-weight:600;color:var(--text-1)}
+.status-icons{font-size:12px;color:var(--text-1);letter-spacing:2px}
+
+/* ================================================
    HEADER
-============================================= */
-.app-header {
-  display: flex; align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  height: var(--header-h);
-  flex-shrink: 0;
-  position: relative;
+================================================ */
+.app-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 8px 6px 20px;flex-shrink:0;min-height:52px;
+}
+.header-title{font-size:22px;font-weight:600;letter-spacing:-.3px}
+
+.header-right{display:flex;align-items:center;gap:2px}
+
+.icon-btn{
+  width:40px;height:40px;border-radius:50%;border:none;
+  background:transparent;color:var(--text-1);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;transition:background .2s var(--ease);
+  position:relative;overflow:hidden;
+}
+.icon-btn:active{background:rgba(128,128,128,.15)}
+
+/* Sahur pill */
+.sahur-pill{
+  display:flex;align-items:center;gap:5px;
+  padding:5px 11px;border-radius:20px;
+  border:1px solid var(--border);background:var(--bg-2);
+  font-size:11px;font-weight:600;color:var(--text-2);
+  cursor:pointer;transition:all .3s var(--ease);letter-spacing:.3px;
+  white-space:nowrap;
+}
+.sahur-pill .pd{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--text-3);transition:all .3s;
+}
+.sahur-pill.on{border-color:rgba(0,230,118,.45);background:var(--accent-dim);color:var(--accent)}
+.sahur-pill.on .pd{background:var(--accent);box-shadow:0 0 6px var(--accent);animation:blink 1.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+/* ================================================
+   SAHUR BANNER
+================================================ */
+.sahur-banner{
+  margin:2px 14px 4px;padding:13px 16px;
+  border-radius:var(--radius);
+  background:var(--accent-dim);
+  border:1px solid rgba(0,230,118,.18);
+  display:none;align-items:center;justify-content:space-between;
+  animation:slideDown .4s var(--spring);
+}
+.sahur-banner.on{display:flex}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px)}to{opacity:1;transform:translateY(0)}}
+.banner-l .bl{font-size:10px;font-weight:600;color:rgba(0,230,118,.65);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px}
+.banner-l .bt{font-family:var(--mono);font-size:22px;font-weight:500;color:var(--accent);letter-spacing:2px}
+.banner-r{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.banner-ram{font-size:10px;color:var(--text-2);font-weight:500}
+.banner-icon{font-size:28px}
+
+/* Ramadan info row */
+.ramadan-row{
+  margin:0 14px 6px;padding:10px 14px;
+  border-radius:var(--radius-sm);
+  background:var(--bg-2);border:1px solid var(--border);
+  display:none;align-items:center;justify-content:space-between;
+  font-size:12px;color:var(--text-2);
+}
+.ramadan-row.on{display:flex}
+.ram-edit{font-size:11px;color:var(--accent);font-weight:600;cursor:pointer;padding:4px 8px}
+
+/* ================================================
+   CONTENT SCROLL AREA
+================================================ */
+.tab-content{
+  flex:1;overflow-y:auto;overflow-x:hidden;
+  padding-bottom:calc(var(--nav-h)+10px);
+  -webkit-overflow-scrolling:touch;
 }
 
-.header-title {
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.3px;
-  color: var(--text-primary);
+/* ================================================
+   SECTION HEADER
+================================================ */
+.sec-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 18px 6px;
 }
+.sec-label{font-size:12px;font-weight:600;color:var(--text-2);letter-spacing:.7px;text-transform:uppercase}
 
-.header-actions { display: flex; align-items: center; gap: 4px; }
-
-.icon-btn {
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  border: none;
-  background: transparent;
-  color: var(--text-primary);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 20px;
-  transition: background var(--transition);
-  position: relative; overflow: hidden;
-}
-.icon-btn:active { background: rgba(255,255,255,0.08); }
-
-/* Sahur mode pill */
-.sahur-pill {
-  display: flex; align-items: center; gap: 6px;
-  padding: 6px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  background: var(--surface-2);
-  font-size: 12px; font-weight: 500;
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: all var(--transition);
-  letter-spacing: 0.3px;
-}
-.sahur-pill.active {
-  border-color: rgba(0,230,118,0.4);
-  background: var(--accent-dim);
-  color: var(--accent);
-}
-.sahur-pill .pill-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--text-dim);
-  transition: background 0.3s;
-}
-.sahur-pill.active .pill-dot {
-  background: var(--accent);
-  box-shadow: 0 0 6px var(--accent);
-  animation: dotBlink 1.5s ease infinite;
-}
-@keyframes dotBlink { 0%,100%{opacity:1}50%{opacity:0.4} }
-
-/* =============================================
-   CONTENT AREA
-============================================= */
-.tab-content {
-  flex: 1; overflow-y: auto; overflow-x: hidden;
-  padding-bottom: calc(var(--nav-h) + 8px);
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* Custom scrollbar */
-.tab-content::-webkit-scrollbar { width: 0; }
-
-/* =============================================
-   SAHUR COUNTDOWN BANNER
-============================================= */
-.sahur-banner {
-  margin: 0 16px 4px;
-  padding: 14px 18px;
-  border-radius: var(--radius);
-  background: var(--accent-dim);
-  border: 1px solid rgba(0,230,118,0.2);
-  display: none;
-  align-items: center;
-  justify-content: space-between;
-  animation: fadeSlideDown 0.4s ease;
-}
-.sahur-banner.visible { display: flex; }
-@keyframes fadeSlideDown {
-  from { opacity: 0; transform: translateY(-12px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.banner-label {
-  font-size: 11px; font-weight: 500;
-  color: rgba(0,230,118,0.7);
-  letter-spacing: 1px; text-transform: uppercase;
-  margin-bottom: 3px;
-}
-.banner-time {
-  font-family: var(--font-mono);
-  font-size: 22px; font-weight: 500;
-  color: var(--accent);
-  letter-spacing: 2px;
-}
-.banner-icon { font-size: 32px; opacity: 0.8; }
-
-/* =============================================
-   ALARM LIST SECTION
-============================================= */
-.section-header {
-  padding: 8px 20px 6px;
-  display: flex; align-items: center;
-  justify-content: space-between;
-}
-.section-label {
-  font-size: 12px; font-weight: 500;
-  color: var(--text-secondary);
-  letter-spacing: 0.8px; text-transform: uppercase;
-}
-
-/* =============================================
+/* ================================================
    ALARM CARD
-============================================= */
-.alarm-list { padding: 0 16px; }
+================================================ */
+.alarm-list{padding:0 14px}
 
-.alarm-card {
-  display: flex; align-items: center;
-  padding: 18px 18px;
-  background: var(--surface-1);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  margin-bottom: 10px;
-  transition: all var(--transition);
-  position: relative; overflow: hidden;
-  cursor: pointer;
+.alarm-card{
+  display:flex;align-items:center;
+  padding:18px 16px;
+  background:var(--bg-1);
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  margin-bottom:10px;
+  position:relative;overflow:hidden;cursor:pointer;
+  transition:border-color .3s var(--ease), background .3s var(--ease), transform .15s var(--ease);
+  -webkit-transform:translateZ(0);
 }
+.alarm-card::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--text-3);border-radius:0 2px 2px 0;
+  transition:all .3s var(--ease);
+}
+.alarm-card.on::before{background:var(--accent);box-shadow:0 0 14px var(--accent-glow)}
+.alarm-card.on{border-color:rgba(0,230,118,.13);background:linear-gradient(135deg,rgba(0,230,118,.04),var(--bg-1) 55%)}
+.alarm-card.sahur-card::before{background:linear-gradient(180deg,var(--accent),rgba(0,180,90,.4))}
+.alarm-card:active{transform:scale(.985)}
 
-.alarm-card::before {
-  content: '';
-  position: absolute; left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: var(--text-dim);
-  border-radius: 0 2px 2px 0;
-  transition: all var(--transition);
-}
+.alarm-info{flex:1;min-width:0}
+.alarm-badge{display:flex;align-items:center;gap:5px;margin-bottom:3px}
+.alarm-badge-icon{font-size:11px}
+.alarm-badge-text{font-size:10px;font-weight:600;color:var(--text-2);letter-spacing:.4px}
+.alarm-card.on .alarm-badge-text{color:var(--accent)}
 
-.alarm-card.enabled::before {
-  background: var(--accent);
-  box-shadow: 0 0 12px var(--accent-glow);
+.alarm-time{
+  font-size:40px;font-weight:200;letter-spacing:-2px;line-height:1;
+  margin-bottom:6px;color:var(--text-1);
+  transition:color .3s;
 }
+.alarm-ampm{font-size:18px;font-weight:300;margin-left:2px;color:var(--text-2)}
 
-.alarm-card.enabled {
-  border-color: rgba(0,230,118,0.12);
-  background: linear-gradient(135deg, rgba(0,230,118,0.04) 0%, var(--surface-1) 60%);
+.alarm-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.alarm-repeat{font-size:12px;color:var(--text-2)}
+.alarm-tag{
+  background:var(--bg-3);padding:2px 8px;border-radius:10px;
+  font-size:11px;color:var(--text-2);white-space:nowrap;
 }
+.alarm-next{font-size:11px;color:var(--accent);font-weight:500}
 
-.alarm-card.sahur-type::before {
-  background: linear-gradient(180deg, var(--accent), rgba(0,180,90,0.5));
-}
+.alarm-toggle-wrap{padding-left:14px;flex-shrink:0}
 
-/* Ripple */
-.alarm-card .ripple {
-  position: absolute;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.06);
-  transform: scale(0);
-  animation: rippleOut 0.55s linear;
-  pointer-events: none;
+/* ================================================
+   TOGGLE SWITCH
+================================================ */
+.sw{
+  width:52px;height:28px;border-radius:14px;
+  background:var(--bg-4);position:relative;
+  cursor:pointer;border:none;outline:none;
+  transition:background .3s ease;flex-shrink:0;
 }
-@keyframes rippleOut {
-  to { transform: scale(4); opacity: 0; }
+.sw.on{background:var(--accent)}
+.sw::after{
+  content:'';position:absolute;top:3px;left:3px;
+  width:22px;height:22px;border-radius:50%;
+  background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.35);
+  transition:transform .35s var(--spring);
 }
+.sw.on::after{transform:translateX(24px)}
 
-.alarm-info { flex: 1; }
-
-.alarm-icon-label {
-  display: flex; align-items: center; gap: 6px;
-  margin-bottom: 4px;
-}
-.alarm-type-icon { font-size: 12px; }
-.alarm-type-text {
-  font-size: 11px; font-weight: 500;
-  color: var(--text-secondary);
-  letter-spacing: 0.5px;
-}
-.alarm-card.enabled .alarm-type-text { color: var(--accent); }
-
-.alarm-time-display {
-  font-size: 38px;
-  font-weight: 200;
-  letter-spacing: -1.5px;
-  line-height: 1;
-  color: var(--text-primary);
-  margin-bottom: 6px;
-  transition: color var(--transition);
-}
-.alarm-card.enabled .alarm-time-display { color: var(--text-primary); }
-
-.alarm-meta {
-  font-size: 12px;
-  color: var(--text-secondary);
-  display: flex; align-items: center; gap: 8px;
-}
-.alarm-repeat { }
-.alarm-label-tag {
-  background: var(--surface-3);
-  padding: 2px 8px; border-radius: 10px;
-  font-size: 11px; color: var(--text-secondary);
-}
-
-.alarm-toggle-wrap { padding-left: 12px; }
-
-/* =============================================
-   TOGGLE SWITCH (Material style)
-============================================= */
-.toggle-switch {
-  width: 52px; height: 28px;
-  border-radius: 14px;
-  background: var(--surface-4);
-  position: relative;
-  cursor: pointer;
-  border: none;
-  outline: none;
-  transition: background 0.3s ease;
-  flex-shrink: 0;
-}
-.toggle-switch.on { background: var(--accent); }
-.toggle-switch::after {
-  content: '';
-  position: absolute;
-  top: 3px; left: 3px;
-  width: 22px; height: 22px;
-  border-radius: 50%;
-  background: white;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-  transition: transform var(--transition-spring);
-}
-.toggle-switch.on::after { transform: translateX(24px); }
-
-/* =============================================
+/* ================================================
    EMPTY STATE
-============================================= */
-.empty-state {
-  text-align: center;
-  padding: 48px 20px;
-  color: var(--text-dim);
-}
-.empty-state-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.3; }
-.empty-state-text { font-size: 15px; font-weight: 400; }
+================================================ */
+.empty-state{text-align:center;padding:60px 20px;color:var(--text-3)}
+.empty-icon{font-size:52px;margin-bottom:14px;opacity:.3;display:block}
+.empty-text{font-size:15px}
 
-/* =============================================
-   FAB (Floating Add Button) — inside header
-============================================= */
-.fab-add {
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  border: none;
-  background: var(--accent);
-  color: #000;
-  font-size: 24px;
-  font-weight: 300;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all var(--transition);
-  box-shadow: 0 4px 16px rgba(0,230,118,0.3);
-  line-height: 1;
-}
-.fab-add:active { transform: scale(0.92); }
-
-/* =============================================
+/* ================================================
    BOTTOM NAVIGATION
-============================================= */
-.bottom-nav {
-  position: fixed;
-  bottom: 0; left: 50%; transform: translateX(-50%);
-  width: 100%; max-width: 430px;
-  height: var(--nav-h);
-  background: rgba(8,8,8,0.96);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-top: 1px solid var(--border);
-  display: flex; align-items: stretch;
-  z-index: 100;
+================================================ */
+.bottom-nav{
+  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+  width:100%;max-width:430px;height:var(--nav-h);
+  background:rgba(10,10,10,.96);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border-top:1px solid var(--border);
+  display:flex;align-items:stretch;z-index:100;
+  transition:background .4s;
+}
+body.light .bottom-nav{background:rgba(250,250,250,.96)}
+
+.nav-item{
+  flex:1;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;
+  border:none;background:transparent;cursor:pointer;
+  color:var(--text-3);transition:color .25s var(--ease);
+  padding-bottom:6px;position:relative;overflow:hidden;
+}
+.nav-item.active{color:var(--accent)}
+.nav-icon{font-size:22px;line-height:1}
+.nav-label{font-size:10px;font-weight:500;letter-spacing:.2px}
+.nav-dot{
+  position:absolute;bottom:4px;left:50%;transform:translateX(-50%);
+  width:4px;height:4px;border-radius:50%;background:var(--accent);
+  opacity:0;transition:opacity .25s;
+}
+.nav-item.active .nav-dot{opacity:1}
+
+/* ================================================
+   TAB PANES
+================================================ */
+.tab-pane{display:none;padding-top:4px;animation:tabIn .25s var(--ease)}
+.tab-pane.active{display:block}
+@keyframes tabIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ================================================
+   WORLD CLOCK
+================================================ */
+.world-list{padding:4px 14px}
+.world-item{
+  display:flex;align-items:center;
+  padding:16px 16px;background:var(--bg-1);
+  border-radius:var(--radius);border:1px solid var(--border);
+  margin-bottom:10px;transition:all .2s;
+}
+.world-item:active{background:var(--bg-2)}
+.world-left{flex:1}
+.w-flag{font-size:22px;margin-bottom:3px}
+.w-city{font-size:16px;font-weight:500;margin-bottom:2px}
+.w-tz{font-size:11px;color:var(--text-2)}
+.world-right{text-align:right}
+.w-time{font-family:var(--mono);font-size:26px;font-weight:300;letter-spacing:1px;margin-bottom:3px}
+.w-diff{font-size:11px;font-weight:600;padding:2px 8px;border-radius:10px;display:inline-block}
+.w-diff.ahead{color:var(--accent);background:var(--accent-dim)}
+.w-diff.behind{color:var(--red);background:rgba(255,82,82,.1)}
+.w-diff.same{color:var(--text-2);background:var(--bg-3)}
+
+.world-add{padding:4px 14px 14px;display:flex;gap:10px}
+.city-sel{
+  flex:1;background:var(--bg-2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text-1);
+  font-size:14px;padding:12px 14px;outline:none;
+  appearance:none;transition:border-color .2s;
+}
+.city-sel:focus{border-color:rgba(0,230,118,.35)}
+.city-sel option{background:#111}
+body.light .city-sel option{background:#f0f0f0}
+.btn-add{
+  padding:12px 18px;background:var(--accent);color:#000;
+  border:none;border-radius:var(--radius-sm);
+  font-size:14px;font-weight:700;cursor:pointer;
+  transition:opacity .2s;
+}
+.btn-add:active{opacity:.8}
+
+/* ================================================
+   TIMER
+================================================ */
+.timer-wrap{
+  display:flex;flex-direction:column;
+  align-items:center;padding:20px 24px 16px;
+}
+.timer-ring-outer{position:relative;width:220px;height:220px;margin-bottom:28px}
+.timer-ring-outer svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--bg-3);stroke-width:6}
+.ring-fg{
+  fill:none;stroke:var(--accent);stroke-width:6;
+  stroke-linecap:round;
+  stroke-dasharray:628.3;stroke-dashoffset:628.3;
+  transition:stroke-dashoffset .8s linear;
+  filter:drop-shadow(0 0 8px var(--accent));
+}
+.timer-center{
+  position:absolute;inset:0;display:flex;
+  flex-direction:column;align-items:center;justify-content:center;
+}
+.timer-disp{
+  font-family:var(--mono);font-size:38px;font-weight:300;
+  color:var(--text-1);letter-spacing:2px;transition:color .3s;
+}
+.timer-stat{font-size:10px;color:var(--text-2);letter-spacing:1.5px;text-transform:uppercase;margin-top:6px}
+
+.time-row{display:flex;align-items:center;gap:6px;margin-bottom:26px}
+.tug{display:flex;flex-direction:column;align-items:center;gap:4px}
+.tug label{font-size:10px;color:var(--text-2);letter-spacing:1px;text-transform:uppercase}
+.tug input{
+  width:72px;background:var(--bg-2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text-1);
+  font-family:var(--mono);font-size:30px;font-weight:300;
+  text-align:center;padding:10px 4px;outline:none;
+  transition:border-color .2s;
+}
+.tug input:focus{border-color:rgba(0,230,118,.4)}
+.tsep{font-size:28px;color:var(--text-3);margin-top:18px}
+
+.btn-row{display:flex;gap:14px;align-items:center}
+.btn-circ{
+  width:58px;height:58px;border-radius:50%;
+  border:2px solid var(--border);background:var(--bg-2);
+  color:var(--text-1);font-size:20px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s var(--ease);
+}
+.btn-circ:active{transform:scale(.92)}
+.btn-circ.primary{
+  width:72px;height:72px;background:var(--accent);color:#000;
+  border-color:var(--accent);font-size:26px;
+  box-shadow:0 4px 22px var(--accent-glow);
+}
+.btn-circ.primary:active{box-shadow:0 2px 10px var(--accent-glow)}
+
+/* ================================================
+   STOPWATCH
+================================================ */
+.sw-wrap{display:flex;flex-direction:column;align-items:center;padding:28px 24px 16px}
+.sw-disp{
+  font-family:var(--mono);font-size:66px;font-weight:200;
+  letter-spacing:-2px;color:var(--text-1);line-height:1;
+  margin-bottom:6px;transition:color .3s;
+}
+.sw-disp.running{color:var(--accent)}
+.sw-ms{font-family:var(--mono);font-size:26px;font-weight:300;color:var(--text-2);margin-bottom:34px}
+
+.lap-list{
+  width:100%;border-top:1px solid var(--border);margin-top:20px;
+  max-height:220px;overflow-y:auto;
+}
+.lap-item{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:11px 2px;border-bottom:1px solid var(--border);
+  font-size:14px;
+}
+.lap-num{color:var(--text-2);font-weight:500}
+.lap-time{font-family:var(--mono);font-size:15px}
+.lap-item.best .lap-time{color:var(--accent)}
+.lap-item.worst .lap-time{color:var(--red)}
+
+/* ================================================
+   MODAL — BOTTOM SHEET
+================================================ */
+.overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(0,0,0,.65);backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  display:none;align-items:flex-end;
+}
+.overlay.open{display:flex;animation:fadeIn .2s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.sheet{
+  width:100%;background:var(--bg-1);
+  border-radius:24px 24px 0 0;
+  border-top:1px solid var(--border);
+  padding-bottom:env(safe-area-inset-bottom,16px);
+  animation:slideUp .35s cubic-bezier(.32,.72,0,1);
+  max-height:94vh;overflow-y:auto;
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+
+.sheet-handle{
+  width:36px;height:4px;border-radius:2px;
+  background:var(--bg-4);margin:12px auto 18px;
+}
+.sheet-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px 14px;border-bottom:1px solid var(--border);
+}
+.sheet-title{font-size:17px;font-weight:600}
+.btn-save{
+  background:var(--accent);color:#000;border:none;
+  border-radius:20px;padding:8px 20px;
+  font-family:var(--font);font-size:14px;font-weight:700;
+  cursor:pointer;transition:opacity .2s;
+}
+.btn-save:active{opacity:.8}
+.btn-cancel{
+  background:transparent;color:var(--text-2);border:none;
+  font-family:var(--font);font-size:15px;cursor:pointer;
 }
 
-.nav-item {
-  flex: 1;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  gap: 4px;
-  border: none; background: transparent;
-  cursor: pointer;
-  color: var(--text-dim);
-  transition: color var(--transition);
-  padding-bottom: 4px;
-  position: relative; overflow: hidden;
+/* Time picker row */
+.modal-time{
+  display:flex;align-items:center;justify-content:center;
+  padding:22px 20px;gap:2px;
 }
-.nav-item.active { color: var(--accent); }
+.drum{
+  font-family:var(--mono);font-size:68px;font-weight:200;
+  letter-spacing:-3px;color:var(--text-1);
+  background:transparent;border:none;outline:none;
+  text-align:center;width:108px;
+}
+.drum-colon{font-size:54px;font-weight:200;color:var(--text-2);padding-bottom:4px}
 
-.nav-icon { font-size: 22px; line-height: 1; }
-.nav-label { font-size: 10px; font-weight: 500; letter-spacing: 0.3px; }
+/* Options */
+.opts{padding:0 20px 10px}
+.opt-grp{margin-bottom:18px}
+.opt-grp-lbl{
+  font-size:11px;font-weight:700;color:var(--text-2);
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:9px;
+}
+.opt-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 0;border-bottom:1px solid var(--border);
+}
+.opt-row:last-child{border-bottom:none}
+.opt-lbl{font-size:15px}
+.opt-val{font-size:14px;color:var(--text-2);display:flex;align-items:center;gap:8px}
 
-.nav-indicator {
-  position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
-  width: 20px; height: 2px; border-radius: 2px;
-  background: var(--accent);
-  transition: opacity var(--transition);
-  opacity: 0;
+/* Text input */
+.txt-in{
+  width:100%;background:var(--bg-2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text-1);
+  font-family:var(--font);font-size:15px;padding:12px 14px;
+  outline:none;transition:border-color .2s;
 }
-.nav-item.active .nav-indicator { opacity: 1; }
-
-/* =============================================
-   TABS
-============================================= */
-.tab-pane { display: none; padding-top: 4px; }
-.tab-pane.active { display: block; }
-
-/* =============================================
-   WORLD CLOCK TAB
-============================================= */
-.world-list { padding: 8px 16px; }
-
-.world-item {
-  display: flex; align-items: center;
-  padding: 16px 18px;
-  background: var(--surface-1);
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-  margin-bottom: 10px;
-  transition: border-color var(--transition);
-}
-.world-item:active { background: var(--surface-2); }
-
-.world-left { flex: 1; }
-.world-flag { font-size: 20px; margin-bottom: 4px; }
-.world-city { font-size: 16px; font-weight: 500; color: var(--text-primary); margin-bottom: 2px; }
-.world-tz { font-size: 12px; color: var(--text-secondary); }
-
-.world-right { text-align: right; }
-.world-time {
-  font-family: var(--font-mono);
-  font-size: 26px; font-weight: 300;
-  color: var(--text-primary);
-  letter-spacing: 1px;
-  margin-bottom: 2px;
-}
-.world-diff {
-  font-size: 11px; font-weight: 500;
-  padding: 2px 8px; border-radius: 10px;
-  display: inline-block;
-}
-.world-diff.ahead { color: var(--accent); background: var(--accent-dim); }
-.world-diff.behind { color: var(--red); background: rgba(255,82,82,0.1); }
-.world-diff.same { color: var(--text-secondary); background: var(--surface-3); }
-
-/* World add button */
-.world-add-row {
-  padding: 0 16px 16px;
-  display: flex; gap: 10px;
-}
-.city-select-input {
-  flex: 1;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--text-primary);
-  font-family: var(--font);
-  font-size: 14px; padding: 12px 14px;
-  appearance: none; outline: none;
-  transition: border-color var(--transition);
-}
-.city-select-input:focus { border-color: rgba(0,230,118,0.3); }
-.city-select-input option { background: #111; }
-
-.btn-add-city {
-  padding: 12px 18px;
-  background: var(--accent);
-  color: #000; font-family: var(--font);
-  font-size: 14px; font-weight: 600;
-  border: none; border-radius: var(--radius-sm);
-  cursor: pointer; transition: all var(--transition);
-}
-.btn-add-city:active { transform: scale(0.95); }
-
-/* =============================================
-   TIMER TAB
-============================================= */
-.timer-wrap {
-  display: flex; flex-direction: column;
-  align-items: center;
-  padding: 20px 24px;
-}
-
-.timer-ring-outer {
-  position: relative; width: 220px; height: 220px;
-  margin-bottom: 32px;
-}
-.timer-ring-outer svg { transform: rotate(-90deg); }
-.ring-bg { fill: none; stroke: var(--surface-3); stroke-width: 6; }
-.ring-progress {
-  fill: none; stroke: var(--accent); stroke-width: 6;
-  stroke-linecap: round;
-  stroke-dasharray: 628.3;
-  stroke-dashoffset: 628.3;
-  transition: stroke-dashoffset 0.8s linear;
-  filter: drop-shadow(0 0 8px var(--accent));
-}
-.timer-center-text {
-  position: absolute; inset: 0;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-}
-.timer-main-display {
-  font-family: var(--font-mono);
-  font-size: 36px; font-weight: 300;
-  color: var(--text-primary); letter-spacing: 2px;
-}
-.timer-status-label {
-  font-size: 11px; color: var(--text-secondary);
-  letter-spacing: 1px; margin-top: 6px; text-transform: uppercase;
-}
-
-.time-picker-row {
-  display: flex; align-items: center; gap: 8px;
-  margin-bottom: 28px;
-}
-.time-unit-group { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.time-unit-label { font-size: 10px; color: var(--text-secondary); letter-spacing: 1px; text-transform: uppercase; }
-.time-unit-input {
-  width: 70px;
-  background: var(--surface-2);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  font-size: 28px; font-weight: 300;
-  text-align: center; padding: 10px 4px;
-  outline: none; transition: border-color var(--transition);
-}
-.time-unit-input:focus { border-color: rgba(0,230,118,0.4); }
-.time-sep { font-size: 28px; color: var(--text-dim); margin-top: 18px; }
-
-.btn-row-center { display: flex; gap: 12px; }
-.btn-circle {
-  width: 60px; height: 60px; border-radius: 50%;
-  border: 2px solid var(--border);
-  background: var(--surface-2);
-  color: var(--text-primary); font-size: 20px;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: all var(--transition);
-}
-.btn-circle.primary {
-  width: 72px; height: 72px;
-  background: var(--accent); color: #000;
-  border-color: var(--accent);
-  font-size: 24px;
-  box-shadow: 0 4px 20px var(--accent-glow);
-}
-.btn-circle:active { transform: scale(0.93); }
-.btn-circle.primary:active { box-shadow: 0 2px 10px var(--accent-glow); }
-
-/* =============================================
-   STOPWATCH TAB
-============================================= */
-.sw-wrap {
-  display: flex; flex-direction: column;
-  align-items: center;
-  padding: 28px 24px 20px;
-}
-
-.sw-display {
-  font-family: var(--font-mono);
-  font-size: 62px; font-weight: 200;
-  letter-spacing: -2px;
-  color: var(--text-primary);
-  margin-bottom: 8px;
-  line-height: 1;
-  transition: color var(--transition);
-}
-.sw-display.running { color: var(--accent); }
-.sw-ms {
-  font-family: var(--font-mono);
-  font-size: 24px; font-weight: 300;
-  color: var(--text-secondary);
-  margin-bottom: 36px;
-}
-
-.sw-lap-list {
-  width: 100%;
-  max-height: 220px;
-  overflow-y: auto;
-  border-top: 1px solid var(--border);
-  margin-top: 24px;
-}
-.sw-lap-list::-webkit-scrollbar { width: 0; }
-.sw-lap-item {
-  display: flex; justify-content: space-between;
-  align-items: center;
-  padding: 12px 4px;
-  border-bottom: 1px solid var(--border);
-  font-size: 14px;
-}
-.sw-lap-num { color: var(--text-secondary); font-weight: 500; }
-.sw-lap-time { font-family: var(--font-mono); font-size: 15px; color: var(--text-primary); }
-.sw-lap-item.fastest .sw-lap-time { color: var(--accent); }
-.sw-lap-item.slowest .sw-lap-time { color: var(--red); }
-
-/* =============================================
-   MODAL (Add Alarm)
-============================================= */
-.modal-overlay {
-  position: fixed; inset: 0; z-index: 200;
-  background: rgba(0,0,0,0.7);
-  backdrop-filter: blur(8px);
-  display: none; align-items: flex-end;
-  animation: none;
-}
-.modal-overlay.open {
-  display: flex;
-  animation: fadeIn 0.2s ease;
-}
-@keyframes fadeIn { from{opacity:0}to{opacity:1} }
-
-.modal-sheet {
-  width: 100%;
-  background: #0e0e0e;
-  border-radius: 24px 24px 0 0;
-  border-top: 1px solid var(--border);
-  padding: 0 0 40px;
-  animation: slideUp 0.35s cubic-bezier(0.32, 0.72, 0, 1);
-  max-height: 92vh;
-  overflow-y: auto;
-}
-@keyframes slideUp {
-  from{ transform: translateY(100%); }
-  to{ transform: translateY(0); }
-}
-
-.modal-handle {
-  width: 36px; height: 4px; border-radius: 2px;
-  background: var(--surface-4);
-  margin: 12px auto 20px;
-}
-
-.modal-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 0 20px 16px;
-  border-bottom: 1px solid var(--border);
-}
-.modal-title { font-size: 17px; font-weight: 600; }
-.modal-save {
-  background: var(--accent); color: #000;
-  border: none; border-radius: 20px;
-  padding: 8px 20px;
-  font-family: var(--font); font-size: 14px; font-weight: 600;
-  cursor: pointer; transition: all var(--transition);
-}
-.modal-save:active { transform: scale(0.95); }
-.modal-cancel {
-  background: transparent; color: var(--text-secondary);
-  border: none; font-family: var(--font);
-  font-size: 15px; cursor: pointer;
-}
-
-/* Time picker in modal */
-.modal-time-picker {
-  display: flex; align-items: center; justify-content: center;
-  padding: 24px 20px;
-  gap: 4px;
-}
-.picker-drum {
-  font-family: var(--font-mono);
-  font-size: 64px; font-weight: 200;
-  letter-spacing: -2px;
-  color: var(--text-primary);
-  background: transparent; border: none;
-  outline: none; text-align: center;
-  width: 100px;
-}
-.picker-drum::-webkit-inner-spin-button,
-.picker-drum::-webkit-outer-spin-button { -webkit-appearance: none; }
-.picker-colon {
-  font-size: 52px; font-weight: 200;
-  color: var(--text-secondary); line-height: 1;
-  padding-bottom: 4px;
-}
-
-/* Modal options */
-.modal-options { padding: 0 20px; }
-
-.option-group { margin-bottom: 20px; }
-.option-group-title {
-  font-size: 11px; font-weight: 600;
-  color: var(--text-secondary); letter-spacing: 1px;
-  text-transform: uppercase; margin-bottom: 10px;
-}
-
-.option-row {
-  display: flex; align-items: center;
-  justify-content: space-between;
-  padding: 14px 0;
-  border-bottom: 1px solid var(--border);
-}
-.option-row:last-child { border-bottom: none; }
-.option-row-label { font-size: 15px; color: var(--text-primary); }
-.option-row-value { font-size: 14px; color: var(--text-secondary); display: flex; align-items: center; gap: 8px; }
+.txt-in:focus{border-color:rgba(0,230,118,.35)}
 
 /* Day chips */
-.day-chips { display: flex; gap: 6px; flex-wrap: wrap; }
-.day-chip {
-  width: 34px; height: 34px; border-radius: 50%;
-  background: var(--surface-3); border: 1px solid var(--border);
-  color: var(--text-secondary); font-size: 11px; font-weight: 600;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: all var(--transition);
+.day-chips{display:flex;gap:7px;flex-wrap:wrap}
+.dc{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--bg-3);border:1px solid var(--border);
+  color:var(--text-2);font-size:11px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;
 }
-.day-chip.sel { background: var(--accent); border-color: var(--accent); color: #000; }
-
-/* Sound select */
-.sound-select {
-  background: var(--surface-2); border: 1px solid var(--border);
-  border-radius: var(--radius-sm); color: var(--text-primary);
-  font-family: var(--font); font-size: 14px;
-  padding: 10px 12px; width: 100%; outline: none;
-  appearance: none; transition: border-color var(--transition);
-  margin-top: 4px;
-}
-.sound-select:focus { border-color: rgba(0,230,118,0.3); }
-.sound-select option { background: #111; }
-
-/* Volume */
-.vol-row { display: flex; align-items: center; gap: 12px; margin-top: 4px; }
-.vol-icon { font-size: 16px; }
-input[type=range] {
-  flex: 1; -webkit-appearance: none; height: 3px;
-  background: var(--surface-4); border-radius: 2px; outline: none;
-}
-input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 18px; height: 18px;
-  border-radius: 50%; background: var(--accent);
-  cursor: pointer; box-shadow: 0 0 6px var(--accent-glow);
-}
+.dc.on{background:var(--accent);border-color:var(--accent);color:#000}
 
 /* Snooze chips */
-.snooze-chips { display: flex; gap: 8px; margin-top: 4px; }
-.snooze-chip {
-  padding: 7px 14px; border-radius: 20px;
-  background: var(--surface-3); border: 1px solid var(--border);
-  color: var(--text-secondary); font-size: 13px; font-weight: 500;
-  cursor: pointer; transition: all var(--transition);
+.sc-row{display:flex;gap:8px;flex-wrap:wrap}
+.sc{
+  padding:7px 16px;border-radius:20px;
+  background:var(--bg-3);border:1px solid var(--border);
+  color:var(--text-2);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .2s;
 }
-.snooze-chip.sel { background: var(--accent-dim); border-color: rgba(0,230,118,0.4); color: var(--accent); }
+.sc.on{background:var(--accent-dim);border-color:rgba(0,230,118,.4);color:var(--accent)}
 
-/* Sahur type toggle row */
-.sahur-type-row {
-  display: flex; align-items: center;
-  justify-content: space-between;
-  padding: 14px 0;
+/* Sound section */
+.snd-sel{
+  width:100%;background:var(--bg-2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text-1);
+  font-size:14px;padding:11px 14px;appearance:none;outline:none;
+  transition:border-color .2s;margin-top:4px;
 }
-.sahur-type-label { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+.snd-sel:focus{border-color:rgba(0,230,118,.35)}
+.snd-sel option{background:var(--bg-2)}
 
-/* =============================================
-   ALARM POPUP (ring)
-============================================= */
-.alarm-ring-overlay {
-  position: fixed; inset: 0; z-index: 500;
-  background: #000;
-  display: none; flex-direction: column;
-  align-items: center; justify-content: center;
-  animation: none;
+/* Custom upload */
+.upload-area{
+  border:1.5px dashed var(--border);border-radius:var(--radius-sm);
+  padding:14px;text-align:center;cursor:pointer;
+  transition:border-color .2s;margin-top:8px;
+  position:relative;overflow:hidden;
 }
-.alarm-ring-overlay.ringing {
-  display: flex;
-  animation: fadeIn 0.3s ease;
+.upload-area:hover{border-color:rgba(0,230,118,.35)}
+.upload-area input[type=file]{
+  position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;
 }
+.upload-lbl{font-size:13px;color:var(--text-2)}
+.upload-name{font-size:12px;color:var(--accent);margin-top:4px;font-weight:500}
 
-.ring-time {
-  font-family: var(--font-mono);
-  font-size: 72px; font-weight: 200;
-  letter-spacing: -3px;
-  color: var(--text-primary);
-  margin-bottom: 8px;
+.btn-test{
+  width:100%;padding:11px;background:var(--bg-3);
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  color:var(--text-1);font-family:var(--font);font-size:13px;
+  font-weight:600;cursor:pointer;transition:all .2s;margin-top:8px;
+  display:flex;align-items:center;justify-content:center;gap:8px;
 }
-.ring-label {
-  font-size: 14px; color: var(--text-secondary);
-  margin-bottom: 4px; font-weight: 400;
+.btn-test:hover{border-color:rgba(0,230,118,.35);color:var(--accent)}
+.btn-test:active{background:var(--accent-dim)}
+
+/* Vol row */
+.vol-row{display:flex;align-items:center;gap:10px;margin-top:6px}
+.vol-ico{font-size:16px}
+input[type=range]{
+  flex:1;-webkit-appearance:none;height:3px;
+  background:var(--bg-4);border-radius:2px;outline:none;
 }
-.ring-alarm-name {
-  font-size: 22px; font-weight: 500;
-  color: var(--text-primary);
-  margin-bottom: 60px;
-  display: flex; align-items: center; gap: 8px;
-}
-.ring-icon-anim {
-  font-size: 36px;
-  animation: ringBell 0.4s ease infinite alternate;
-}
-@keyframes ringBell {
-  from{ transform: rotate(-15deg); }
-  to{ transform: rotate(15deg); }
+input[type=range]::-webkit-slider-thumb{
+  -webkit-appearance:none;width:18px;height:18px;
+  border-radius:50%;background:var(--accent);cursor:pointer;
+  box-shadow:0 0 6px var(--accent-glow);
 }
 
-.ring-buttons {
-  display: flex; gap: 40px; align-items: center;
+/* Sahur toggle in modal */
+.sahur-tog-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:13px 0;border-bottom:1px solid var(--border);
 }
-.ring-btn {
-  display: flex; flex-direction: column; align-items: center; gap: 10px;
-  border: none; background: transparent; cursor: pointer;
-  color: var(--text-primary);
-}
-.ring-btn-circle {
-  width: 70px; height: 70px; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 28px;
-}
-.ring-btn-circle.snooze-btn-circle {
-  background: var(--surface-3); border: 1px solid var(--border);
-}
-.ring-btn-circle.dismiss-btn-circle {
-  background: var(--accent); color: #000;
-  box-shadow: 0 0 30px var(--accent-glow);
-}
-.ring-btn-label { font-size: 12px; color: var(--text-secondary); font-weight: 500; }
-.ring-pulse {
-  position: absolute;
-  width: 70px; height: 70px; border-radius: 50%;
-  border: 2px solid var(--accent);
-  animation: ringPulse 1.5s ease-out infinite;
-  pointer-events: none;
-}
-.ring-pulse:nth-child(2) { animation-delay: 0.5s; }
-.ring-pulse:nth-child(3) { animation-delay: 1s; }
-@keyframes ringPulse {
-  0%{ transform: scale(1); opacity: 0.6; }
-  100%{ transform: scale(2.5); opacity: 0; }
-}
+.sahur-tog-lbl{display:flex;align-items:center;gap:7px;font-size:15px}
 
-/* =============================================
-   CONTEXT MENU (long press)
-============================================= */
-.ctx-menu {
-  position: fixed; z-index: 300;
-  background: #1c1c1c;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  min-width: 160px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
-  overflow: hidden;
-  display: none;
-  animation: popIn 0.15s ease;
+/* ================================================
+   RAMADAN MODAL
+================================================ */
+.ram-sheet{padding:20px}
+.ram-title{font-size:17px;font-weight:600;margin-bottom:16px;text-align:center}
+.date-in{
+  width:100%;background:var(--bg-2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text-1);
+  font-size:16px;padding:12px 14px;outline:none;
+  transition:border-color .2s;margin-bottom:12px;
 }
-.ctx-menu.open { display: block; }
-@keyframes popIn {
-  from{ opacity:0; transform:scale(0.9); }
-  to{ opacity:1; transform:scale(1); }
+.date-in:focus{border-color:rgba(0,230,118,.35)}
+.ram-info{
+  font-size:12px;color:var(--text-2);text-align:center;
+  line-height:1.6;margin-bottom:16px;
 }
-.ctx-item {
-  padding: 14px 18px;
-  font-size: 14px; color: var(--text-primary);
-  cursor: pointer; transition: background var(--transition);
-  display: flex; align-items: center; gap: 10px;
+.btn-full{
+  width:100%;padding:14px;background:var(--accent);color:#000;
+  border:none;border-radius:var(--radius-sm);
+  font-family:var(--font);font-size:15px;font-weight:700;
+  cursor:pointer;transition:opacity .2s;
 }
-.ctx-item:hover { background: var(--surface-3); }
-.ctx-item.danger { color: var(--red); }
-.ctx-item:not(:last-child) { border-bottom: 1px solid var(--border); }
+.btn-full:active{opacity:.8}
+.btn-full-outline{
+  width:100%;padding:14px;background:transparent;color:var(--text-2);
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  font-family:var(--font);font-size:15px;font-weight:600;
+  cursor:pointer;transition:all .2s;margin-top:8px;
+}
+.btn-full-outline:active{background:var(--bg-3)}
 
-/* =============================================
-   NOTIFICATION TOAST
-============================================= */
-.toast-container {
-  position: fixed; top: 16px;
-  left: 50%; transform: translateX(-50%);
-  z-index: 400; display: flex; flex-direction: column; gap: 8px;
-  pointer-events: none; width: calc(100% - 32px); max-width: 400px;
+/* ================================================
+   ALARM RINGING OVERLAY
+================================================ */
+.ring-overlay{
+  position:fixed;inset:0;z-index:500;background:var(--bg);
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:24px;
 }
-.toast {
-  background: #1e1e1e;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 14px 16px;
-  display: flex; align-items: center; gap: 12px;
-  animation: toastIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-  pointer-events: all;
+.ring-overlay.on{display:flex;animation:fadeIn .3s ease}
+.ring-vibe{
+  font-size:70px;margin-bottom:16px;
+  animation:vibe .3s ease infinite alternate;
 }
-.toast.success { border-color: rgba(0,230,118,0.3); }
-.toast.error { border-color: rgba(255,82,82,0.3); }
-.toast-icon { font-size: 18px; }
-.toast-body { flex: 1; }
-.toast-title { font-size: 14px; font-weight: 500; margin-bottom: 1px; }
-.toast-sub { font-size: 12px; color: var(--text-secondary); }
-@keyframes toastIn {
-  from{ opacity:0; transform:translateY(-16px) scale(0.95); }
-  to{ opacity:1; transform:translateY(0) scale(1); }
+@keyframes vibe{from{transform:rotate(-12deg) scale(1)}to{transform:rotate(12deg) scale(1.08)}}
+.ring-time-disp{font-size:76px;font-weight:200;font-family:var(--mono);letter-spacing:-3px;margin-bottom:8px}
+.ring-subtitle{font-size:14px;color:var(--text-2);margin-bottom:6px}
+.ring-name{font-size:24px;font-weight:500;margin-bottom:50px}
+.ring-pulses{position:relative;width:80px;height:80px;margin:0 auto 48px;display:flex;align-items:center;justify-content:center}
+.ring-pulse{
+  position:absolute;width:80px;height:80px;border-radius:50%;
+  border:2px solid var(--accent);
+  animation:pulse 1.8s ease-out infinite;
 }
-@keyframes toastOut {
-  from{ opacity:1; transform:translateY(0); }
-  to{ opacity:0; transform:translateY(-12px); }
+.ring-pulse:nth-child(2){animation-delay:.6s}
+.ring-pulse:nth-child(3){animation-delay:1.2s}
+@keyframes pulse{0%{transform:scale(1);opacity:.7}100%{transform:scale(2.8);opacity:0}}
+.ring-btns{display:flex;gap:48px;align-items:center}
+.ring-btn{display:flex;flex-direction:column;align-items:center;gap:10px;border:none;background:transparent;cursor:pointer;color:var(--text-1)}
+.rbc{width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px}
+.rbc.snz{background:var(--bg-3);border:1px solid var(--border)}
+.rbc.dis{background:var(--accent);color:#000;box-shadow:0 0 30px var(--accent-glow)}
+.ring-btn-lbl{font-size:12px;color:var(--text-2);font-weight:600}
+
+/* ================================================
+   CONTEXT MENU
+================================================ */
+.ctx{
+  position:fixed;z-index:300;background:var(--bg-2);
+  border:1px solid var(--border);border-radius:var(--radius-sm);
+  min-width:160px;box-shadow:0 10px 36px rgba(0,0,0,.5);
+  overflow:hidden;display:none;animation:popIn .15s ease;
 }
+.ctx.open{display:block}
+@keyframes popIn{from{opacity:0;transform:scale(.88)}to{opacity:1;transform:scale(1)}}
+.ctx-item{
+  padding:13px 18px;font-size:14px;cursor:pointer;
+  display:flex;align-items:center;gap:10px;
+  transition:background .15s;
+}
+.ctx-item:hover{background:var(--bg-3)}
+.ctx-item:not(:last-child){border-bottom:1px solid var(--border)}
+.ctx-item.danger{color:var(--red)}
+
+/* ================================================
+   TOAST
+================================================ */
+.toast-wrap{
+  position:fixed;top:16px;left:50%;transform:translateX(-50%);
+  z-index:600;display:flex;flex-direction:column;gap:8px;
+  pointer-events:none;width:calc(100% - 28px);max-width:400px;
+}
+.toast{
+  background:var(--bg-2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);padding:13px 16px;
+  display:flex;align-items:center;gap:12px;
+  animation:toastIn .35s var(--spring);
+  box-shadow:0 8px 28px rgba(0,0,0,.35);pointer-events:all;
+}
+.toast.ok{border-color:rgba(0,230,118,.3)}
+.toast.er{border-color:rgba(255,82,82,.3)}
+.toast-ico{font-size:18px}
+.toast-bd{flex:1}
+.toast-t{font-size:14px;font-weight:600}
+.toast-s{font-size:12px;color:var(--text-2);margin-top:1px}
+@keyframes toastIn{from{opacity:0;transform:translateY(-14px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes toastOut{from{opacity:1}to{opacity:0;transform:translateY(-10px)}}
+
+/* ================================================
+   THREE DOT MENU
+================================================ */
+.dot-menu{
+  position:fixed;top:60px;right:14px;z-index:300;
+  background:var(--bg-2);border:1px solid var(--border);
+  border-radius:var(--radius-sm);min-width:180px;
+  box-shadow:0 10px 36px rgba(0,0,0,.5);
+  overflow:hidden;display:none;animation:popIn .15s ease;
+}
+.dot-menu.open{display:block}
 </style>
 </head>
 <body>
 
-<!-- SAHUR MODE BACKGROUND -->
-<div id="sahurBg">
-  <div class="sahur-gradient"></div>
-  <div class="sahur-pattern"></div>
+<!-- SAHUR BG -->
+<div id="sahurBg"><div class="sg"></div><div class="sp"></div></div>
+<div id="moon">🌙</div>
+
+<!-- RINGING OVERLAY -->
+<div class="ring-overlay" id="ringOverlay">
+  <div class="ring-vibe" id="ringIcon">🔔</div>
+  <div class="ring-time-disp" id="ringTime">06:00</div>
+  <div class="ring-subtitle" id="ringSub">Alarm</div>
+  <div class="ring-name" id="ringName">Wake up</div>
+  <div class="ring-pulses">
+    <div class="ring-pulse"></div><div class="ring-pulse"></div><div class="ring-pulse"></div>
+  </div>
+  <div class="ring-btns">
+    <button class="ring-btn" onclick="snoozeRing()">
+      <div class="rbc snz">💤</div>
+      <span class="ring-btn-lbl" id="snoozeLabel">Snooze</span>
+    </button>
+    <button class="ring-btn" onclick="dismissRing()">
+      <div class="rbc dis">✕</div>
+      <span class="ring-btn-lbl">Dismiss</span>
+    </button>
+  </div>
 </div>
-
-<!-- MOON (header) -->
-<div class="sahur-moon" id="sahurMoon">🌙</div>
-
-<!-- TOAST CONTAINER -->
-<div class="toast-container" id="toastContainer"></div>
 
 <!-- CONTEXT MENU -->
-<div class="ctx-menu" id="ctxMenu">
-  <div class="ctx-item" onclick="ctxEdit()">✏️ Düzəlt</div>
-  <div class="ctx-item danger" onclick="ctxDelete()">🗑 Sil</div>
+<div class="ctx" id="ctx">
+  <div class="ctx-item" onclick="ctxDo('edit')">✏️ Edit</div>
+  <div class="ctx-item danger" onclick="ctxDo('delete')">🗑 Delete</div>
 </div>
 
-<!-- ALARM RINGING OVERLAY -->
-<div class="alarm-ring-overlay" id="alarmRingOverlay">
-  <div class="ring-time" id="ringDisplayTime">06:00</div>
-  <div class="ring-label">Sahur Vaxtı</div>
-  <div class="ring-alarm-name" id="ringAlarmName">
-    <span class="ring-icon-anim" id="ringIcon">🔔</span>
-    <span id="ringNameText">Alarm</span>
-  </div>
-  <div style="position:relative;width:70px;height:70px;display:flex;align-items:center;justify-content:center;margin-bottom:40px">
-    <div class="ring-pulse"></div>
-    <div class="ring-pulse"></div>
-    <div class="ring-pulse"></div>
-  </div>
-  <div class="ring-buttons">
-    <button class="ring-btn" onclick="snoozeRinging()">
-      <div class="ring-btn-circle snooze-btn-circle">💤</div>
-      <span class="ring-btn-label">Snooze</span>
-    </button>
-    <button class="ring-btn" onclick="dismissRinging()">
-      <div class="ring-btn-circle dismiss-btn-circle">✕</div>
-      <span class="ring-btn-label">Qapat</span>
-    </button>
-  </div>
+<!-- THREE DOT MENU -->
+<div class="dot-menu" id="dotMenu">
+  <div class="ctx-item" onclick="dotDo('theme')">🌓 Toggle Light/Dark</div>
+  <div class="ctx-item" onclick="dotDo('ramadan')">🌙 Ramadan Settings</div>
+  <div class="ctx-item" onclick="dotDo('clear')">🗑 Clear All Alarms</div>
 </div>
 
-<!-- ADD/EDIT ALARM MODAL -->
-<div class="modal-overlay" id="alarmModal" onclick="modalOverlayClick(event)">
-  <div class="modal-sheet" id="modalSheet">
-    <div class="modal-handle"></div>
-    <div class="modal-header">
-      <button class="modal-cancel" onclick="closeModal()">Ləğv Et</button>
-      <div class="modal-title" id="modalTitle">Alarm əlavə et</div>
-      <button class="modal-save" onclick="saveAlarm()">Saxla</button>
+<!-- TOAST -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ALARM MODAL -->
+<div class="overlay" id="alarmModal" onclick="overlayClick(event,'alarmModal')">
+  <div class="sheet" id="alarmSheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-hdr">
+      <button class="btn-cancel" onclick="closeModal('alarmModal')">Cancel</button>
+      <div class="sheet-title" id="modalTitle">Add Alarm</div>
+      <button class="btn-save" onclick="saveAlarm()">Save</button>
     </div>
+
     <!-- Time picker -->
-    <div class="modal-time-picker">
-      <input class="picker-drum" type="number" id="pickH" min="0" max="23" value="6">
-      <span class="picker-colon">:</span>
-      <input class="picker-drum" type="number" id="pickM" min="0" max="59" value="0">
+    <div class="modal-time">
+      <input class="drum" type="number" id="dH" min="0" max="23" value="6">
+      <span class="drum-colon">:</span>
+      <input class="drum" type="number" id="dM" min="0" max="59" value="0">
     </div>
 
-    <div class="modal-options">
-      <!-- Sahur Type -->
-      <div class="option-group">
-        <div class="sahur-type-row">
-          <div class="sahur-type-label">🌙 Sahur Alarmi</div>
-          <div class="toggle-switch" id="modalSahurToggle" onclick="toggleModal('modalSahurToggle')"></div>
+    <div class="opts">
+      <!-- Sahur type -->
+      <div class="opt-grp">
+        <div class="sahur-tog-row">
+          <div class="sahur-tog-lbl">🌙 Sahur Alarm</div>
+          <div class="sw" id="mSahurTog" onclick="mToggle('mSahurTog','mSahur')"></div>
         </div>
       </div>
 
       <!-- Repeat -->
-      <div class="option-group">
-        <div class="option-group-title">Təkrar</div>
+      <div class="opt-grp">
+        <div class="opt-grp-lbl">Repeat</div>
         <div class="day-chips" id="dayChips">
-          <div class="day-chip" data-d="0">B</div>
-          <div class="day-chip" data-d="1">BE</div>
-          <div class="day-chip" data-d="2">Ç</div>
-          <div class="day-chip" data-d="3">CA</div>
-          <div class="day-chip" data-d="4">C</div>
-          <div class="day-chip" data-d="5">Ş</div>
-          <div class="day-chip" data-d="6">Ş</div>
+          <div class="dc" data-d="0">Su</div>
+          <div class="dc" data-d="1">Mo</div>
+          <div class="dc" data-d="2">Tu</div>
+          <div class="dc" data-d="3">We</div>
+          <div class="dc" data-d="4">Th</div>
+          <div class="dc" data-d="5">Fr</div>
+          <div class="dc" data-d="6">Sa</div>
         </div>
       </div>
 
       <!-- Label -->
-      <div class="option-group">
-        <div class="option-group-title">Ad</div>
-        <input type="text" id="alarmLabelInput" placeholder="Alarm adı (istəyə bağlı)"
-          style="background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-family:var(--font);font-size:15px;padding:12px 14px;width:100%;outline:none">
+      <div class="opt-grp">
+        <div class="opt-grp-lbl">Label</div>
+        <input type="text" class="txt-in" id="mLabel" placeholder="Alarm name (optional)">
       </div>
 
       <!-- Sound -->
-      <div class="option-group">
-        <div class="option-group-title">Zəng səsi</div>
-        <select class="sound-select" id="modalSound">
-          <option value="beep">🔔 Klassik Zəng</option>
-          <option value="digital">📟 Rəqəmsal Siqnal</option>
-          <option value="gentle">🎶 Yumşaq Melodiya</option>
-          <option value="mosque">🕌 Ezan (Fəcr)</option>
-          <option value="nature">🌿 Təbiət Səsi</option>
+      <div class="opt-grp">
+        <div class="opt-grp-lbl">Alarm Sound</div>
+        <select class="snd-sel" id="mSound">
+          <option value="classic">🔔 Classic Alarm</option>
+          <option value="soft">🔔 Soft Bell</option>
+          <option value="digital">📟 Digital Beep</option>
+          <option value="adhan">🕌 Adhan Style</option>
+          <option value="calm">🎶 Calm Melody</option>
+          <option value="custom">📂 Custom Upload</option>
         </select>
-      </div>
 
-      <!-- Volume -->
-      <div class="option-group">
-        <div class="option-group-title">Səs səviyyəsi</div>
-        <div class="vol-row">
-          <span class="vol-icon">🔈</span>
-          <input type="range" id="modalVol" min="0" max="100" value="70">
-          <span class="vol-icon">🔊</span>
+        <!-- Custom upload area -->
+        <div class="upload-area" id="uploadArea" style="display:none">
+          <input type="file" accept="audio/*" id="audioFile" onchange="handleAudioUpload(event)">
+          <div class="upload-lbl">📂 Tap to upload audio file<br><span style="font-size:11px;opacity:.6">MP3, WAV, OGG supported</span></div>
+          <div class="upload-name" id="uploadName"></div>
+        </div>
+
+        <button class="btn-test" onclick="testSound()">
+          <span id="testBtnIcon">▶</span> Test Sound
+        </button>
+
+        <!-- Volume -->
+        <div class="vol-row" style="margin-top:12px">
+          <span class="vol-ico">🔈</span>
+          <input type="range" id="mVol" min="0" max="100" value="70">
+          <span class="vol-ico">🔊</span>
+          <span style="font-size:12px;color:var(--text-2);min-width:30px;text-align:right" id="volPct">70%</span>
         </div>
       </div>
 
       <!-- Snooze -->
-      <div class="option-group">
-        <div class="option-group-title">Snooze müddəti</div>
-        <div class="snooze-chips">
-          <div class="snooze-chip" data-s="5">5 dəq</div>
-          <div class="snooze-chip sel" data-s="10">10 dəq</div>
-          <div class="snooze-chip" data-s="15">15 dəq</div>
+      <div class="opt-grp">
+        <div class="opt-grp-lbl">Snooze Duration</div>
+        <div class="sc-row">
+          <div class="sc" data-s="5">5 min</div>
+          <div class="sc on" data-s="10">10 min</div>
+          <div class="sc" data-s="15">15 min</div>
         </div>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- RAMADAN MODAL -->
+<div class="overlay" id="ramModal" onclick="overlayClick(event,'ramModal')">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-hdr">
+      <button class="btn-cancel" onclick="closeModal('ramModal')">Cancel</button>
+      <div class="sheet-title">Ramadan Settings</div>
+      <div style="width:70px"></div>
+    </div>
+    <div class="ram-sheet">
+      <div class="ram-info">
+        Set the Ramadan start date. Sahur Mode will be<br>
+        automatically active for <strong>30 days</strong> from this date.<br>
+        After 30 days it will deactivate automatically.
+      </div>
+      <label style="font-size:12px;color:var(--text-2);font-weight:600;letter-spacing:1px;display:block;margin-bottom:8px">RAMADAN START DATE</label>
+      <input type="date" class="date-in" id="ramStartDate">
+      <div id="ramStatus" style="font-size:12px;color:var(--accent);text-align:center;margin-bottom:12px;font-weight:500"></div>
+      <button class="btn-full" onclick="saveRamadan()">Activate Sahur Mode</button>
+      <button class="btn-full-outline" onclick="deactivateSahur()">Deactivate Sahur Mode</button>
     </div>
   </div>
 </div>
 
 <!-- APP -->
 <div id="app">
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span class="status-time" id="statusTime">12:00</span>
+    <span class="status-icons">▲ ⬛ 🔋</span>
+  </div>
+
   <!-- HEADER -->
   <div class="app-header">
     <div class="header-title" id="headerTitle">Alarm</div>
-    <div class="header-actions">
-      <!-- Sahur mode pill -->
-      <div class="sahur-pill" id="sahurPill" onclick="toggleSahurMode()">
-        <div class="pill-dot"></div>
+    <div class="header-right">
+      <div class="sahur-pill" id="sahurPill" onclick="sahurPillClick()">
+        <div class="pd"></div>
         Sahur
       </div>
-      <button class="fab-add" onclick="openModal()" title="Alarm əlavə et">+</button>
+      <button class="icon-btn" onclick="openModal('alarmModal')" id="addBtn" title="Add alarm">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M19 13H13v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+      </button>
+      <button class="icon-btn" onclick="toggleDotMenu()" title="More options">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+      </button>
     </div>
   </div>
 
   <!-- CONTENT -->
-  <div class="tab-content" id="tabContent">
+  <div class="tab-content">
 
     <!-- ALARM TAB -->
     <div class="tab-pane active" id="tab-alarm">
-      <!-- Sahur Banner -->
       <div class="sahur-banner" id="sahurBanner">
-        <div>
-          <div class="banner-label">Sahur vaxtına qalan</div>
-          <div class="banner-time" id="sahurCountdownDisplay">--:--:--</div>
+        <div class="banner-l">
+          <div class="bl">Time Until Sahur</div>
+          <div class="bt" id="sahurCountdown">--:--:--</div>
         </div>
-        <div class="banner-icon">🌙</div>
+        <div class="banner-r">
+          <div class="banner-ram" id="ramDayInfo"></div>
+          <div class="banner-icon">🌙</div>
+        </div>
       </div>
-
-      <div class="section-header">
-        <span class="section-label" id="alarmSectionLabel">Alarmlar</span>
+      <div class="ramadan-row" id="ramadanRow">
+        <span id="ramadanInfo">Ramadan not set</span>
+        <span class="ram-edit" onclick="dotDo('ramadan')">Edit ›</span>
+      </div>
+      <div class="sec-hdr">
+        <span class="sec-label" id="alarmCountLabel">Alarms</span>
       </div>
       <div class="alarm-list" id="alarmList">
         <div class="empty-state" id="emptyState">
-          <div class="empty-state-icon">🔕</div>
-          <div class="empty-state-text">Hər hansı alarm yoxdur.<br>+ ilə əlavə edin</div>
+          <span class="empty-icon">🔕</span>
+          <div class="empty-text">No alarms set.<br>Tap + to add one.</div>
         </div>
       </div>
     </div>
 
-    <!-- WORLD CLOCK TAB -->
+    <!-- WORLD CLOCK -->
     <div class="tab-pane" id="tab-world">
-      <div class="section-header"><span class="section-label">Dünya Saatı</span></div>
+      <div class="sec-hdr"><span class="sec-label">World Clock</span></div>
       <div class="world-list" id="worldList"></div>
-      <div class="world-add-row">
-        <select class="city-select-input" id="cityAddSel">
-          <option value="">Şəhər seç...</option>
-        </select>
-        <button class="btn-add-city" onclick="addWorldCity()">Əlavə Et</button>
+      <div class="world-add">
+        <select class="city-sel" id="citySel"><option value="">Add city…</option></select>
+        <button class="btn-add" onclick="addCity()">Add</button>
       </div>
     </div>
 
-    <!-- TIMER TAB -->
+    <!-- TIMER -->
     <div class="tab-pane" id="tab-timer">
       <div class="timer-wrap">
         <div class="timer-ring-outer">
           <svg width="220" height="220" viewBox="0 0 220 220">
             <circle class="ring-bg" cx="110" cy="110" r="100"/>
-            <circle class="ring-progress" id="timerRing" cx="110" cy="110" r="100"/>
+            <circle class="ring-fg" id="timerRing" cx="110" cy="110" r="100"/>
           </svg>
-          <div class="timer-center-text">
-            <div class="timer-main-display" id="timerDisplay">00:00</div>
-            <div class="timer-status-label" id="timerStatusLabel">HAZIR</div>
+          <div class="timer-center">
+            <div class="timer-disp" id="timerDisp">00:00</div>
+            <div class="timer-stat" id="timerStat">READY</div>
           </div>
         </div>
-        <div class="time-picker-row">
-          <div class="time-unit-group">
-            <div class="time-unit-label">SAAT</div>
-            <input class="time-unit-input" type="number" id="timerH" min="0" max="23" value="0">
-          </div>
-          <span class="time-sep">:</span>
-          <div class="time-unit-group">
-            <div class="time-unit-label">DƏQ</div>
-            <input class="time-unit-input" type="number" id="timerM" min="0" max="59" value="5">
-          </div>
-          <span class="time-sep">:</span>
-          <div class="time-unit-group">
-            <div class="time-unit-label">SAN</div>
-            <input class="time-unit-input" type="number" id="timerS" min="0" max="59" value="0">
-          </div>
+        <div class="time-row">
+          <div class="tug"><label>HR</label><input type="number" id="tH" min="0" max="23" value="0"></div>
+          <span class="tsep">:</span>
+          <div class="tug"><label>MIN</label><input type="number" id="tM" min="0" max="59" value="5"></div>
+          <span class="tsep">:</span>
+          <div class="tug"><label>SEC</label><input type="number" id="tS" min="0" max="59" value="0"></div>
         </div>
-        <div class="btn-row-center">
-          <button class="btn-circle" onclick="timerReset()" title="Sıfırla">↺</button>
-          <button class="btn-circle primary" id="timerBtn" onclick="timerToggle()">▶</button>
-          <button class="btn-circle" onclick="timerLap()" title="+" style="font-size:16px;opacity:0.4" id="timerLapBtn">+</button>
+        <div class="btn-row">
+          <button class="btn-circ" onclick="timerReset()">↺</button>
+          <button class="btn-circ primary" id="timerBtn" onclick="timerToggle()">▶</button>
+          <button class="btn-circ" style="opacity:.3;font-size:14px" title="N/A">●</button>
         </div>
       </div>
     </div>
 
-    <!-- STOPWATCH TAB -->
+    <!-- STOPWATCH -->
     <div class="tab-pane" id="tab-sw">
       <div class="sw-wrap">
-        <div class="sw-display" id="swDisplay">00:00</div>
+        <div class="sw-disp" id="swDisp">00:00</div>
         <div class="sw-ms" id="swMs">.00</div>
-        <div class="btn-row-center">
-          <button class="btn-circle" id="swLapBtn" onclick="swLap()" style="opacity:0.35">Tuş</button>
-          <button class="btn-circle primary" id="swBtn" onclick="swToggle()">▶</button>
-          <button class="btn-circle" onclick="swReset()">↺</button>
+        <div class="btn-row">
+          <button class="btn-circ" id="lapBtn" onclick="swLap()" style="font-size:13px;opacity:.35">Lap</button>
+          <button class="btn-circ primary" id="swBtn" onclick="swToggle()">▶</button>
+          <button class="btn-circ" onclick="swReset()">↺</button>
         </div>
-        <div class="sw-lap-list" id="swLapList"></div>
+        <div class="lap-list" id="lapList"></div>
       </div>
     </div>
 
-  </div>
+  </div><!-- end tab-content -->
 
   <!-- BOTTOM NAV -->
   <nav class="bottom-nav">
     <button class="nav-item active" id="nav-alarm" onclick="switchTab('alarm')">
-      <div class="nav-icon">🔔</div>
-      <div class="nav-label">Alarm</div>
-      <div class="nav-indicator"></div>
+      <span class="nav-icon">🔔</span>
+      <span class="nav-label">Alarm</span>
+      <div class="nav-dot"></div>
     </button>
     <button class="nav-item" id="nav-world" onclick="switchTab('world')">
-      <div class="nav-icon">🌍</div>
-      <div class="nav-label">Dünya Saatı</div>
-      <div class="nav-indicator"></div>
+      <span class="nav-icon">🌍</span>
+      <span class="nav-label">World Clock</span>
+      <div class="nav-dot"></div>
     </button>
     <button class="nav-item" id="nav-timer" onclick="switchTab('timer')">
-      <div class="nav-icon">⏳</div>
-      <div class="nav-label">Zamanlayıcı</div>
-      <div class="nav-indicator"></div>
+      <span class="nav-icon">⏳</span>
+      <span class="nav-label">Timer</span>
+      <div class="nav-dot"></div>
     </button>
     <button class="nav-item" id="nav-sw" onclick="switchTab('sw')">
-      <div class="nav-icon">⏱</div>
-      <div class="nav-label">Kronometr</div>
-      <div class="nav-indicator"></div>
+      <span class="nav-icon">⏱</span>
+      <span class="nav-label">Stopwatch</span>
+      <div class="nav-dot"></div>
     </button>
   </nav>
-</div>
+</div><!-- end #app -->
 
 <script>
-/* ============================================
-   CONSTANTS & DATA
-============================================ */
-const DAY_NAMES = ['B','BE','Ç','CA','C','Ş','Ş'];
-const REPEAT_LABELS = {
-  all: 'Hər gün',
-  once: 'Bir dəfə',
-  weekdays: 'Həftə içi',
-  weekend: 'Həftə sonu',
-  custom: 'Özəl'
-};
-
-const WORLD_CITIES_ALL = [
-  { name: 'Bakı',         tz: 'Asia/Baku',          flag: '🇦🇿' },
-  { name: 'İstanbul',     tz: 'Europe/Istanbul',     flag: '🇹🇷' },
-  { name: 'London',       tz: 'Europe/London',       flag: '🇬🇧' },
-  { name: 'New York',     tz: 'America/New_York',    flag: '🇺🇸' },
-  { name: 'Tokyo',        tz: 'Asia/Tokyo',          flag: '🇯🇵' },
-  { name: 'Dubai',        tz: 'Asia/Dubai',          flag: '🇦🇪' },
-  { name: 'Məkkə',        tz: 'Asia/Riyadh',         flag: '🕌' },
-  { name: 'Paris',        tz: 'Europe/Paris',        flag: '🇫🇷' },
-  { name: 'Berlin',       tz: 'Europe/Berlin',       flag: '🇩🇪' },
-  { name: 'Moskva',       tz: 'Europe/Moscow',       flag: '🇷🇺' },
-  { name: 'Pekin',        tz: 'Asia/Shanghai',       flag: '🇨🇳' },
-  { name: 'Sydney',       tz: 'Australia/Sydney',    flag: '🇦🇺' },
-  { name: 'Los Angeles',  tz: 'America/Los_Angeles', flag: '🇺🇸' },
-  { name: 'Tehrān',       tz: 'Asia/Tehran',         flag: '🇮🇷' },
-  { name: 'Karaçi',       tz: 'Asia/Karachi',        flag: '🇵🇰' },
-  { name: 'Kuala Lumpur', tz: 'Asia/Kuala_Lumpur',   flag: '🇲🇾' },
-  { name: 'Kahirə',       tz: 'Africa/Cairo',        flag: '🇪🇬' },
-  { name: 'Riyad',        tz: 'Asia/Riyadh',         flag: '🇸🇦' },
+/* ================================================
+   WORLD CITIES DATA
+================================================ */
+const ALL_CITIES = [
+  {name:'Baku',       tz:'Asia/Baku',          flag:'🇦🇿'},
+  {name:'Istanbul',   tz:'Europe/Istanbul',     flag:'🇹🇷'},
+  {name:'London',     tz:'Europe/London',       flag:'🇬🇧'},
+  {name:'New York',   tz:'America/New_York',    flag:'🇺🇸'},
+  {name:'Tokyo',      tz:'Asia/Tokyo',          flag:'🇯🇵'},
+  {name:'Dubai',      tz:'Asia/Dubai',          flag:'🇦🇪'},
+  {name:'Mecca',      tz:'Asia/Riyadh',         flag:'🕌'},
+  {name:'Kuala Lumpur',tz:'Asia/Kuala_Lumpur',  flag:'🇲🇾'},
+  {name:'Paris',      tz:'Europe/Paris',        flag:'🇫🇷'},
+  {name:'Berlin',     tz:'Europe/Berlin',       flag:'🇩🇪'},
+  {name:'Moscow',     tz:'Europe/Moscow',       flag:'🇷🇺'},
+  {name:'Beijing',    tz:'Asia/Shanghai',       flag:'🇨🇳'},
+  {name:'Sydney',     tz:'Australia/Sydney',    flag:'🇦🇺'},
+  {name:'Los Angeles',tz:'America/Los_Angeles', flag:'🇺🇸'},
+  {name:'Tehran',     tz:'Asia/Tehran',         flag:'🇮🇷'},
+  {name:'Cairo',      tz:'Africa/Cairo',        flag:'🇪🇬'},
+  {name:'Riyadh',     tz:'Asia/Riyadh',         flag:'🇸🇦'},
+  {name:'Jakarta',    tz:'Asia/Jakarta',        flag:'🇮🇩'},
+  {name:'Karachi',    tz:'Asia/Karachi',        flag:'🇵🇰'},
+  {name:'Chicago',    tz:'America/Chicago',     flag:'🇺🇸'},
 ];
 
-const WORLD_CITIES_DEFAULT = WORLD_CITIES_ALL.slice(0, 7);
+const DAY_SHORT = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+const RAMADAN_DAYS = 30;
 
-/* ============================================
+/* ================================================
    STATE
-============================================ */
+================================================ */
 let S = {
-  sahurMode: false,
+  theme: 'dark',          // dark | light
   alarms: [],
-  worldCities: [...WORLD_CITIES_DEFAULT],
-  // Stopwatch
-  sw: { running: false, start: 0, elapsed: 0, interval: null, laps: [] },
-  // Timer
-  timer: { running: false, total: 0, remaining: 0, interval: null },
-  // Edit
-  editIndex: -1,
-  ctxIndex: -1,
-  // Modal temp state
-  modalDays: [],
-  modalSahur: false,
-  snoozeMin: 10,
+  worldCities: [],
+  ramadanStart: null,     // ms timestamp
+  sahurActive: false,
+  // Edit state
+  editIdx: -1,
+  ctxIdx: -1,
+  mDays: [],
+  mSahur: false,
+  mSnooze: 10,
+  // Custom audio
+  customAudioDataURL: null,
+  customAudioName: '',
   // Ringing
-  ringingAlarmIndex: -1,
+  ringingIdx: -1,
   ringAudioLoop: null,
-  snoozeCountdown: null,
-  // Sahur
-  sahurCountdownInterval: null,
+  snoozeTO: null,
+  // Stopwatch
+  sw: {running:false, start:0, elapsed:0, interval:null, laps:[]},
+  // Timer
+  tmr: {running:false, total:0, remaining:0, interval:null},
 };
 
-/* ============================================
-   PERSISTENCE
-============================================ */
-function persist() {
+/* ================================================
+   PERSIST
+================================================ */
+function save() {
   try {
-    localStorage.setItem('sahur_v2', JSON.stringify({
-      sahurMode: S.sahurMode,
+    localStorage.setItem('sav2', JSON.stringify({
+      theme: S.theme,
       alarms: S.alarms,
       worldCities: S.worldCities,
+      ramadanStart: S.ramadanStart,
+      sahurActive: S.sahurActive,
+      customAudioName: S.customAudioName,
     }));
+    // Save custom audio separately (large)
+    if (S.customAudioDataURL) {
+      try { localStorage.setItem('sav2_audio', S.customAudioDataURL); } catch(e) {}
+    }
   } catch(e) {}
 }
 
-function hydrate() {
+function load() {
   try {
-    const d = JSON.parse(localStorage.getItem('sahur_v2') || '{}');
+    const d = JSON.parse(localStorage.getItem('sav2') || '{}');
+    if (d.theme) S.theme = d.theme;
     if (d.alarms) S.alarms = d.alarms;
-    if (d.worldCities) S.worldCities = d.worldCities;
-    if (d.sahurMode) S.sahurMode = true;
-  } catch(e) {}
+    if (d.worldCities && d.worldCities.length) S.worldCities = d.worldCities;
+    else S.worldCities = ALL_CITIES.slice(0,8);
+    if (d.ramadanStart) S.ramadanStart = d.ramadanStart;
+    if (d.sahurActive !== undefined) S.sahurActive = d.sahurActive;
+    if (d.customAudioName) S.customAudioName = d.customAudioName;
+    // Load custom audio
+    const ad = localStorage.getItem('sav2_audio');
+    if (ad) S.customAudioDataURL = ad;
+    // Auto-expire Sahur Mode
+    if (S.sahurActive && S.ramadanStart) {
+      const days = (Date.now() - S.ramadanStart) / 86400000;
+      if (days >= RAMADAN_DAYS) {
+        S.sahurActive = false;
+        S.ramadanStart = null;
+        save();
+        toast('Sahur Mode has automatically expired (30 days).','','ok');
+      }
+    }
+  } catch(e) {
+    S.worldCities = ALL_CITIES.slice(0,8);
+  }
 }
 
-/* ============================================
+/* ================================================
+   THEME
+================================================ */
+function applyTheme() {
+  document.body.classList.toggle('light', S.theme === 'light');
+}
+function toggleTheme() {
+  S.theme = S.theme === 'dark' ? 'light' : 'dark';
+  applyTheme(); save();
+  toast(S.theme === 'light' ? '☀️ Light mode' : '🌙 Dark mode','','ok');
+}
+
+/* ================================================
+   TAB SWITCHING
+================================================ */
+const TAB_TITLES = {alarm:'Alarm', world:'World Clock', timer:'Timer', sw:'Stopwatch'};
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.getElementById('nav-'+tab).classList.add('active');
+  document.getElementById('headerTitle').textContent = TAB_TITLES[tab];
+  // Show/hide add button
+  document.getElementById('addBtn').style.display = tab==='alarm' ? '' : 'none';
+  document.getElementById('sahurPill').style.display = tab==='alarm' ? '' : 'none';
+  closeDotMenu();
+}
+
+/* ================================================
+   DOT MENU
+================================================ */
+function toggleDotMenu() {
+  document.getElementById('dotMenu').classList.toggle('open');
+}
+function closeDotMenu() {
+  document.getElementById('dotMenu').classList.remove('open');
+}
+function dotDo(action) {
+  closeDotMenu();
+  if (action==='theme') toggleTheme();
+  else if (action==='ramadan') { prefillRamadan(); openModal('ramModal'); }
+  else if (action==='clear') {
+    if (confirm('Delete all alarms?')) {
+      S.alarms=[]; save(); renderAlarms();
+      toast('All alarms cleared','','ok');
+    }
+  }
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.dot-menu') && !e.target.closest('.icon-btn')) closeDotMenu();
+  if (!e.target.closest('.ctx') && !e.target.closest('.alarm-card')) closeCtx();
+});
+
+/* ================================================
    SAHUR MODE
-============================================ */
-function toggleSahurMode() {
-  S.sahurMode = !S.sahurMode;
+================================================ */
+function sahurPillClick() {
+  if (S.sahurActive) {
+    // Already active: deactivate
+    deactivateSahur();
+  } else {
+    // Open ramadan settings
+    prefillRamadan(); openModal('ramModal');
+  }
+}
+
+function prefillRamadan() {
+  if (S.ramadanStart) {
+    const d = new Date(S.ramadanStart);
+    document.getElementById('ramStartDate').value = d.toISOString().slice(0,10);
+    const daysLeft = RAMADAN_DAYS - Math.floor((Date.now()-S.ramadanStart)/86400000);
+    document.getElementById('ramStatus').textContent = S.sahurActive
+      ? `✅ Active — ${Math.max(0,daysLeft)} days remaining`
+      : 'Sahur Mode not active';
+  } else {
+    const today = new Date().toISOString().slice(0,10);
+    document.getElementById('ramStartDate').value = today;
+    document.getElementById('ramStatus').textContent = '';
+  }
+}
+
+function saveRamadan() {
+  const val = document.getElementById('ramStartDate').value;
+  if (!val) { toast('Please select a start date','','er'); return; }
+  const start = new Date(val).getTime();
+  const end = start + RAMADAN_DAYS*86400000;
+  const now = Date.now();
+  if (now > end) { toast('That Ramadan period has already ended','','er'); return; }
+  S.ramadanStart = start;
+  S.sahurActive = true;
+  save();
+  closeModal('ramModal');
   applySahurMode();
-  persist();
-  toast(S.sahurMode ? '🌙 Sahur Mode aktiv edildi' : '☀️ Sahur Mode deaktiv edildi', '', S.sahurMode ? 'success' : 'info');
+  toast('🌙 Sahur Mode activated for 30 days','','ok');
+}
+
+function deactivateSahur() {
+  S.sahurActive = false;
+  S.ramadanStart = null;
+  save();
+  closeModal('ramModal');
+  applySahurMode();
+  toast('Sahur Mode deactivated','','ok');
 }
 
 function applySahurMode() {
-  const bg = document.getElementById('sahurBg');
-  const pill = document.getElementById('sahurPill');
-  const moon = document.getElementById('sahurMoon');
-  const banner = document.getElementById('sahurBanner');
-
-  bg.classList.toggle('active', S.sahurMode);
-  pill.classList.toggle('active', S.sahurMode);
-  moon.classList.toggle('visible', S.sahurMode);
-  banner.classList.toggle('visible', S.sahurMode);
-
-  if (S.sahurMode) {
+  const on = S.sahurActive;
+  document.getElementById('sahurBg').classList.toggle('on', on);
+  document.getElementById('sahurPill').classList.toggle('on', on);
+  document.getElementById('moon').classList.toggle('on', on);
+  document.getElementById('sahurBanner').classList.toggle('on', on);
+  document.getElementById('ramadanRow').classList.toggle('on', on);
+  if (on) {
     generateStars();
-    startSahurCountdown();
+    updateRamadanRow();
   } else {
-    clearInterval(S.sahurCountdownInterval);
+    // Remove stars
     const sl = document.querySelector('.stars-layer');
     if (sl) sl.remove();
   }
-}
-
-function startSahurCountdown() {
-  clearInterval(S.sahurCountdownInterval);
-  function tick() {
-    // Find nearest sahur alarm
-    const sahurAlarms = S.alarms.filter(a => a.isSahur && a.enabled);
-    if (!sahurAlarms.length) {
-      document.getElementById('sahurCountdownDisplay').textContent = '--:--:--';
-      return;
-    }
-    const now = new Date();
-    let nearest = null, minDiff = Infinity;
-    sahurAlarms.forEach(a => {
-      const t = nextAlarmMs(a);
-      if (t < minDiff) { minDiff = t; nearest = a; }
-    });
-    if (!nearest) return;
-    const diff = minDiff;
-    const h = Math.floor(diff/3600000);
-    const m = Math.floor((diff%3600000)/60000);
-    const sec = Math.floor((diff%60000)/1000);
-    document.getElementById('sahurCountdownDisplay').textContent =
-      `${pad(h)}:${pad(m)}:${pad(sec)}`;
-  }
-  tick();
-  S.sahurCountdownInterval = setInterval(tick, 1000);
-}
-
-function nextAlarmMs(alarm) {
-  const now = new Date();
-  const h = alarm.hour, m = alarm.minute;
-  let next = new Date(now); next.setHours(h, m, 0, 0);
-  const days = alarm.days || [];
-  if (days.length === 0) {
-    if (next <= now) next.setDate(next.getDate()+1);
-    return next - now;
-  }
-  // Find next matching day
-  for (let i = 0; i <= 7; i++) {
-    const candidate = new Date(now);
-    candidate.setDate(now.getDate()+i);
-    candidate.setHours(h, m, 0, 0);
-    const wd = candidate.getDay();
-    if (days.includes(wd) && candidate > now) return candidate - now;
-  }
-  return Infinity;
 }
 
 function generateStars() {
@@ -1353,695 +1263,766 @@ function generateStars() {
   if (!sl) {
     sl = document.createElement('div');
     sl.className = 'stars-layer';
-    sl.style.cssText = 'position:absolute;inset:0;pointer-events:none';
+    sl.style.cssText='position:absolute;inset:0;pointer-events:none';
     document.getElementById('sahurBg').appendChild(sl);
   }
   sl.innerHTML = '';
-  for (let i = 0; i < 60; i++) {
-    const s = document.createElement('div');
-    s.className = 'star-dot';
-    const sz = Math.random()*2+0.5;
-    s.style.cssText = `width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${Math.random()*4+2}s;--dl:${Math.random()*5}s`;
+  for (let i=0;i<70;i++){
+    const s=document.createElement('div');
+    s.className='star';
+    const sz=Math.random()*2+.5;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${Math.random()*4+2}s;--dl:${Math.random()*5}s`;
     sl.appendChild(s);
   }
 }
 
-/* ============================================
-   TAB SWITCHING
-============================================ */
-const TAB_TITLES = { alarm:'Alarm', world:'Dünya Saatı', timer:'Zamanlayıcı', sw:'Kronometr' };
-
-function switchTab(tab) {
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('tab-'+tab).classList.add('active');
-  document.getElementById('nav-'+tab).classList.add('active');
-  document.getElementById('headerTitle').textContent = TAB_TITLES[tab];
-
-  // Show/hide add button
-  const fab = document.querySelector('.fab-add');
-  fab.style.display = tab === 'alarm' ? '' : 'none';
-  const pill = document.getElementById('sahurPill');
-  pill.style.display = tab === 'alarm' ? '' : 'none';
+function updateRamadanRow() {
+  if (!S.ramadanStart) return;
+  const dayNum = Math.floor((Date.now()-S.ramadanStart)/86400000)+1;
+  const left = RAMADAN_DAYS - dayNum + 1;
+  document.getElementById('ramadanInfo').textContent =
+    `Ramadan Day ${Math.min(dayNum,RAMADAN_DAYS)} · ${Math.max(0,left)} days remaining`;
+  document.getElementById('ramDayInfo').textContent = `Day ${Math.min(dayNum,RAMADAN_DAYS)}/${RAMADAN_DAYS}`;
 }
 
-/* ============================================
+/* Sahur countdown — finds nearest enabled sahur alarm */
+let sahurCDI = null;
+function startSahurCountdown() {
+  clearInterval(sahurCDI);
+  function tick() {
+    if (!S.sahurActive) { document.getElementById('sahurCountdown').textContent='--:--:--'; return; }
+    const sa = S.alarms.filter(a=>a.isSahur && a.enabled);
+    if (!sa.length) { document.getElementById('sahurCountdown').textContent='No Sahur alarm'; return; }
+    let min=Infinity;
+    sa.forEach(a=>{ const t=nextAlarmMs(a); if(t<min)min=t; });
+    if (!isFinite(min)) return;
+    const h=Math.floor(min/3600000), m=Math.floor((min%3600000)/60000), s=Math.floor((min%60000)/1000);
+    document.getElementById('sahurCountdown').textContent=`${pad(h)}:${pad(m)}:${pad(s)}`;
+  }
+  tick();
+  sahurCDI = setInterval(tick,1000);
+}
+
+/* ================================================
    ALARM SYSTEM
-============================================ */
+================================================ */
 function renderAlarms() {
   const list = document.getElementById('alarmList');
   const empty = document.getElementById('emptyState');
-  const label = document.getElementById('alarmSectionLabel');
+  const label = document.getElementById('alarmCountLabel');
 
-  if (S.alarms.length === 0) {
-    empty.style.display = ''; list.innerHTML = '';
-    list.appendChild(empty);
-    label.textContent = 'Alarmlar';
-    return;
+  if (!S.alarms.length) {
+    list.innerHTML=''; list.appendChild(empty); empty.style.display='';
+    label.textContent='Alarms'; return;
   }
-  empty.style.display = 'none';
-  const enabled = S.alarms.filter(a=>a.enabled).length;
-  label.textContent = `${S.alarms.length} alarm${enabled ? `, ${enabled} aktiv` : ''}`;
+  empty.style.display='none';
+  const en = S.alarms.filter(a=>a.enabled).length;
+  label.textContent = `${S.alarms.length} alarm${S.alarms.length!==1?'s':''} · ${en} active`;
 
-  list.innerHTML = '';
-  S.alarms.forEach((alarm, i) => {
+  list.innerHTML='';
+  S.alarms.forEach((a,i)=>{
     const card = document.createElement('div');
-    card.className = `alarm-card${alarm.enabled ? ' enabled':''}${alarm.isSahur ? ' sahur-type':''}`;
+    card.className = `alarm-card${a.enabled?' on':''}${a.isSahur?' sahur-card':''}`;
 
-    const h = pad(alarm.hour), m = pad(alarm.minute);
-    const repeatText = getRepeatText(alarm.days);
-    const labelText = alarm.label || (alarm.isSahur ? 'Sahur' : 'Alarm');
+    const h=pad(a.hour), m=pad(a.minute);
+    const repeat=getRepeat(a.days);
+    const lbl=a.label||(a.isSahur?'Sahur':'Alarm');
+    const next=a.enabled?nextAlarmStr(a):'';
 
-    card.innerHTML = `
+    card.innerHTML=`
       <div class="alarm-info">
-        <div class="alarm-icon-label">
-          <span class="alarm-type-icon">${alarm.isSahur ? '🌙' : '🔔'}</span>
-          <span class="alarm-type-text">${alarm.isSahur ? 'Sahur Alarmi' : 'Alarm'}</span>
+        <div class="alarm-badge">
+          <span class="alarm-badge-icon">${a.isSahur?'🌙':'🔔'}</span>
+          <span class="alarm-badge-text">${a.isSahur?'SAHUR ALARM':'ALARM'}</span>
         </div>
-        <div class="alarm-time-display">${h}:${m}</div>
+        <div class="alarm-time">${h}<span class="alarm-ampm">:</span>${m}</div>
         <div class="alarm-meta">
-          <span class="alarm-repeat">${repeatText}</span>
-          <span class="alarm-label-tag">${labelText}</span>
+          <span class="alarm-repeat">${repeat}</span>
+          <span class="alarm-tag">${lbl}</span>
+          ${next?`<span class="alarm-next">in ${next}</span>`:''}
         </div>
       </div>
       <div class="alarm-toggle-wrap">
-        <div class="toggle-switch${alarm.enabled?' on':''}" data-idx="${i}" onclick="toggleAlarm(event,${i})"></div>
+        <div class="sw${a.enabled?' on':''}" data-i="${i}" onclick="toggleAlarm(event,${i})"></div>
       </div>
     `;
 
-    // Long press for context menu
-    let longPressTimer;
-    card.addEventListener('pointerdown', e => {
-      longPressTimer = setTimeout(() => openCtxMenu(e, i), 500);
+    // Long press context
+    let lpt;
+    card.addEventListener('pointerdown', e=>{
+      lpt=setTimeout(()=>openCtx(e,i),500);
     });
-    card.addEventListener('pointerup', () => clearTimeout(longPressTimer));
-    card.addEventListener('pointermove', () => clearTimeout(longPressTimer));
-    card.addEventListener('click', e => {
-      if (e.target.closest('.alarm-toggle-wrap')) return;
-      addRipple(card, e);
+    card.addEventListener('pointerup',()=>clearTimeout(lpt));
+    card.addEventListener('pointermove',()=>clearTimeout(lpt));
+    card.addEventListener('click', e=>{
+      if(e.target.closest('.alarm-toggle-wrap')) return;
+      ripple(card,e);
+      // Single tap = edit
+      setTimeout(()=>openModal('alarmModal',i),150);
     });
 
     list.appendChild(card);
   });
 }
 
-function getRepeatText(days) {
-  if (!days || days.length === 0) return 'Bir dəfə';
-  if (days.length === 7) return 'Hər gün';
-  if (days.length === 5 && !days.includes(0) && !days.includes(6)) return 'Həftə içi';
-  if (days.length === 2 && days.includes(0) && days.includes(6)) return 'Həftə sonu';
-  return days.map(d => DAY_NAMES[d]).join(', ');
+function getRepeat(days) {
+  if(!days||!days.length) return 'Once';
+  if(days.length===7) return 'Every day';
+  if(days.length===5&&!days.includes(0)&&!days.includes(6)) return 'Weekdays';
+  if(days.length===2&&days.includes(0)&&days.includes(6)) return 'Weekends';
+  return days.map(d=>DAY_SHORT[d]).join(', ');
 }
 
-function toggleAlarm(e, i) {
-  e.stopPropagation();
-  S.alarms[i].enabled = !S.alarms[i].enabled;
-  persist();
-  renderAlarms();
-  if (S.sahurMode) startSahurCountdown();
-  const a = S.alarms[i];
-  toast(a.enabled ? '🔔 Alarm aktiv edildi' : '🔕 Alarm deaktiv edildi', `${pad(a.hour)}:${pad(a.minute)}`, a.enabled ? 'success' : 'info');
-}
-
-/* ============================================
-   MODAL
-============================================ */
-function openModal(editIdx = -1) {
-  S.editIndex = editIdx;
-  S.modalDays = [];
-  S.modalSahur = false;
-
-  if (editIdx >= 0) {
-    const a = S.alarms[editIdx];
-    document.getElementById('pickH').value = a.hour;
-    document.getElementById('pickM').value = a.minute;
-    S.modalDays = [...(a.days||[])];
-    S.modalSahur = a.isSahur || false;
-    document.getElementById('alarmLabelInput').value = a.label||'';
-    document.getElementById('modalSound').value = a.sound||'beep';
-    document.getElementById('modalVol').value = (a.vol||0.7)*100;
-    S.snoozeMin = a.snooze||10;
-    document.getElementById('modalTitle').textContent = 'Alarmi düzəlt';
-  } else {
-    document.getElementById('pickH').value = 4;
-    document.getElementById('pickM').value = 30;
-    document.getElementById('alarmLabelInput').value = '';
-    document.getElementById('modalSound').value = 'beep';
-    document.getElementById('modalVol').value = 70;
-    S.snoozeMin = 10;
-    document.getElementById('modalTitle').textContent = 'Alarm əlavə et';
+function nextAlarmMs(a) {
+  const now = new Date();
+  for(let i=0;i<=7;i++){
+    const c = new Date(now);
+    c.setDate(now.getDate()+i);
+    c.setHours(a.hour,a.minute,0,0);
+    if(c<=now) continue;
+    if(!a.days||!a.days.length) return c-now;
+    if(a.days.includes(c.getDay())) return c-now;
   }
-
-  // Apply state
-  const sahurTog = document.getElementById('modalSahurToggle');
-  sahurTog.className = 'toggle-switch' + (S.modalSahur ? ' on' : '');
-
-  renderDayChips();
-  renderSnoozeChips();
-
-  document.getElementById('alarmModal').classList.add('open');
+  return Infinity;
 }
 
-function closeModal() {
-  document.getElementById('alarmModal').classList.remove('open');
-}
-function modalOverlayClick(e) {
-  if (e.target === document.getElementById('alarmModal')) closeModal();
+function nextAlarmStr(a) {
+  const ms=nextAlarmMs(a);
+  if(!isFinite(ms)) return '';
+  const h=Math.floor(ms/3600000),m=Math.floor((ms%3600000)/60000);
+  if(h>23) return `${Math.ceil(ms/86400000)} days`;
+  return h?`${h}h ${m}m`:`${m}m`;
 }
 
-function renderDayChips() {
-  document.querySelectorAll('.day-chip').forEach(chip => {
-    const d = parseInt(chip.dataset.d);
-    chip.classList.toggle('sel', S.modalDays.includes(d));
-    chip.onclick = () => {
-      if (S.modalDays.includes(d)) S.modalDays = S.modalDays.filter(x=>x!==d);
-      else S.modalDays.push(d);
+function toggleAlarm(e,i) {
+  e.stopPropagation();
+  S.alarms[i].enabled=!S.alarms[i].enabled;
+  save(); renderAlarms();
+  if(S.sahurActive) startSahurCountdown();
+  const a=S.alarms[i];
+  toast(a.enabled?'🔔 Alarm enabled':'🔕 Alarm disabled',`${pad(a.hour)}:${pad(a.minute)}`,a.enabled?'ok':'');
+}
+
+/* ================================================
+   ALARM MODAL
+================================================ */
+function openModal(id, editIdx=-1) {
+  if(id==='alarmModal'){
+    S.editIdx=editIdx;
+    S.mDays=[]; S.mSahur=false; S.mSnooze=10;
+    if(editIdx>=0){
+      const a=S.alarms[editIdx];
+      document.getElementById('dH').value=a.hour;
+      document.getElementById('dM').value=a.minute;
+      S.mDays=[...(a.days||[])];
+      S.mSahur=a.isSahur||false;
+      document.getElementById('mLabel').value=a.label||'';
+      document.getElementById('mSound').value=a.sound||'classic';
+      document.getElementById('mVol').value=Math.round((a.vol||.7)*100);
+      document.getElementById('volPct').textContent=Math.round((a.vol||.7)*100)+'%';
+      S.mSnooze=a.snooze||10;
+      document.getElementById('modalTitle').textContent='Edit Alarm';
+    } else {
+      document.getElementById('dH').value=4;
+      document.getElementById('dM').value=30;
+      document.getElementById('mLabel').value='';
+      document.getElementById('mSound').value='classic';
+      document.getElementById('mVol').value=70;
+      document.getElementById('volPct').textContent='70%';
+      document.getElementById('modalTitle').textContent='Add Alarm';
+    }
+    const mST=document.getElementById('mSahurTog');
+    mST.className='sw'+(S.mSahur?' on':'');
+    renderDayChips(); renderSnoozChips(); updateUploadArea();
+  }
+  document.getElementById(id).classList.add('open');
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove('open');
+}
+function overlayClick(e,id){
+  if(e.target===document.getElementById(id)) closeModal(id);
+}
+
+function mToggle(toggleId, stateKey) {
+  const el=document.getElementById(toggleId);
+  el.classList.toggle('on');
+  if(stateKey==='mSahur') S.mSahur=el.classList.contains('on');
+}
+
+function renderDayChips(){
+  document.querySelectorAll('.dc').forEach(c=>{
+    const d=parseInt(c.dataset.d);
+    c.classList.toggle('on',S.mDays.includes(d));
+    c.onclick=()=>{
+      if(S.mDays.includes(d)) S.mDays=S.mDays.filter(x=>x!==d);
+      else S.mDays.push(d);
       renderDayChips();
     };
   });
 }
 
-function renderSnoozeChips() {
-  document.querySelectorAll('.snooze-chip').forEach(chip => {
-    chip.classList.toggle('sel', parseInt(chip.dataset.s) === S.snoozeMin);
-    chip.onclick = () => { S.snoozeMin = parseInt(chip.dataset.s); renderSnoozeChips(); };
+function renderSnoozChips(){
+  document.querySelectorAll('.sc').forEach(c=>{
+    c.classList.toggle('on',parseInt(c.dataset.s)===S.mSnooze);
+    c.onclick=()=>{ S.mSnooze=parseInt(c.dataset.s); renderSnoozChips(); };
   });
 }
 
-function toggleModal(id) {
-  const el = document.getElementById(id);
-  el.classList.toggle('on');
-  if (id === 'modalSahurToggle') S.modalSahur = el.classList.contains('on');
+/* Volume label */
+document.getElementById('mVol').addEventListener('input',function(){
+  document.getElementById('volPct').textContent=this.value+'%';
+});
+
+/* Sound select — show upload area for custom */
+document.getElementById('mSound').addEventListener('change',function(){
+  updateUploadArea();
+});
+function updateUploadArea(){
+  const isCustom=document.getElementById('mSound').value==='custom';
+  document.getElementById('uploadArea').style.display=isCustom?'block':'none';
+  if(isCustom&&S.customAudioName){
+    document.getElementById('uploadName').textContent='📄 '+S.customAudioName;
+  }
 }
 
-function saveAlarm() {
-  const h = parseInt(document.getElementById('pickH').value)||0;
-  const m = parseInt(document.getElementById('pickM').value)||0;
-  const alarm = {
-    hour: Math.max(0,Math.min(23,h)),
-    minute: Math.max(0,Math.min(59,m)),
-    days: [...S.modalDays],
-    label: document.getElementById('alarmLabelInput').value.trim(),
-    sound: document.getElementById('modalSound').value,
-    vol: document.getElementById('modalVol').value/100,
-    snooze: S.snoozeMin,
-    isSahur: S.modalSahur,
-    enabled: true,
+function saveAlarm(){
+  const h=Math.max(0,Math.min(23,parseInt(document.getElementById('dH').value)||0));
+  const m=Math.max(0,Math.min(59,parseInt(document.getElementById('dM').value)||0));
+  const alarm={
+    hour:h, minute:m,
+    days:[...S.mDays],
+    label:document.getElementById('mLabel').value.trim(),
+    sound:document.getElementById('mSound').value,
+    vol:document.getElementById('mVol').value/100,
+    snooze:S.mSnooze,
+    isSahur:S.mSahur,
+    enabled:true,
   };
-  if (S.editIndex >= 0) {
-    alarm.enabled = S.alarms[S.editIndex].enabled;
-    S.alarms[S.editIndex] = alarm;
-    toast('✅ Alarm yeniləndi', `${pad(alarm.hour)}:${pad(alarm.minute)}`, 'success');
+  if(S.editIdx>=0){
+    alarm.enabled=S.alarms[S.editIdx].enabled;
+    S.alarms[S.editIdx]=alarm;
+    toast('✅ Alarm updated',`${pad(h)}:${pad(m)}`,'ok');
   } else {
     S.alarms.push(alarm);
-    toast('🔔 Alarm əlavə edildi', `${pad(alarm.hour)}:${pad(alarm.minute)}`, 'success');
+    toast('🔔 Alarm added',`${pad(h)}:${pad(m)}`,'ok');
   }
-  persist();
-  renderAlarms();
-  closeModal();
-  if (S.sahurMode) startSahurCountdown();
+  save(); renderAlarms(); closeModal('alarmModal');
+  if(S.sahurActive) startSahurCountdown();
   requestNotifPermission();
 }
 
-/* ============================================
-   CONTEXT MENU
-============================================= */
-function openCtxMenu(e, i) {
-  S.ctxIndex = i;
-  const menu = document.getElementById('ctxMenu');
-  menu.classList.add('open');
-  let x = e.clientX, y = e.clientY;
-  if (x + 170 > window.innerWidth) x = window.innerWidth - 180;
-  if (y + 120 > window.innerHeight) y = window.innerHeight - 130;
-  menu.style.left = x+'px'; menu.style.top = y+'px';
+/* ================================================
+   CUSTOM AUDIO UPLOAD
+================================================ */
+function handleAudioUpload(event){
+  const file=event.target.files[0];
+  if(!file) return;
+  S.customAudioName=file.name;
+  document.getElementById('uploadName').textContent='📄 '+file.name;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    S.customAudioDataURL=e.target.result;
+    save();
+    toast('🎵 Custom sound loaded',file.name,'ok');
+  };
+  reader.readAsDataURL(file);
 }
-function ctxEdit() {
-  closeCtxMenu();
-  openModal(S.ctxIndex);
-}
-function ctxDelete() {
-  closeCtxMenu();
-  S.alarms.splice(S.ctxIndex, 1);
-  persist(); renderAlarms();
-  toast('🗑 Alarm silindi', '', 'info');
-}
-function closeCtxMenu() {
-  document.getElementById('ctxMenu').classList.remove('open');
-}
-document.addEventListener('click', e => {
-  if (!e.target.closest('.ctx-menu')) closeCtxMenu();
-});
 
-/* ============================================
-   ALARM CHECK LOOP
-============================================ */
-function checkAlarms() {
-  if (S.ringingAlarmIndex >= 0) return;
-  const now = new Date();
-  S.alarms.forEach((alarm, i) => {
-    if (!alarm.enabled) return;
-    if (alarm.hour === now.getHours() && alarm.minute === now.getMinutes() && now.getSeconds() === 0) {
-      // Check day
-      const wd = now.getDay();
-      if (alarm.days && alarm.days.length > 0 && !alarm.days.includes(wd)) return;
-      triggerAlarm(i);
+/* ================================================
+   SOUND ENGINE (Web Audio API)
+================================================ */
+let _actx=null, _osc=[], _agn=null, _testTimeout=null;
+
+function getACtx(){
+  if(!_actx) _actx=new(window.AudioContext||window.webkitAudioContext)();
+  if(_actx.state==='suspended') _actx.resume();
+  return _actx;
+}
+
+function buildSound(type, vol=.7, loop=false, fadeIn=false){
+  stopSound();
+  // If custom audio and data URL available, use HTMLAudio
+  if(type==='custom'&&S.customAudioDataURL){
+    const audio=new Audio(S.customAudioDataURL);
+    audio.volume=fadeIn?0:vol;
+    audio.loop=loop;
+    audio.play().catch(()=>{});
+    if(fadeIn){
+      let v=0;
+      const fi=setInterval(()=>{
+        v=Math.min(vol,v+vol/20);
+        audio.volume=v;
+        if(v>=vol) clearInterval(fi);
+      },100);
     }
-  });
-}
-
-function triggerAlarm(i) {
-  S.ringingAlarmIndex = i;
-  const a = S.alarms[i];
-  const overlay = document.getElementById('alarmRingOverlay');
-  document.getElementById('ringDisplayTime').textContent = `${pad(a.hour)}:${pad(a.minute)}`;
-  document.getElementById('ringNameText').textContent = a.label || (a.isSahur ? 'Sahur Alarmi' : 'Alarm');
-  document.getElementById('ringIcon').textContent = a.isSahur ? '🌙' : '🔔';
-  overlay.classList.add('ringing');
-  playAlarmSound(a.sound, a.vol, true);
-  if (a.days && a.days.length === 0) {
-    // one-time: disable after firing
-    S.alarms[i].enabled = false;
-    persist(); renderAlarms();
+    _osc=[{stop:()=>audio.pause()}];
+    if(loop) S.ringAudioLoop=setInterval(()=>{},9999);
+    return;
   }
-  if (Notification.permission === 'granted') {
-    new Notification(a.isSahur ? '🌙 Sahur Vaxtı!' : '⏰ Alarm!', {
-      body: `${pad(a.hour)}:${pad(a.minute)} — ${a.label || 'Alarm'}`,
-    });
+
+  const ctx=getACtx();
+  const gn=ctx.createGain();
+  gn.gain.value=fadeIn?0:vol;
+  gn.connect(ctx.destination);
+  _agn=gn;
+
+  if(fadeIn){
+    gn.gain.linearRampToValueAtTime(vol, ctx.currentTime+2);
   }
-  if (navigator.vibrate) navigator.vibrate([500,200,500,200,500,200,1000]);
-}
 
-function dismissRinging() {
-  stopAlarmSound();
-  document.getElementById('alarmRingOverlay').classList.remove('ringing');
-  S.ringingAlarmIndex = -1;
-  clearTimeout(S.snoozeCountdown);
-}
-
-function snoozeRinging() {
-  const i = S.ringingAlarmIndex;
-  stopAlarmSound();
-  document.getElementById('alarmRingOverlay').classList.remove('ringing');
-  const snoozeMs = (S.alarms[i]?.snooze || 10) * 60000;
-  S.ringingAlarmIndex = -1;
-  S.snoozeCountdown = setTimeout(() => triggerAlarm(i), snoozeMs);
-  toast('💤 Snooze', `${S.alarms[i]?.snooze||10} dəqiqə sonra yenidən`, 'info');
-}
-
-/* ============================================
-   WEB AUDIO ENGINE
-============================================ */
-let _audioCtx, _alarmGain, _alarmOsc = [];
-
-function getACtx() {
-  if (!_audioCtx) _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if (_audioCtx.state === 'suspended') _audioCtx.resume();
-  return _audioCtx;
-}
-
-function playAlarmSound(type='beep', vol=0.7, loop=false) {
-  stopAlarmSound();
-  const ctx = getACtx();
-  _alarmGain = ctx.createGain();
-  _alarmGain.gain.value = vol;
-  _alarmGain.connect(ctx.destination);
-
-  function play() {
-    const g = ctx.createGain();
-    g.connect(_alarmGain);
-    const o = ctx.createOscillator();
-
-    switch(type) {
-      case 'digital':
-        o.type='square'; o.frequency.value=1000;
-        g.gain.setValueAtTime(0.4, ctx.currentTime);
-        g.gain.setValueAtTime(0, ctx.currentTime+0.1);
-        g.gain.setValueAtTime(0.4, ctx.currentTime+0.15);
-        g.gain.setValueAtTime(0, ctx.currentTime+0.25);
-        o.start(ctx.currentTime); o.stop(ctx.currentTime+0.3);
-        break;
-      case 'gentle':
-        o.type='sine';
-        [523,659,784].forEach((f,idx)=>{
-          o.frequency.setValueAtTime(f, ctx.currentTime+idx*0.2);
-        });
-        g.gain.setValueAtTime(0,ctx.currentTime);
-        g.gain.linearRampToValueAtTime(1,ctx.currentTime+0.1);
-        g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.7);
-        o.start(ctx.currentTime); o.stop(ctx.currentTime+0.75);
-        break;
-      case 'mosque':
-        o.type='sine';
-        [392,440,523,659,523,440,392].forEach((f,idx)=>{
-          o.frequency.setValueAtTime(f,ctx.currentTime+idx*0.15);
-        });
-        g.gain.setValueAtTime(0,ctx.currentTime);
-        g.gain.linearRampToValueAtTime(1,ctx.currentTime+0.2);
-        g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+1.2);
-        o.start(ctx.currentTime); o.stop(ctx.currentTime+1.25);
-        break;
-      case 'nature':
-        o.type='triangle'; o.frequency.value=220;
-        const lfo=ctx.createOscillator(), lg=ctx.createGain();
-        lfo.frequency.value=5; lg.gain.value=40;
-        lfo.connect(lg); lg.connect(o.frequency);
-        g.gain.setValueAtTime(0,ctx.currentTime);
-        g.gain.linearRampToValueAtTime(0.8,ctx.currentTime+0.5);
-        g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+2);
-        lfo.start(ctx.currentTime); lfo.stop(ctx.currentTime+2.1);
-        o.start(ctx.currentTime); o.stop(ctx.currentTime+2.1);
-        _alarmOsc.push(lfo);
-        break;
-      default: // beep
-        o.frequency.setValueAtTime(880,ctx.currentTime);
-        o.frequency.setValueAtTime(660,ctx.currentTime+0.2);
-        g.gain.setValueAtTime(1,ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.45);
-        o.start(ctx.currentTime); o.stop(ctx.currentTime+0.5);
-    }
-    o.connect(g);
-    _alarmOsc.push(o);
+  function play(){
+    const patterns={
+      classic:  ()=>playTone(ctx,gn,[880,660,880,660],[.2,.2,.2,.2]),
+      soft:     ()=>playTone(ctx,gn,[523,659,784,659],[.3,.3,.3,.3]),
+      digital:  ()=>playDigital(ctx,gn),
+      adhan:    ()=>playTone(ctx,gn,[392,440,523,587,659,523,440,392],[.18,.18,.18,.18,.18,.18,.18,.18]),
+      calm:     ()=>playTone(ctx,gn,[261,330,392,523,392,330,261],[.25,.25,.25,.25,.25,.25,.25]),
+    };
+    (patterns[type]||patterns.classic)();
   }
 
   play();
-  if (loop) {
-    S.ringAudioLoop = setInterval(play, 1800);
+  if(loop){
+    S.ringAudioLoop=setInterval(play,1800);
   }
 }
 
-function stopAlarmSound() {
-  clearInterval(S.ringAudioLoop);
-  _alarmOsc.forEach(n=>{ try{n.stop()}catch(e){} });
-  _alarmOsc = [];
+function playTone(ctx,gn,freqs,durs){
+  let t=ctx.currentTime;
+  freqs.forEach((f,i)=>{
+    const o=ctx.createOscillator();
+    const eg=ctx.createGain();
+    o.type='sine'; o.frequency.value=f;
+    o.connect(eg); eg.connect(gn);
+    eg.gain.setValueAtTime(0,t);
+    eg.gain.linearRampToValueAtTime(1,t+.05);
+    eg.gain.exponentialRampToValueAtTime(.001,t+durs[i]);
+    o.start(t); o.stop(t+durs[i]+.01);
+    t+=durs[i];
+    _osc.push(o);
+  });
 }
 
-/* ============================================
+function playDigital(ctx,gn){
+  const o=ctx.createOscillator();
+  const eg=ctx.createGain();
+  o.type='square'; o.frequency.value=1200;
+  o.connect(eg); eg.connect(gn);
+  const t=ctx.currentTime;
+  [0,.12,.25,.37].forEach(dt=>{
+    eg.gain.setValueAtTime(.4,t+dt);
+    eg.gain.setValueAtTime(0,t+dt+.08);
+  });
+  o.start(t); o.stop(t+.5);
+  _osc.push(o);
+}
+
+function stopSound(){
+  clearInterval(S.ringAudioLoop);
+  S.ringAudioLoop=null;
+  _osc.forEach(n=>{try{n.stop()}catch(e){}});
+  _osc=[];
+  if(_agn){ try{_agn.disconnect()}catch(e){} _agn=null; }
+}
+
+function testSound(){
+  clearTimeout(_testTimeout);
+  const type=document.getElementById('mSound').value;
+  const vol=document.getElementById('mVol').value/100;
+  const btn=document.getElementById('testBtnIcon');
+  btn.textContent='⏹';
+  buildSound(type,vol,false,false);
+  _testTimeout=setTimeout(()=>{stopSound();btn.textContent='▶';},3000);
+}
+
+/* ================================================
+   ALARM FIRING
+================================================ */
+function checkAlarms(){
+  if(S.ringingIdx>=0) return;
+  const now=new Date();
+  S.alarms.forEach((a,i)=>{
+    if(!a.enabled) return;
+    if(a.hour!==now.getHours()||a.minute!==now.getMinutes()||now.getSeconds()!==0) return;
+    if(a.days&&a.days.length&&!a.days.includes(now.getDay())) return;
+    triggerAlarm(i);
+  });
+}
+
+function triggerAlarm(i){
+  S.ringingIdx=i;
+  const a=S.alarms[i];
+  const o=document.getElementById('ringOverlay');
+  document.getElementById('ringTime').textContent=`${pad(a.hour)}:${pad(a.minute)}`;
+  document.getElementById('ringSub').textContent=a.isSahur?'🌙 Sahur Time':'Alarm';
+  document.getElementById('ringName').textContent=a.label||(a.isSahur?'Wake up for Sahur!':'Alarm');
+  document.getElementById('ringIcon').textContent=a.isSahur?'🌙':'🔔';
+  document.getElementById('snoozeLabel').textContent=`Snooze (${a.snooze||10}m)`;
+  o.classList.add('on');
+  buildSound(a.sound||'classic',a.vol||.7,true,true);
+  if(navigator.vibrate) navigator.vibrate([500,200,500,200,500,200,1000]);
+  if(Notification.permission==='granted'){
+    new Notification(a.isSahur?'🌙 Sahur Time!':'⏰ Alarm!',{
+      body:`${pad(a.hour)}:${pad(a.minute)} — ${a.label||''}`,
+    });
+  }
+  // One-time: disable after trigger
+  if(!a.days||!a.days.length){
+    S.alarms[i].enabled=false;
+    save(); renderAlarms();
+  }
+}
+
+function dismissRing(){
+  stopSound();
+  document.getElementById('ringOverlay').classList.remove('on');
+  clearTimeout(S.snoozeTO);
+  S.ringingIdx=-1;
+}
+
+function snoozeRing(){
+  const i=S.ringingIdx;
+  stopSound();
+  document.getElementById('ringOverlay').classList.remove('on');
+  const mins=(S.alarms[i]?.snooze||10);
+  S.ringingIdx=-1;
+  S.snoozeTO=setTimeout(()=>triggerAlarm(i),mins*60000);
+  toast(`💤 Snoozing for ${mins} minutes`,'','ok');
+}
+
+/* ================================================
+   CONTEXT MENU
+================================================ */
+function openCtx(e,i){
+  S.ctxIdx=i;
+  const m=document.getElementById('ctx');
+  m.classList.add('open');
+  let x=e.clientX,y=e.clientY;
+  if(x+170>window.innerWidth) x=window.innerWidth-176;
+  if(y+100>window.innerHeight) y=window.innerHeight-106;
+  m.style.left=x+'px'; m.style.top=y+'px';
+}
+function closeCtx(){ document.getElementById('ctx').classList.remove('open'); }
+function ctxDo(a){
+  closeCtx();
+  if(a==='edit') openModal('alarmModal',S.ctxIdx);
+  else if(a==='delete'){
+    S.alarms.splice(S.ctxIdx,1);
+    save(); renderAlarms();
+    toast('Alarm deleted','','ok');
+  }
+}
+
+/* ================================================
    WORLD CLOCK
-============================================ */
-function renderWorldList() {
-  const list = document.getElementById('worldList');
-  const localOff = -(new Date().getTimezoneOffset());
-  list.innerHTML = '';
-  S.worldCities.forEach((city,i) => {
-    const now = new Date();
-    const ct = new Date(now.toLocaleString('en-US',{timeZone:city.tz}));
-    const h=pad(ct.getHours()), m=pad(ct.getMinutes()), s=pad(ct.getSeconds());
-
-    // offset diff vs local
-    const cityMs = ct.getTime();
-    const localMs = now.getTime();
-    const diffMin = Math.round((ct.getTime() - now.getTime()) / 60000) + localOff;
-    let diffStr, diffCls;
-    if (Math.abs(diffMin) < 1) { diffStr='Yerli'; diffCls='same'; }
-    else {
-      const sign = diffMin>0?'+':'-';
-      const dh=Math.floor(Math.abs(diffMin)/60), dm=Math.abs(diffMin)%60;
-      diffStr=`${sign}${dh}${dm?':'+pad(dm):''}h`;
-      diffCls=diffMin>0?'ahead':'behind';
-    }
-
-    const el = document.createElement('div');
-    el.className='world-item';
-    el.id=`wc-${i}`;
+================================================ */
+function renderWorldList(){
+  const list=document.getElementById('worldList');
+  const localOff=-(new Date().getTimezoneOffset());
+  list.innerHTML='';
+  S.worldCities.forEach((c,i)=>{
+    const el=document.createElement('div');
+    el.className='world-item'; el.id=`wc${i}`;
     el.innerHTML=`
       <div class="world-left">
-        <div class="world-flag">${city.flag}</div>
-        <div class="world-city">${city.name}</div>
-        <div class="world-tz">${city.tz}</div>
+        <div class="w-flag">${c.flag}</div>
+        <div class="w-city">${c.name}</div>
+        <div class="w-tz">${c.tz}</div>
       </div>
       <div class="world-right">
-        <div class="world-time" id="wt-${i}">${h}:${m}:${s}</div>
-        <div class="world-diff ${diffCls}" id="wd-${i}">${diffStr}</div>
+        <div class="w-time" id="wt${i}">--:--:--</div>
+        <div class="w-diff same" id="wd${i}">local</div>
       </div>
     `;
     list.appendChild(el);
   });
+  updateWorldTimes();
+  populateCitySelect();
+}
 
-  // Populate select
-  const sel = document.getElementById('cityAddSel');
-  const existing = new Set(S.worldCities.map(c=>c.name));
-  sel.innerHTML='<option value="">Şəhər seç...</option>';
-  WORLD_CITIES_ALL.forEach(c=>{
-    if (!existing.has(c.name)) {
-      const o=document.createElement('option');
-      o.value=c.name; o.textContent=`${c.flag} ${c.name}`;
-      sel.appendChild(o);
+function updateWorldTimes(){
+  const now=new Date();
+  const localOff=-(now.getTimezoneOffset());
+  S.worldCities.forEach((c,i)=>{
+    const wt=document.getElementById(`wt${i}`);
+    const wd=document.getElementById(`wd${i}`);
+    if(!wt) return;
+    const ct=new Date(now.toLocaleString('en-US',{timeZone:c.tz}));
+    wt.textContent=`${pad(ct.getHours())}:${pad(ct.getMinutes())}:${pad(ct.getSeconds())}`;
+    const diff=Math.round((ct-now)/60000)+localOff;
+    if(Math.abs(diff)<1){wd.textContent='Local';wd.className='w-diff same';}
+    else{
+      const sign=diff>0?'+':'-';
+      const dh=Math.floor(Math.abs(diff)/60),dm=Math.abs(diff)%60;
+      wd.textContent=`${sign}${dh}${dm?':'+pad(dm):''}h`;
+      wd.className='w-diff '+(diff>0?'ahead':'behind');
     }
   });
 }
 
-function updateWorldTimes() {
-  const now = new Date();
-  const localOff = -(new Date().getTimezoneOffset());
-  S.worldCities.forEach((city,i) => {
-    const el=document.getElementById(`wt-${i}`);
-    const del=document.getElementById(`wd-${i}`);
-    if (!el) return;
-    const ct=new Date(now.toLocaleString('en-US',{timeZone:city.tz}));
-    el.textContent=`${pad(ct.getHours())}:${pad(ct.getMinutes())}:${pad(ct.getSeconds())}`;
-    const diffMin=Math.round((ct.getTime()-now.getTime())/60000)+localOff;
-    if (Math.abs(diffMin)<1){del.textContent='Yerli';del.className='world-diff same';}
-    else {
-      const sign=diffMin>0?'+':'-';
-      const dh=Math.floor(Math.abs(diffMin)/60),dm=Math.abs(diffMin)%60;
-      del.textContent=`${sign}${dh}${dm?':'+pad(dm):''}h`;
-      del.className='world-diff '+(diffMin>0?'ahead':'behind');
-    }
+function populateCitySelect(){
+  const sel=document.getElementById('citySel');
+  const ex=new Set(S.worldCities.map(c=>c.name));
+  sel.innerHTML='<option value="">Add city…</option>';
+  ALL_CITIES.filter(c=>!ex.has(c.name)).forEach(c=>{
+    const o=document.createElement('option');
+    o.value=c.name; o.textContent=`${c.flag} ${c.name}`;
+    sel.appendChild(o);
   });
 }
 
-function addWorldCity() {
-  const sel=document.getElementById('cityAddSel');
-  const name=sel.value; if(!name)return;
-  const city=WORLD_CITIES_ALL.find(c=>c.name===name);
-  if(city){ S.worldCities.push(city); persist(); renderWorldList(); toast(`${city.flag} ${city.name} əlavə edildi`,'','success'); }
+function addCity(){
+  const sel=document.getElementById('citySel');
+  const name=sel.value; if(!name) return;
+  const city=ALL_CITIES.find(c=>c.name===name);
+  if(city){ S.worldCities.push(city); save(); renderWorldList(); toast(`${city.flag} ${city.name} added`,'','ok'); }
 }
 
-/* ============================================
+/* ================================================
    TIMER
-============================================ */
-const RING_C = 2*Math.PI*100; // 628.3
+================================================ */
+const RING_C=2*Math.PI*100;
 
-function timerToggle() {
-  if (S.timer.running) {
-    clearInterval(S.timer.interval);
-    S.timer.running=false;
+function timerToggle(){
+  if(S.tmr.running){
+    clearInterval(S.tmr.interval);
+    S.tmr.running=false;
     document.getElementById('timerBtn').textContent='▶';
-    document.getElementById('timerStatusLabel').textContent='DAYANDIRILIB';
+    document.getElementById('timerStat').textContent='PAUSED';
   } else {
-    if (S.timer.remaining<=0) {
-      const h=parseInt(document.getElementById('timerH').value)||0;
-      const m=parseInt(document.getElementById('timerM').value)||0;
-      const s=parseInt(document.getElementById('timerS').value)||0;
-      S.timer.total=h*3600+m*60+s;
-      if(S.timer.total<=0){toast('⚠️','Vaxt daxil edin','error');return;}
-      S.timer.remaining=S.timer.total;
+    if(S.tmr.remaining<=0){
+      const h=parseInt(document.getElementById('tH').value)||0;
+      const m=parseInt(document.getElementById('tM').value)||0;
+      const s=parseInt(document.getElementById('tS').value)||0;
+      S.tmr.total=h*3600+m*60+s;
+      if(!S.tmr.total){toast('Enter a duration','','er');return;}
+      S.tmr.remaining=S.tmr.total;
     }
-    S.timer.running=true;
-    S.timer.interval=setInterval(timerTick,1000);
+    S.tmr.running=true;
+    S.tmr.interval=setInterval(timerTick,1000);
     document.getElementById('timerBtn').textContent='⏸';
-    document.getElementById('timerStatusLabel').textContent='İŞLƏYİR';
+    document.getElementById('timerStat').textContent='RUNNING';
   }
 }
 
-function timerTick() {
-  S.timer.remaining--;
+function timerTick(){
+  S.tmr.remaining--;
   updateTimerUI();
-  if(S.timer.remaining<=0){
-    clearInterval(S.timer.interval);
-    S.timer.running=false;
+  if(S.tmr.remaining<=0){
+    clearInterval(S.tmr.interval);
+    S.tmr.running=false;
     document.getElementById('timerBtn').textContent='▶';
-    document.getElementById('timerStatusLabel').textContent='BİTDİ';
-    playAlarmSound('beep',0.7,false);
-    toast('⏰','Zamanlayıcı bitdi!','','success');
-    if(navigator.vibrate)navigator.vibrate([300,100,300,100,300]);
+    document.getElementById('timerStat').textContent='DONE';
+    document.getElementById('timerDisp').style.color='var(--red)';
+    buildSound('classic',.7,false,false);
+    toast('⏰ Timer finished!','','ok');
+    if(navigator.vibrate) navigator.vibrate([300,100,300,100,600]);
+    setTimeout(()=>{document.getElementById('timerDisp').style.color=''},3000);
   }
 }
 
-function updateTimerUI() {
-  const r=S.timer.remaining;
+function updateTimerUI(){
+  const r=S.tmr.remaining;
   const h=Math.floor(r/3600),m=Math.floor((r%3600)/60),s=r%60;
-  document.getElementById('timerDisplay').textContent=
-    h>0?`${pad(h)}:${pad(m)}:${pad(s)}`:`${pad(m)}:${pad(s)}`;
-  const frac=S.timer.total>0?r/S.timer.total:0;
-  const offset=RING_C*(1-frac);
-  document.getElementById('timerRing').style.strokeDashoffset=offset;
-  if(r<=10&&r>0) document.getElementById('timerDisplay').style.color='var(--red)';
-  else document.getElementById('timerDisplay').style.color='';
+  document.getElementById('timerDisp').textContent=
+    h?`${pad(h)}:${pad(m)}:${pad(s)}`:`${pad(m)}:${pad(s)}`;
+  const frac=S.tmr.total?r/S.tmr.total:0;
+  document.getElementById('timerRing').style.strokeDashoffset=RING_C*(1-frac);
+  if(r<=10&&r>0) document.getElementById('timerDisp').style.color='var(--red)';
+  else document.getElementById('timerDisp').style.color='';
 }
 
-function timerReset() {
-  clearInterval(S.timer.interval);
-  S.timer.running=false; S.timer.remaining=0; S.timer.total=0;
-  document.getElementById('timerDisplay').textContent='00:00';
-  document.getElementById('timerDisplay').style.color='';
-  document.getElementById('timerStatusLabel').textContent='HAZIR';
+function timerReset(){
+  clearInterval(S.tmr.interval);
+  S.tmr={running:false,total:0,remaining:0,interval:null};
+  document.getElementById('timerDisp').textContent='00:00';
+  document.getElementById('timerDisp').style.color='';
+  document.getElementById('timerStat').textContent='READY';
   document.getElementById('timerBtn').textContent='▶';
   document.getElementById('timerRing').style.strokeDashoffset=RING_C;
 }
 
-function timerLap(){} // placeholder
-
-/* ============================================
+/* ================================================
    STOPWATCH
-============================================ */
-function swToggle() {
+================================================ */
+function swToggle(){
   if(S.sw.running){
     clearInterval(S.sw.interval);
     S.sw.elapsed+=Date.now()-S.sw.start;
     S.sw.running=false;
     document.getElementById('swBtn').textContent='▶';
-    document.getElementById('swDisplay').classList.remove('running');
-    document.getElementById('swLapBtn').style.opacity='0.35';
+    document.getElementById('swDisp').classList.remove('running');
+    document.getElementById('lapBtn').style.opacity='.35';
   } else {
     S.sw.start=Date.now();
     S.sw.running=true;
-    S.sw.interval=setInterval(swUpdate,30);
+    S.sw.interval=setInterval(swTick,30);
     document.getElementById('swBtn').textContent='⏸';
-    document.getElementById('swDisplay').classList.add('running');
-    document.getElementById('swLapBtn').style.opacity='1';
+    document.getElementById('swDisp').classList.add('running');
+    document.getElementById('lapBtn').style.opacity='1';
   }
 }
 
-function swUpdate() {
+function swTick(){
   const total=S.sw.elapsed+(Date.now()-S.sw.start);
   const m=Math.floor(total/60000),s=Math.floor((total%60000)/1000),cs=Math.floor((total%1000)/10);
   const h=Math.floor(m/60);
-  document.getElementById('swDisplay').textContent=
-    h>0?`${pad(h)}:${pad(m%60)}:${pad(s)}`:`${pad(m)}:${pad(s)}`;
+  document.getElementById('swDisp').textContent=
+    h?`${pad(h)}:${pad(m%60)}:${pad(s)}`:`${pad(m)}:${pad(s)}`;
   document.getElementById('swMs').textContent='.'+pad(cs);
 }
 
-function swLap() {
-  if(!S.sw.running&&S.sw.elapsed===0)return;
+function swLap(){
+  if(!S.sw.running&&!S.sw.elapsed) return;
   const total=S.sw.elapsed+(S.sw.running?Date.now()-S.sw.start:0);
   S.sw.laps.push(total);
   renderLaps();
 }
 
-function renderLaps() {
-  const container=document.getElementById('swLapList');
-  if(!S.sw.laps.length){container.innerHTML='';return;}
+function renderLaps(){
+  if(!S.sw.laps.length){document.getElementById('lapList').innerHTML='';return;}
   const sorted=[...S.sw.laps].sort((a,b)=>a-b);
-  const fastest=sorted[0], slowest=sorted[sorted.length-1];
-  container.innerHTML=S.sw.laps.map((t,i)=>{
-    const isFast=t===fastest&&S.sw.laps.length>1;
-    const isSlow=t===slowest&&S.sw.laps.length>1;
+  const best=sorted[0],worst=sorted[sorted.length-1];
+  document.getElementById('lapList').innerHTML=S.sw.laps.map((t,i)=>{
+    const isBest=t===best&&S.sw.laps.length>1;
+    const isWorst=t===worst&&S.sw.laps.length>1;
     const m=Math.floor(t/60000),s=Math.floor((t%60000)/1000),cs=Math.floor((t%1000)/10);
-    return `<div class="sw-lap-item${isFast?' fastest':isSlow?' slowest':''}">
-      <span class="sw-lap-num">Tuş ${i+1}</span>
-      <span class="sw-lap-time">${pad(m)}:${pad(s)}.${pad(cs)}</span>
+    return `<div class="lap-item${isBest?' best':isWorst?' worst':''}">
+      <span class="lap-num">Lap ${i+1}</span>
+      <span class="lap-time">${pad(m)}:${pad(s)}.${pad(cs)}</span>
     </div>`;
   }).reverse().join('');
 }
 
-function swReset() {
+function swReset(){
   clearInterval(S.sw.interval);
   S.sw={running:false,start:0,elapsed:0,interval:null,laps:[]};
-  document.getElementById('swDisplay').textContent='00:00';
-  document.getElementById('swDisplay').classList.remove('running');
+  document.getElementById('swDisp').textContent='00:00';
+  document.getElementById('swDisp').classList.remove('running');
   document.getElementById('swMs').textContent='.00';
   document.getElementById('swBtn').textContent='▶';
-  document.getElementById('swLapBtn').style.opacity='0.35';
-  document.getElementById('swLapList').innerHTML='';
+  document.getElementById('lapBtn').style.opacity='.35';
+  document.getElementById('lapList').innerHTML='';
 }
 
-/* ============================================
-   RIPPLE
-============================================ */
-function addRipple(el, e) {
+/* ================================================
+   RIPPLE EFFECT
+================================================ */
+function ripple(el,e){
   const r=document.createElement('span');
   r.className='ripple';
+  r.style.cssText='position:absolute;border-radius:50%;background:rgba(255,255,255,.06);transform:scale(0);animation:rpl .55s linear;pointer-events:none';
   const rect=el.getBoundingClientRect();
   const sz=Math.max(rect.width,rect.height);
-  r.style.cssText=`width:${sz}px;height:${sz}px;left:${e.clientX-rect.left-sz/2}px;top:${e.clientY-rect.top-sz/2}px`;
+  r.style.width=r.style.height=sz+'px';
+  r.style.left=(e.clientX-rect.left-sz/2)+'px';
+  r.style.top=(e.clientY-rect.top-sz/2)+'px';
   el.appendChild(r);
   r.addEventListener('animationend',()=>r.remove());
 }
+// Add keyframe dynamically
+const rplStyle=document.createElement('style');
+rplStyle.textContent='@keyframes rpl{to{transform:scale(4);opacity:0}}';
+document.head.appendChild(rplStyle);
 
-/* ============================================
+/* ================================================
    TOAST
-============================================ */
-function toast(title, sub='', type='info') {
-  const icons={success:'✅',error:'⚠️',info:'ℹ️'};
-  const container=document.getElementById('toastContainer');
+================================================ */
+function toast(title,sub='',type='ok'){
+  const icons={ok:'✅',er:'⚠️'};
   const el=document.createElement('div');
   el.className=`toast ${type}`;
-  el.innerHTML=`
-    <div class="toast-icon">${icons[type]||'ℹ️'}</div>
-    <div class="toast-body">
-      <div class="toast-title">${title}</div>
-      ${sub?`<div class="toast-sub">${sub}</div>`:''}
-    </div>
-  `;
-  container.appendChild(el);
-  setTimeout(()=>{
-    el.style.animation='toastOut 0.3s ease forwards';
-    setTimeout(()=>el.remove(),300);
-  },2800);
+  el.innerHTML=`<div class="toast-ico">${icons[type]||'ℹ️'}</div>
+    <div class="toast-bd"><div class="toast-t">${title}</div>${sub?`<div class="toast-s">${sub}</div>`:''}</div>`;
+  document.getElementById('toastWrap').appendChild(el);
+  setTimeout(()=>{el.style.animation='toastOut .3s ease forwards';setTimeout(()=>el.remove(),300);},2800);
 }
 
-/* ============================================
-   NOTIFICATION PERMISSION
-============================================ */
-function requestNotifPermission() {
-  if('Notification' in window && Notification.permission==='default') {
-    Notification.requestPermission();
-  }
+/* ================================================
+   STATUS BAR CLOCK
+================================================ */
+function updateStatusBar(){
+  const now=new Date();
+  document.getElementById('statusTime').textContent=
+    `${pad(now.getHours())}:${pad(now.getMinutes())}`;
 }
 
-/* ============================================
-   UTILITY
-============================================ */
-function pad(n) { return String(n).padStart(2,'0'); }
+/* ================================================
+   NOTIFICATION
+================================================ */
+function requestNotifPermission(){
+  if('Notification' in window&&Notification.permission==='default') Notification.requestPermission();
+}
 
-/* ============================================
+/* ================================================
+   UTILS
+================================================ */
+function pad(n){return String(n).padStart(2,'0')}
+
+/* ================================================
+   MAIN LOOP
+================================================ */
+let lastCheckSec=-1;
+function mainLoop(){
+  const now=new Date();
+  updateStatusBar();
+  if(document.getElementById('tab-world').classList.contains('active')) updateWorldTimes();
+  const sec=now.getSeconds();
+  if(sec===0&&sec!==lastCheckSec){ checkAlarms(); lastCheckSec=sec; }
+  if(sec!==0) lastCheckSec=-1;
+  requestAnimationFrame(mainLoop);
+}
+
+/* ================================================
    INIT
-============================================ */
-function init() {
-  hydrate();
+================================================ */
+function init(){
+  load();
+  applyTheme();
 
-  // Render
+  // Default demo alarms if none saved
+  if(!S.alarms.length){
+    S.alarms=[
+      {hour:4,minute:30,days:[0,1,2,3,4,5,6],label:'Sahur',sound:'adhan',vol:.8,snooze:10,isSahur:true,enabled:true},
+      {hour:6,minute:0,days:[1,2,3,4,5],label:'Morning',sound:'classic',vol:.7,snooze:5,isSahur:false,enabled:false},
+    ];
+    save();
+  }
+
   renderAlarms();
   renderWorldList();
   applySahurMode();
+  if(S.sahurActive) startSahurCountdown();
 
-  // Show second tab header
-  document.querySelector('.fab-add').style.display='';
+  // Init timer ring
+  document.getElementById('timerRing').style.strokeDashoffset=RING_C;
 
-  // Clock loop
-  setInterval(()=>{
-    const now=new Date();
-    // Update world clock if visible
-    if(document.getElementById('tab-world').classList.contains('active')) updateWorldTimes();
-    // Check alarms
-    checkAlarms();
-    // Sahur countdown
-    // (handled in startSahurCountdown interval)
-  },1000);
+  // Request notif after 2s
+  setTimeout(requestNotifPermission,2000);
 
-  // Request notification on load
-  setTimeout(requestNotifPermission, 2000);
+  // Start loop
+  requestAnimationFrame(mainLoop);
 
-  // Demo alarms if empty
-  if(S.alarms.length===0){
-    S.alarms=[
-      {hour:4,minute:30,days:[0,1,2,3,4,5,6],label:'Sahur',sound:'mosque',vol:0.8,snooze:10,isSahur:true,enabled:true},
-      {hour:6,minute:0,days:[1,2,3,4,5],label:'Səhər',sound:'beep',vol:0.7,snooze:5,isSahur:false,enabled:false},
-    ];
-    persist();
-    renderAlarms();
-  }
+  // World clock updater
+  setInterval(updateWorldTimes,1000);
+
+  // Alarm check every second (backup)
+  setInterval(checkAlarms,1000);
+
+  // Sahur countdown every second
+  setInterval(()=>{ if(S.sahurActive) startSahurCountdown(); },30000);
 }
 
-window.addEventListener('DOMContentLoaded', init);
+window.addEventListener('DOMContentLoaded',init);
 
-// Prevent double-tap zoom
-let lastTouch=0;
+// Prevent double-tap zoom on mobile
+let _lt=0;
 document.addEventListener('touchend',e=>{
   const now=Date.now();
-  if(now-lastTouch<300){e.preventDefault();}
-  lastTouch=now;
+  if(now-_lt<300) e.preventDefault();
+  _lt=now;
 },{passive:false});
 </script>
 </body>
